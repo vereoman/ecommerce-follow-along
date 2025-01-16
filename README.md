@@ -39,9 +39,3 @@ In this initial milestone, we covered the following aspects of the project:
 6. **Live Demonstration**:
    - Observation of the completed application's functionality
    - Overview of user interface and backend integration
-
-<<<<<<< HEAD
-This milestone laid the foundation for the project, providing a clear understanding of the technologies involved and the features to be implemented in the upcoming development phases.
-=======
-This milestone laid the foundation for the project, providing a clear understanding of the technologies involved and the features to be implemented in the upcoming development phases.
->>>>>>> 9a087faa8c17d3bd60acf5759487134a3651e9fd
