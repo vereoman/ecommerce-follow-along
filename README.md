@@ -69,8 +69,3 @@ In this milestone, we achieved the following:
      - Separate folders for `frontend` and `backend`.
      - The functional Login Page in the `frontend` directory.
      - An updated README file summarizing progress.
-
----
-
-### Frontend Deployment Link
-https://ecommerce-follow-along-7ojok23up-vereomen.vercel.app/
