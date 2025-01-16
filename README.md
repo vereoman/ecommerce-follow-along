@@ -68,4 +68,3 @@ In this milestone, we achieved the following:
    - Ensured the repository includes:
      - Separate folders for `frontend` and `backend`.
      - The functional Login Page in the `frontend` directory.
-     - An updated README file summarizing progress.
