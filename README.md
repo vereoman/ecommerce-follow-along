@@ -12,6 +12,8 @@ This project is a full-fledged E-Commerce Application using the MERN stack (Mong
 - Database Schema Design using MongoDB
 - Robust Backend Development with Node.js and Express
 
+---
+
 ## Milestone 1: Project Overview
 
 In this initial milestone, we covered the following aspects of the project:
@@ -39,3 +41,36 @@ In this initial milestone, we covered the following aspects of the project:
 6. **Live Demonstration**:
    - Observation of the completed application's functionality
    - Overview of user interface and backend integration
+
+---
+
+## Milestone 2: Project Setup and Login Page
+
+In this milestone, we achieved the following:
+
+1. **Project Folder Structure**:
+   - Organized project files into separate `frontend` and `backend` directories for better maintainability.
+
+2. **React Frontend Setup**:
+   - Initialized a React application for building the user interface.
+
+3. **Node.js Backend Setup**:
+   - Set up a simple Node.js server to prepare for API integration in future milestones.
+
+4. **Tailwind CSS Configuration**:
+   - Integrated and configured Tailwind CSS for modern, responsive, and utility-based styling.
+
+5. **Login Page Development**:
+   - Designed and implemented the first user interface of the application, focusing on functionality and styling.
+   - The login page includes a responsive layout with Tailwind CSS and essential input fields for email and password.
+
+6. **GitHub Repository Updates**:
+   - Ensured the repository includes:
+     - Separate folders for `frontend` and `backend`.
+     - The functional Login Page in the `frontend` directory.
+     - An updated README file summarizing progress.
+
+---
+
+### Frontend Deployment Link
+https://ecommerce-follow-along-7ojok23up-vereomen.vercel.app/
