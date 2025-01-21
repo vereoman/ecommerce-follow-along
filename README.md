@@ -68,3 +68,75 @@ In this milestone, we achieved the following:
    - Ensured the repository includes:
      - Separate folders for `frontend` and `backend`.
      - The functional Login Page in the `frontend` directory.
+
+---
+
+## Milestone 3: Project Setup for Backend
+
+In this milestone, we focused on setting up the backend of the application:
+
+1. **Backend Folder Structure**:
+   - Created a structured hierarchy for organizing routes, controllers, models, and middleware.
+
+2. **Server Setup**:
+   - Initialized and configured a Node.js server using Express to handle API requests.
+   - Configured the server to listen on a designated port.
+
+3. **Database Connection**:
+   - Integrated MongoDB for efficient data storage and confirmed the connection between the server and MongoDB.
+
+4. **Error Handling**:
+   - Implemented basic error handling to provide clear error messages for better debugging and user feedback.
+
+5. **GitHub Repository Updates**:
+   - Updated the repository with the new backend structure and ensured all changes were committed.
+
+---
+
+## Milestone 4: User Model and File Uploads
+
+In this milestone, we created the necessary components for user management:
+
+1. **User Model**:
+   - Designed a User Model to define how user data (like name, email, and password) is stored in the database using MongoDB schemas.
+
+2. **User Controller**:
+   - Created a User Controller to manage user data interactions, such as adding new users and retrieving user information.
+
+3. **File Uploads with Multer**:
+   - Enabled and configured Multer to allow the application to accept and store files uploaded by users, such as profile pictures.
+
+4. **GitHub Repository Updates**:
+   - Updated the repository with the new User Model and Controller, along with Multer configuration.
+
+---
+
+## Milestone 5: Sign-Up Page and Form Validation
+
+In this milestone, we focused on the frontend user registration process:
+
+1. **Sign-Up Page Development**:
+   - Built a user-friendly Sign-Up page where users can enter their details (name, email, password) to create an account.
+
+2. **Form Validation**:
+   - Implemented form validation to ensure user inputs are correct and in the right format, preventing errors before submission.
+
+3. **GitHub Repository Updates**:
+   - Updated the repository with the new Sign-Up page and validation logic.
+
+---
+
+## Milestone 6: Password Encryption and User Data Storage
+
+In this milestone, we enhanced security for user data:
+
+1. **Password Encryption**:
+   - Used bcrypt to hash user passwords during signup, ensuring that only encrypted passwords are stored in the database.
+
+2. **Complete User Data Storage**:
+   - Saved all user data (e.g., name, email) in the database while ensuring that passwords remain encrypted.
+
+3. **GitHub Repository Updates**:
+   - Updated the repository with the password encryption logic and complete user data storage implementation.
+
+---
