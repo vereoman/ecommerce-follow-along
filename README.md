@@ -138,5 +138,3 @@ In this milestone, we enhanced security for user data:
 
 3. **GitHub Repository Updates**:
    - Updated the repository with the password encryption logic and complete user data storage implementation.
-
----
