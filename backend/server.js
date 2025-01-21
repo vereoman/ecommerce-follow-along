@@ -1,25 +1,32 @@
 const express = require('express');
-const mongoose = require('mongoose');
-const connectDB = require('./database/database');
-const userRoutes = require('./routes/user.routes');
-const dotenv = require('dotenv');
-dotenv.config();
-
+const connectDB = require('./config/database');
+const userRouter = require('./routes/user.routes');
+require('dotenv').config();
 const app = express();
+const PORT = 6000;
+
 app.use(express.json());
 
-app.get('/', function (req, res) {
-    res.send('Server is running and connected to the database!');
-});
-
-app.use('/api/users', userRoutes);
-
-const PORT = process.env.PORT || 6000;
-app.listen(PORT, async function () {
+app.get('/', (req, res) => {
     try {
-        await connectDB();
-        console.log(`Server is running on port ${PORT}`);
+        res.send('Hello World');
     } catch (error) {
-        console.error('Failed to start the server:', error.message);
+        res.status(500).send('Server Error');
     }
 });
+
+app.use('/user', userRouter);
+
+const startServer = async () => {
+    try {
+        await connectDB();
+        app.listen(PORT, () => {
+            console.log(`Server is running on port ${PORT}`);
+        });
+    } catch (error) {
+        console.error('Server startup error:', error);
+        process.exit(1);
+    }
+};
+
+startServer();
