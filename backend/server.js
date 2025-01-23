@@ -7,26 +7,21 @@ const PORT = 6000;
 
 app.use(express.json());
 
-app.get('/', (req, res) => {
+app.get('/', function (req, res) {
     try {
-        res.send('Hello World');
+        res.send('hello');
     } catch (error) {
-        res.status(500).send('Server Error');
+        res.status(500).send('server error');
     }
 });
 
 app.use('/user', userRouter);
 
-const startServer = async () => {
+app.listen(PORT, async function () {
     try {
         await connectDB();
-        app.listen(PORT, () => {
-            console.log(`Server is running on port ${PORT}`);
-        });
+        console.log('server is running');
     } catch (error) {
-        console.error('Server startup error:', error);
-        process.exit(1);
+        console.error('server startup error');
     }
-};
-
-startServer();
+});

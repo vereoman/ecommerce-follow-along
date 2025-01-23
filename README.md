@@ -138,3 +138,70 @@ In this milestone, we enhanced security for user data:
 
 3. **GitHub Repository Updates**:
    - Updated the repository with the password encryption logic and complete user data storage implementation.
+  
+---
+
+## Milestone 7: User Login Endpoint and Credential Validation
+
+In this milestone, we focused on implementing the user login functionality, ensuring secure authentication through credential validation:
+
+1. **Login Endpoint Creation**:
+   - Developed a backend endpoint to accept user credentials (email/username and password).
+   - Implemented a route that handles POST requests for user login.
+
+2. **User Data Retrieval**:
+   - Retrieved user records from the database based on the provided email/username.
+   - Implemented error handling to return a clear message if the user does not exist.
+
+3. **Password Validation**:
+   - Utilized bcrypt to hash the entered password and compare it with the stored hashed password.
+   - Ensured that the comparison process is secure and efficient, allowing for quick authentication.
+
+4. **Authentication Response**:
+   - Provided appropriate responses based on the authentication outcome:
+     - If the credentials are valid, the user is authenticated, and a success message is returned.
+     - If the credentials are invalid, an error message is sent back to the user.
+
+5. **Security Considerations**:
+   - Emphasized the importance of password hashing as a one-way process, ensuring that passwords are never decrypted.
+   - Implemented measures to protect against common security threats, such as SQL injection and brute force attacks.
+
+6. **Testing the Login Functionality**:
+   - Conducted thorough testing of the login endpoint to ensure it works as expected under various scenarios.
+   - Verified that the system correctly handles both successful and failed login attempts.
+
+7. **GitHub Repository Updates**:
+   - Committed and pushed the changes to the repository, including the new login endpoint and validation logic.
+   - Updated the README to reflect the progress made in this milestone.
+
+---
+
+## Milestone 8: Card Component Creation and Homepage Layout
+
+In this milestone, we focused on enhancing the user interface by creating a reusable card component to showcase products effectively:
+
+1. **Card Component Development**:
+   - Designed a reusable card component that accepts product details as props, including product name, image, and price.
+   - Ensured the card component is visually appealing and maintains a consistent layout across different products.
+
+2. **Dynamic Rendering of Products**:
+   - Implemented array mapping to dynamically render a card for each product in the product list.
+   - Passed unique product information to each card, allowing for a personalized display of product details.
+
+3. **Homepage Layout Design**:
+   - Set up a grid layout using CSS Grid or Flexbox to organize multiple product cards neatly on the homepage.
+   - Ensured that the layout is responsive and adapts well to different screen sizes, enhancing the user experience.
+
+4. **Improved User Experience**:
+   - Focused on creating an organized and structured homepage that allows users to easily browse and interact with products.
+   - Ensured that the card component design contributes to a clean and visually appealing interface.
+
+5. **Testing and Validation**:
+   - Conducted testing to ensure that the card component renders correctly for various products and that the layout remains consistent.
+   - Verified that all product details are displayed accurately and that the user interface is intuitive.
+
+6. **GitHub Repository Updates**:
+   - Committed and pushed the changes to the repository, including the new card component and homepage layout.
+   - Updated the README file to summarize the progress made in this milestone.
+
+---

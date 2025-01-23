@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema(
     }
 );
 
-function validatePassword(password) {
+function validatePassword (password) {
     return (
         /[A-Z]/.test(password) && 
         /[a-z]/.test(password) &&
