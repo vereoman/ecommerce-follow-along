@@ -1,9 +1,10 @@
-import React from "react"
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom"
-import Login from "./components/Login"
-import Homepage from "./components/Homepage"
+import React from "react";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import Login from "./components/Login";
+import Homepage from "./components/Homepage";
+import Footer from "./components/Footer";
 
-function App() {
+export default function App() {
   return (
     <Router>
       <Routes>
@@ -11,9 +12,7 @@ function App() {
         <Route path="/ecommerce-follow-along" element={<Login />} />
         <Route path="/ecommerce-follow-along/home" element={<Homepage />} />
       </Routes>
+      <Footer />
     </Router>
-  )
-}
-
-export default App
-
+  );
+};

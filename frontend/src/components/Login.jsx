@@ -1,14 +1,14 @@
-import React from "react"
-import { useNavigate } from "react-router-dom"
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault()
     // Here you would typically handle authentication
     // For now, we'll just navigate to the homepage
-    navigate("/ecommerce-follow-along/home")
+    navigate("/ecommerce-follow-along/home");
   }
 
   return (
@@ -67,5 +67,5 @@ export default function Login() {
         </form>
       </div>
     </div>
-  )
-}
+  );
+};

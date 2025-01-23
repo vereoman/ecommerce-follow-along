@@ -1,5 +1,6 @@
-import React from "react"
-import ProductCard from "./ProductCard"
+import React from "react";
+import ProductCard from "./ProductCard";
+import HeroSection from "./HeroSection";
 
 const products = [
   {
@@ -44,13 +45,16 @@ const products = [
     image:
       "https://static.zara.net/assets/public/ecdc/cf40/e0da4af2af07/654179fb2d84/00526460305-e1/00526460305-e1.jpg?ts=1735307340273&w=563",
   },
-]
+];
 
 export default function Homepage() {
   return (
     <div className="min-h-screen bg-gray-900 p-8 font-['SF_Pro_Display',-apple-system,BlinkMacSystemFont,system-ui,sans-serif]">
-      <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-extrabold text-white mb-8">Welcome to Our Store</h1>
+      <HeroSection />
+
+      <div className="max-w-7xl mx-auto mt-8">
+        <br />
+  
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {products.map((product) => (
             <ProductCard key={product.id} {...product} />
@@ -58,6 +62,5 @@ export default function Homepage() {
         </div>
       </div>
     </div>
-  )
-}
-
+  );
+};

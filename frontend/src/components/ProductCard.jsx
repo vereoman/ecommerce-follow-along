@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 
 export default function ProductCard({ name, price, image }) {
   return (
@@ -19,4 +19,4 @@ export default function ProductCard({ name, price, image }) {
       </div>
     </div>
   )
-}
+};
