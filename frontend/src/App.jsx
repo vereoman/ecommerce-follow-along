@@ -1,10 +1,19 @@
-import React from 'react';
-import Login from './components/Login';
+import React from "react"
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom"
+import Login from "./components/Login"
+import Homepage from "./components/Homepage"
 
-export default function App() {
-    return (
-        <div>
-            <Login />
-        </div>
-    );
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Navigate to="/ecommerce-follow-along" replace />} />
+        <Route path="/ecommerce-follow-along" element={<Login />} />
+        <Route path="/ecommerce-follow-along/home" element={<Homepage />} />
+      </Routes>
+    </Router>
+  )
 }
+
+export default App
+
