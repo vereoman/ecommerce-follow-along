@@ -232,4 +232,32 @@ In this milestone, we focused on creating a form for product details and enablin
    - Committed and pushed the changes to the repository, including the new product form and image upload functionality.
    - Updated the README file to summarize the progress made in this milestone.
 
-![Product Form Screenshot](https://drive.google.com/file/d/1IjgZSDO8ssWdggO0GH5_-P4pHnOpFVGd/view?usp=sharing)
+   ---
+   
+## Milestone 10: Product Schema and API Endpoint Creation
+
+In this milestone, we focused on defining the product schema and creating an API endpoint to validate and store product details in MongoDB:
+
+1. **Product Schema Development**:
+   - Defined the structure of product data using Mongoose, including fields for name, description, price, and image URL.
+   - Implemented validation rules to ensure that each field is required and has the correct data type.
+
+2. **API Endpoint Creation**:
+   - Built a POST endpoint to receive product data from clients.
+   - Configured the endpoint to validate incoming data and save valid product details to the MongoDB database.
+
+3. **Data Validation**:
+   - Ensured that only valid data is saved in the database by implementing comprehensive validation checks.
+   - Provided clear error messages for any validation failures, enhancing the user experience and maintaining data integrity.
+
+4. **Testing the Endpoint**:
+   - Conducted thorough testing of the API endpoint using tools like Postman to ensure it handles various scenarios, including successful product creation and validation errors.
+   - Verified that the endpoint correctly responds with appropriate status codes and messages.
+
+5. **Future Enhancements Discussion**:
+   - Explored potential features for restricting product uploads to admin users only, which would enhance security and control over product listings.
+   - Discussed the possibility of creating user profiles with different roles (e.g., admin, shop user) to manage product uploads effectively.
+
+6. **GitHub Repository Updates**:
+   - Committed and pushed the changes to the repository, including the new product schema and API endpoint functionality.
+   - Updated the README file to summarize the progress made in this milestone.
