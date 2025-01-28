@@ -1,4 +1,5 @@
 import React from "react";
+import { CircleEllipsis, Search, Heart, ShoppingBag, CircleUserRound, CircleHelp } from "lucide-react";
 
 export default function HeroSection() {
   return (
@@ -8,6 +9,23 @@ export default function HeroSection() {
         alt="Hero Background"
         className="absolute inset-0 w-full h-full object-cover opacity-100 rounded-xl"
       />
+      
+      {/* Navigation */}
+      <nav className="absolute w-full p-8 flex justify-between items-center z-10">
+        <div className="flex gap-8">
+          
+        </div>
+        
+        <div className="flex gap-8">
+          <Search className="w-6 h-6 text-white cursor-pointer hover:opacity-80 transition-opacity" />
+          <CircleEllipsis className="w-6 h-6 text-white cursor-pointer hover:opacity-80 transition-opacity" />
+          <CircleHelp className="w-6 h-6 text-white cursor-pointer hover:opacity-80 transition-opacity" />
+          <Heart className="w-6 h-6 text-white cursor-pointer hover:opacity-80 transition-opacity" />
+          <ShoppingBag className="w-6 h-6 text-white cursor-pointer hover:opacity-80 transition-opacity" />
+          <CircleUserRound className="w-6 h-6 text-white cursor-pointer hover:opacity-80 transition-opacity" />
+        </div>
+      </nav>
+
       <div className="relative h-full flex flex-col items-center justify-center">
         <h1 className="text-3xl font-extrabold text-white mb-4 text-center">
           Welcome to Our Store
@@ -23,4 +41,4 @@ export default function HeroSection() {
       </div>
     </div>
   );
-};
+}

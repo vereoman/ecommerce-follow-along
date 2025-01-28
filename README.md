@@ -205,3 +205,31 @@ In this milestone, we focused on enhancing the user interface by creating a reus
    - Updated the README file to summarize the progress made in this milestone.
 
 ---
+
+## Milestone 9: Product Form Creation and Image Uploads
+
+In this milestone, we focused on creating a form for product details and enabling multiple image uploads:
+
+1. **Product Form Development**:
+   - Designed a comprehensive form to input all necessary product details, including name, description, price, and category.
+   - Ensured the form is user-friendly and visually appealing using Tailwind CSS.
+
+2. **Multiple Image Uploads**:
+   - Implemented functionality to allow users to upload multiple images for a product using the file input element.
+   - Configured the backend to handle and store multiple images efficiently.
+
+3. **Form Validation**:
+   - Added validation to ensure that all required fields are filled out correctly before submission.
+   - Provided user feedback for any validation errors to enhance the user experience.
+
+4. **Admin Access Considerations**:
+   - Discussed potential features for restricting product uploads to admin users only, enhancing security and control over product listings.
+
+5. **Testing and Validation**:
+   - Conducted thorough testing of the product form to ensure all functionalities work as expected, including image uploads and validation.
+
+6. **GitHub Repository Updates**:
+   - Committed and pushed the changes to the repository, including the new product form and image upload functionality.
+   - Updated the README file to summarize the progress made in this milestone.
+
+![Product Form Screenshot](https://drive.google.com/file/d/1IjgZSDO8ssWdggO0GH5_-P4pHnOpFVGd/view?usp=sharing)
