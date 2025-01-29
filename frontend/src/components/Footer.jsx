@@ -8,10 +8,10 @@ export default function Footer () {
       <div
         className="absolute inset-0 z-0"
         style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1614853036460-e8cff7410ee9?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')`,
+          backgroundImage: `url('https://gradients.mijo-design.com/public/uploads/files/db16.png')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          opacity: '0.8'
+          opacity: '0.70'
         }}
       />
      
@@ -60,7 +60,7 @@ export default function Footer () {
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/20">
+        <div className="flex flex-col md:flex-row justify-between items-center pt-8">
 
           <div className="flex space-x-6 mb-4 md:mb-0">
             <a href="#" className="text-sm hover:opacity-75">PRIVACY POLICY</a>
