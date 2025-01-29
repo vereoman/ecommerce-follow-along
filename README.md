@@ -34,8 +34,6 @@ This project is a full-fledged E-Commerce Application using the MERN stack (Mong
 - **Login Page**: Developed a responsive login interface.
 - **GitHub Updates**: Committed changes to the repository.
 
-<img src="assets/Screenshot (168).png" alt="Login-Page" width="300">
-
 ---
 
 ## Milestone 3: Project Setup for Backend
@@ -45,6 +43,19 @@ This project is a full-fledged E-Commerce Application using the MERN stack (Mong
 - **Database Connection**: Integrated MongoDB for data storage.
 - **Error Handling**: Implemented basic error handling.
 - **GitHub Updates**: Updated repository with backend structure.
+
+```
+project-root/
+├── backend/
+│   ├── routes/         # Defines API routes
+│   ├── controllers/    # Contains route handling logic
+│   ├── models/         # Defines MongoDB schemas using Mongoose
+│   ├── middlewares/    # Includes middleware for error handling
+│   ├── config/         # Stores database configuration
+│   ├── utils/          # (Optional) Helper functions
+│   └── server.js       # Main server file
+└── frontend/           # Frontend-related code
+```
 
 ---
 
@@ -94,8 +105,6 @@ This project is a full-fledged E-Commerce Application using the MERN stack (Mong
 - **Testing**: Verified card rendering and layout consistency.
 - **GitHub Updates**: Committed changes for card component and layout.
 
-<img src="assets/Screenshot (171).png" alt="Product-Page" width="300">
-
 ---
 
 ## Milestone 9: Product Form Creation and Image Uploads
@@ -107,7 +116,35 @@ This project is a full-fledged E-Commerce Application using the MERN stack (Mong
 - **Testing**: Verified form functionality and image uploads.
 - **GitHub Updates**: Updated repository with product form.
 
-<img src="assets/Screenshot (170).png" alt="Product-Form-Page" width="300">
+```
+project-root/
+├── frontend/
+│   ├── dist/               # Production build output
+│   ├── node_modules/       # Dependencies
+│   ├── src/                # Main source code
+│   │   ├── components/     # Reusable UI components
+│   │   │   ├── Footer.jsx
+│   │   │   ├── HeroSection.jsx
+│   │   │   ├── HomePage.jsx
+│   │   │   ├── Login.jsx
+│   │   │   ├── ProductCard.jsx
+│   │   │   └── ProfilePage.jsx
+│   │   ├── styles/         # CSS or Tailwind styles
+│   │   ├── App.jsx         # Root component
+│   │   ├── main.jsx        # React entry point
+│   │   ├── index.html      # Main HTML file
+│   ├── .gitignore          # Git ignore file
+│   ├── eslint.config.js    # ESLint configuration
+│   ├── package-lock.json   # Dependency lock file
+│   ├── package.json        # Project dependencies and scripts
+│   ├── postcss.config.js   # PostCSS configuration
+│   ├── tailwind.config.js  # TailwindCSS configuration
+│   ├── vite.config.js      # Vite configuration
+├── .gitignore              # Global Git ignore file
+├── package.json            # Root package file
+└── README.md               # Documentation
+
+```
 
 ---
 
@@ -119,5 +156,45 @@ This project is a full-fledged E-Commerce Application using the MERN stack (Mong
 - **Testing**: Verified endpoint functionality with Postman.
 - **Future Enhancements**: Discussed admin restrictions and user roles.
 - **GitHub Updates**: Committed changes for product schema and endpoint.
+
+---
+
+## Milestone 11: Fetching and Displaying Products
+
+- **Backend API**: Created an endpoint to send all product data from MongoDB.
+- **Frontend Data Fetching**: Implemented a function to retrieve product data from the backend.
+- **Dynamic Display**: Passed fetched data to the `ProductCard` component to render dynamically.
+- **Component Reusability**: Utilized `ProductCard` to display multiple products efficiently.
+- **Understanding Data Flow**: Learned how to send, receive, and display data using API calls.
+- **GitHub Updates**: Committed changes for API integration and dynamic rendering.
+
+```
+project-root/
+├── backend/
+│   ├── config/         # Stores database and multer configurations
+│   │   ├── database.js
+│   │   └── multer.js
+│   ├── controllers/    # Contains route handling logic
+│   │   ├── product.controller.js
+│   │   └── user.controller.js
+│   ├── models/         # Defines MongoDB schemas using Mongoose
+│   │   ├── product.model.js
+│   │   └── user.model.js
+│   ├── routes/         # Defines API routes
+│   │   ├── product.routes.js
+│   │   └── user.routes.js
+│   ├── uploads/        # Stores uploaded files
+│   ├── utils/          # (Optional) Helper functions
+│   ├── node_modules/   # Node.js dependencies
+│   ├── .env            # Environment variables
+│   ├── package-lock.json
+│   ├── package.json
+│   └── server.js       # Main server file
+├── frontend/           # Frontend-related code
+├── .gitignore          # Git ignore file
+├── package.json        # Root package file
+└── README.md           # Documentation
+
+```
 
 ---

@@ -12,13 +12,13 @@ export default function HeroSection() {
           <img
             src="https://i.redd.it/jlpv3gf20c291.png"
             alt="Hero Background"
-            className="absolute inset-0 w-full h-full object-cover opacity-90"
+            className="absolute inset-0 w-full h-full object-cover"
           />
           
           <div className="absolute inset-0 bg-black/40" />
           
           {/* Navigation */}
-          <nav className="absolute w-full p-8 flex justify-between items-center z-10">
+          <nav className="absolute w-full p-12 flex justify-between items-center z-10">
             <div className="flex gap-8">
 
             </div>

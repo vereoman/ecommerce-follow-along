@@ -1,52 +1,81 @@
 import React from 'react';
-import { Facebook, Instagram, Twitter, Linkedin } from 'lucide-react';
+import { Facebook, Instagram, Youtube, Linkedin, Twitter } from 'lucide-react';
 
-export default function Footer() {
+export default function Footer () {
   return (
-    <footer className="bg-gray-900 text-white py-12">
-      <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8 justify-items-center">
+    <footer className="relative text-white py-16">
 
-        <div>
-          <h4 className="font-semibold mb-4">Quick Links</h4>
-          <ul className="space-y-2 text-gray-400">
-            <li><a href="#" className="hover:text-white">Home</a></li>
-            <li><a href="#" className="hover:text-white">Shop</a></li>
-            <li><a href="#" className="hover:text-white">Categories</a></li>
-            <li><a href="#" className="hover:text-white">Sale</a></li>
-          </ul>
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          backgroundImage: `url('https://images.unsplash.com/photo-1614853036460-e8cff7410ee9?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          opacity: '0.8'
+        }}
+      />
+     
+      <div className="container mx-auto px-6 relative z-10">
+
+        <div className="mb-12">
+          {/* <h2 className="text-3xl"></h2> */}
         </div>
 
-        <div>
-          <h4 className="font-semibold mb-4">Customer Service</h4>
-          <ul className="space-y-2 text-gray-400">
-            <li><a href="#" className="hover:text-white">Contact Us</a></li>
-            <li><a href="#" className="hover:text-white">Shipping</a></li>
-            <li><a href="#" className="hover:text-white">Returns</a></li>
-            <li><a href="#" className="hover:text-white">FAQ</a></li>
-          </ul>
-        </div>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
 
-        <div>
-          <h4 className="font-semibold mb-4">Socials</h4>
-          <div className="flex space-x-4">
-            <a href="#" className="text-gray-400 hover:text-white">
-              <Facebook size={22} />
-            </a>
-            <a href="#" className="text-gray-400 hover:text-white">
-              <Instagram size={22} />
-            </a>
-            <a href="#" className="text-gray-400 hover:text-white">
-              <Twitter size={22} />
-            </a>
-            <a href="#" className="text-gray-400 hover:text-white">
-              <Linkedin size={22} />
-            </a>
+          <div>
+            <h3 className="text-sm font-bold mb-4">SHOP</h3>
+            <ul className="space-y-2">
+              <li><a href="#" className="hover:opacity-75">New Arrivals</a></li>
+              <li><a href="#" className="hover:opacity-75">Best Sellers</a></li>
+              <li><a href="#" className="hover:opacity-75">Sale</a></li>
+            </ul>
           </div>
-        </div> 
-      </div>
 
-      <div className="border-t border-gray-800 mt-8 pt-6 text-center text-gray-500">
-        <p>&copy; 2025 vereo-commerce. All Rights Reserved.</p>
+          <div>
+            <h3 className="text-sm font-bold mb-4">CUSTOMER SERVICE</h3>
+            <ul className="space-y-2">
+              <li><a href="#" className="hover:opacity-75">Contact Us</a></li>
+              <li><a href="#" className="hover:opacity-75">Shipping & Returns</a></li>
+              <li><a href="#" className="hover:opacity-75">FAQ</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-sm font-bold mb-4">MY ACCOUNT</h3>
+            <ul className="space-y-2">
+              <li><a href="#" className="hover:opacity-75">Order History</a></li>
+              <li><a href="#" className="hover:opacity-75">Wishlist</a></li>
+              <li><a href="#" className="hover:opacity-75">Track Order</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-sm font-bold mb-4">ABOUT</h3>
+            <ul className="space-y-2">
+              <li><a href="#" className="hover:opacity-75">Our Story</a></li>
+              <li><a href="#" className="hover:opacity-75">Blog</a></li>
+              <li><a href="#" className="hover:opacity-75">Careers</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/20">
+
+          <div className="flex space-x-6 mb-4 md:mb-0">
+            <a href="#" className="text-sm hover:opacity-75">PRIVACY POLICY</a>
+            <a href="#" className="text-sm hover:opacity-75">TERMS OF USE</a>
+            <a href="#" className="text-sm hover:opacity-75">NEWSLETTER</a>
+          </div>
+
+          <div className="flex space-x-6">
+            <a href="#" className="hover:opacity-75"><Facebook size={20} /></a>
+            <a href="#" className="hover:opacity-75"><Youtube size={20} /></a>
+            <a href="#" className="hover:opacity-75"><Linkedin size={20} /></a>
+            <a href="#" className="hover:opacity-75"><Instagram size={20} /></a>
+            <a href="#" className="hover:opacity-75"><Twitter size={20} /></a>
+          </div>
+        </div>
       </div>
     </footer>
   );
