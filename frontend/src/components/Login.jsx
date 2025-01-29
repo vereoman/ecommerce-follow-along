@@ -6,8 +6,6 @@ export default function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    // Here you would typically handle authentication
-    // For now, we'll just navigate to the homepage
     navigate("/ecommerce-follow-along/home");
   }
 

@@ -4,5 +4,8 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: "/ecommerce-follow-along"
+  base: "/ecommerce-follow-along",
+  server: {
+    port: 3000,
+  },
 })

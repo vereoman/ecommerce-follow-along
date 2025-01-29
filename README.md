@@ -34,7 +34,7 @@ This project is a full-fledged E-Commerce Application using the MERN stack (Mong
 - **Login Page**: Developed a responsive login interface.
 - **GitHub Updates**: Committed changes to the repository.
 
-![Login-Page](assets\Screenshot (168).png)
+<img src="assets/Screenshot (168).png" alt="Login-Page" width="300">
 
 ---
 
@@ -94,7 +94,7 @@ This project is a full-fledged E-Commerce Application using the MERN stack (Mong
 - **Testing**: Verified card rendering and layout consistency.
 - **GitHub Updates**: Committed changes for card component and layout.
 
-![Product-Page](assets\Screenshot (171).png)
+<img src="assets/Screenshot (171).png" alt="Product-Page" width="300">
 
 ---
 
@@ -107,7 +107,7 @@ This project is a full-fledged E-Commerce Application using the MERN stack (Mong
 - **Testing**: Verified form functionality and image uploads.
 - **GitHub Updates**: Updated repository with product form.
 
-![Product-Form-Page](assets\Screenshot (170).png)
+<img src="assets/Screenshot (170).png" alt="Product-Form-Page" width="300">
 
 ---
 
