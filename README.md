@@ -198,3 +198,15 @@ project-root/
 ```
 
 ---
+
+## Milestone 12: My Products Page with User-Specific Product Display
+
+- **Endpoint Creation**: Developed a GET endpoint to fetch all products associated with the logged-in user's email from MongoDB.
+- **Frontend Integration**: Wrote a function in the frontend to retrieve user-specific product data from the backend.
+- **Dynamic Display**: Utilized the existing product card component to dynamically display the fetched products on the "My Products" page.
+- **Data Filtering**: Implemented filtering logic on the backend to ensure only products associated with the user's email are retrieved.
+- **Testing**: Verified the functionality of the endpoint and the dynamic display using browser tools and Postman.
+- **Future Enhancements**: Considered adding options for editing or deleting user-specific products.
+- **GitHub Updates**: Committed all changes related to the endpoint, frontend integration, and dynamic display to the repository.
+
+---
