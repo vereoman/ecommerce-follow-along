@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const LoginPage = ({ setIsAuthenticated }) => {
   const [formData, setFormData] = useState({
@@ -14,7 +15,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
     setErrors({ ...errors, [e.target.name]: '' });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
     const validationErrors = {};
@@ -31,10 +32,21 @@ const LoginPage = ({ setIsAuthenticated }) => {
       return;
     }
 
-    // Simulate login logic
-    localStorage.setItem('isAuthenticated', 'true');
-    setIsAuthenticated(true);
-    navigate('/');
+    try {
+      const response = await axios.post('http://localhost:5000/api/users/login', formData);
+      if (response.data.token) {
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+        setIsAuthenticated(true);
+        if (response.data.user.isSeller) {
+          navigate('/dashboard');
+        } else {
+          navigate('/');
+        }
+      }
+    } catch (error) {
+      setErrors({ submit: error.response?.data?.message || 'Login failed' });
+    }
   };
 
   return (

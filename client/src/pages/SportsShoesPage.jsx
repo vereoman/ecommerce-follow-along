@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ProductCard from '../components/ProductCard';
 import { ChevronDown } from 'lucide-react';
+import axios from 'axios';
 
 const SportsShoesPage = () => {
     const [sportsShoes, setSportsShoes] = useState([]);
@@ -28,12 +29,11 @@ const SportsShoesPage = () => {
     useEffect(() => {
         const fetchSportsShoes = async () => {
             try {
-                const response = await fetch('/api/sports-shoes');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch sports shoes');
-                }
-                const data = await response.json();
-                setSportsShoes(data);
+                const token = localStorage.getItem('token');
+                const response = await axios.get('http://localhost:5000/api/products?category=sports', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                setSportsShoes(response.data);
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -89,7 +89,7 @@ const SportsShoesPage = () => {
     });
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-white">
             <div className="container mx-auto px-4 py-10">
                 <div className="flex flex-wrap justify-center gap-4 mb-8">
                     {Object.entries(filterOptions).map(([type, options]) => (
@@ -105,9 +105,16 @@ const SportsShoesPage = () => {
                         {filteredShoes.length === 0 ? (
                             <p className="text-center text-gray-500">No sports shoes found.</p>
                         ) : (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                                 {filteredShoes.map(shoe => (
-                                    <ProductCard key={shoe.id} {...shoe} />
+                                    <ProductCard
+                                        key={shoe._id}
+                                        id={shoe._id}
+                                        name={shoe.name}
+                                        price={shoe.price}
+                                        description={shoe.description}
+                                        image={shoe.imageUrl}
+                                    />
                                 ))}
                             </div>
                         )}

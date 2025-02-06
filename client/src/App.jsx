@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -8,6 +8,7 @@ import LifestyleShoesPage from './pages/LifestyleShoesPage';
 import ProfilePage from './pages/ProfilePage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
+import AuthGuard from './components/AuthGuard';
 
 const ProtectedRoute = ({ children }) => {
     // Get auth status from localStorage
@@ -32,8 +33,17 @@ const PublicRoute = ({ children }) => {
 };
 
 const App = () => {
-    const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem('isAuthenticated') === 'true');
+    const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
     const location = useLocation();
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        setIsAuthenticated(!!token);
+    }, []);
+
+    const handleSignOut = () => {
+        setIsAuthenticated(false);
+    };
 
     // Define routes where Header and Footer should be hidden
     const hideHeaderFooterRoutes = ['/login', '/signup'];
@@ -42,7 +52,7 @@ const App = () => {
     const shouldHideHeaderFooter = hideHeaderFooterRoutes.includes(location.pathname);
 
     return (
-        <div className="min-h-screen flex flex-col bg-gray-50">
+        <div className="min-h-screen flex flex-col bg-white">
             {/* Conditionally render Header */}
             {!shouldHideHeaderFooter && <Header isSignedIn={isAuthenticated} />}
 
@@ -76,9 +86,9 @@ const App = () => {
                     <Route
                         path="/profile"
                         element={
-                            <ProtectedRoute>
-                                <ProfilePage />
-                            </ProtectedRoute>
+                            <AuthGuard>
+                                <ProfilePage onSignOut={handleSignOut} />
+                            </AuthGuard>
                         }
                     />
                     <Route

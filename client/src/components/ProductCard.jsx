@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Heart, ShoppingBag } from 'lucide-react';
+import { HeartStraight, ShoppingBag } from '@phosphor-icons/react';
 
 const ProductCard = ({ image, name, price, originalPrice, description = "A versatile and stylish sneaker that combines comfort with classic design." }) => {
   const [isFavorite, setIsFavorite] = useState(false);
@@ -18,7 +18,7 @@ const ProductCard = ({ image, name, price, originalPrice, description = "A versa
             onClick={() => setIsFavorite(!isFavorite)}
             className="p-2 bg-white rounded-full shadow-sm hover:bg-gray-50 transition-colors duration-200"
           >
-            <Heart
+            <HeartStraight
               className={`w-4 h-4 ${isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-600'}`}
               strokeWidth={1.5}
             />

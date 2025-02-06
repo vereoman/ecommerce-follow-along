@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const SignupPage = ({ setIsAuthenticated }) => {
   const [formData, setFormData] = useState({
     email: '',
-    password: ''
+    password: '',
+    isSeller: false
   });
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
@@ -19,11 +21,12 @@ const SignupPage = ({ setIsAuthenticated }) => {
   };
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+    setFormData({ ...formData, [e.target.name]: value });
     setErrors({ ...errors, [e.target.name]: '' });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
     const validationErrors = {};
@@ -42,10 +45,19 @@ const SignupPage = ({ setIsAuthenticated }) => {
       return;
     }
 
-    // Simulate signup logic
-    localStorage.setItem('isAuthenticated', 'true');
-    setIsAuthenticated(true);
-    navigate('/login');
+    try {
+        const response = await axios.post('http://localhost:5000/api/users/signup', {
+        email: formData.email,
+        password: formData.password,
+        isSeller: formData.isSeller
+
+      });
+      if (response.status === 201) {
+        navigate('/login');
+      }
+    } catch (error) {
+      setErrors({ submit: error.response?.data?.message || 'Signup failed' });
+    }
   };
 
   return (
@@ -86,6 +98,19 @@ const SignupPage = ({ setIsAuthenticated }) => {
                 className="mt-1 block w-full px-4 py-3 rounded-full border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
               {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>}
+            </div>
+
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                name="isSeller"
+                checked={formData.isSeller}
+                onChange={handleChange}
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              />
+              <label className="ml-2 block text-sm text-gray-700">
+                Register as a seller
+              </label>
             </div>
 
             <button

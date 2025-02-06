@@ -23,10 +23,13 @@ const LandingPage = () => {
         }
     ];
 
-    useEffect(() => {
-        const fetchProducts = async () => {
+    useEffect(function () {
+        const fetchProducts = async function () {
             try {
-                const response = await axios.get('http://localhost:5000/products');
+                const token = localStorage.getItem('token');
+                const response = await axios.get('http://localhost:5000/api/products', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
                 setTrendingShoes(response.data);
             } catch (error) {
                 console.error('Error fetching products:', error);
@@ -38,7 +41,7 @@ const LandingPage = () => {
         fetchProducts();
     }, []);
 
-    useEffect(() => {
+    useEffect(function () {
         const interval = setInterval(() => {
             setIsAnimating(true);
             setTimeout(() => {
@@ -84,7 +87,7 @@ const LandingPage = () => {
                     {loading ? (
                         <div className="text-center py-8">Loading products...</div>
                     ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                             {trendingShoes.map((shoe) => (
                                 <ProductCard
                                     key={shoe._id}

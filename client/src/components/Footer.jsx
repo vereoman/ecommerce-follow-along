@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Info, Phone, Shield, Question, ShareNetwork } from '@phosphor-icons/react';
 
-const Footer = () => {
+const Footer = function () {
     return (
         <footer className="w-full px-6 pb-6">
             <div className="max-w-[1100px] w-full mx-auto relative">
