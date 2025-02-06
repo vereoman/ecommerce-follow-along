@@ -4,30 +4,33 @@ const connectDB = require('./config/database');
 const userRouter = require('./routes/user.routes');
 const productRouter = require('./routes/product.routes');
 const cors = require("cors");
+
 const app = express();
 
 app.use(cors({
     origin: "http://localhost:3000",
     credentials: true,
-  }));
-
+}));
 app.use(express.json());
 
-app.get('/', function (req, res) {
+// Static folder for uploads
+app.use('/uploads', express.static('uploads'));
+
+// API routes with /api prefix
+app.use('/api/users', userRouter);
+app.use('/api/products', productRouter);
+
+// Health check route
+app.get('/', (req, res) => {
     try {
-        res.send('hello');
+        res.send('Server is running');
     } catch (error) {
         res.status(500).send('Server Error');
     }
 });
 
-app.use('/uploads', express.static('uploads'));
-
-app.use('/users', userRouter);
-app.use('/items', productRouter);
-
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, async function () {
+app.listen(PORT, async () => {
     try {
         await connectDB();
         console.log('Server is running on Port:', PORT);
