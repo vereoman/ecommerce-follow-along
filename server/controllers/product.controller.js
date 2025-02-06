@@ -3,7 +3,7 @@ const cloudinary = require('../config/cloudinary');
 
 const createProduct = async (req, res) => {
     try {
-        const { name, description, price } = req.body;
+        const { name, description, price, category } = req.body;
 
         if (!req.file) {
             return res.status(400).json({ message: 'Image is required' });
@@ -17,6 +17,7 @@ const createProduct = async (req, res) => {
             name: name.trim(),
             description: description.trim(),
             price: parseFloat(price),
+            category: category,
             imageUrl: result.secure_url
         });
 
