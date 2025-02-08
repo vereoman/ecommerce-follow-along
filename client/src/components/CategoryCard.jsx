@@ -1,9 +1,8 @@
-// src/components/CategoryCard.js
 import React from 'react';
 
-const CategoryCard = ({ imageUrl, title, description}) => {
+const CategoryCard = ({ imageUrl, title, description }) => {
     return (
-        <div className="bg-white border border-gray-100 rounded-lg shadow-sm overflow-hidden w-full max-w-[280px] mx-auto h-[420px] flex flex-col hover:shadow-md transition-shadow duration-200">
+        <div className="bg-white border border-gray-100 rounded-lg overflow-hidden w-full max-w-[280px] mx-auto h-[420px] flex flex-col transition-all duration-200 hover:border-black cursor-pointer">
             <div className="relative h-[240px]"> {/* Increased image container height */}
                 <img
                     src={imageUrl}

@@ -41,7 +41,7 @@ const SignupPage = ({ setIsAuthenticated }) => {
     };
 
     return (
-        <div className="h-screen w-full flex">
+        <div className="h-screen w-full flex overflow-hidden">
             <div className="w-1/2 bg-white p-8 flex items-center justify-center overflow-y-auto">
                 <div className="w-full max-w-md">
                     <p className="text-gray-600 mb-8">Please enter your details</p>
@@ -53,7 +53,7 @@ const SignupPage = ({ setIsAuthenticated }) => {
                                 type="text"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                                 required
                             />
                         </div>
@@ -64,7 +64,7 @@ const SignupPage = ({ setIsAuthenticated }) => {
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                                 required
                             />
                         </div>
@@ -76,7 +76,7 @@ const SignupPage = ({ setIsAuthenticated }) => {
                                     type={showPassword ? "text" : "password"}
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                                     required
                                 />
                                 <button
@@ -89,13 +89,13 @@ const SignupPage = ({ setIsAuthenticated }) => {
                             </div>
                         </div>
 
-                        <div className="flex w-full mt-4">
+                        <div className="flex w-full mt-4 space-x-4"> {/* Added space-x-4 */}
                             <button
                                 type="button"
-                                onClick={() => setIsSeller(false)} // Customer First
+                                onClick={() => setIsSeller(false)}
                                 className={`w-full px-4 py-2 rounded-md ${
                                     !isSeller
-                                        ? 'border-2 border-blue-600 text-blue-600'
+                                        ? 'border-2 border-black text-black'
                                         : 'border border-gray-300 text-gray-700 hover:bg-gray-100'
                                 }`}
                             >
@@ -103,10 +103,10 @@ const SignupPage = ({ setIsAuthenticated }) => {
                             </button>
                             <button
                                 type="button"
-                                onClick={() => setIsSeller(true)} // Seller Second
+                                onClick={() => setIsSeller(true)}
                                 className={`w-full px-4 py-2 rounded-md ${
                                     isSeller
-                                        ? 'border-2 border-blue-600 text-blue-600'
+                                        ? 'border-2 border-black text-black'
                                         : 'border border-gray-300 text-gray-700 hover:bg-gray-100'
                                 }`}
                             >
@@ -156,9 +156,9 @@ const SignupPage = ({ setIsAuthenticated }) => {
                 </div>
             </div>
 
-            <div className="w-1/2">
+            <div className="w-1/2 h-full">
                 <div
-                    className="h-screen w-full bg-cover bg-center relative"
+                    className="h-full w-full bg-cover bg-center relative"
                     style={{
                         backgroundImage: "url('https://images.unsplash.com/photo-1604871000636-074fa5117945?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')"
                     }}

@@ -47,7 +47,7 @@ const App = () => {
   return (
     <div className="min-h-screen flex flex-col bg-white">
       {!shouldHideHeaderFooter && <Header isSignedIn={isAuthenticated} />}
-      <main className="flex-grow container mx-auto">
+      <main className="flex-grow">
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<LandingPage />} />

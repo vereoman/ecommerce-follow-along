@@ -8,7 +8,7 @@ const ProductCard = ({
   name,
   price,
   originalPrice,
-  description = "A versatile and stylish sneaker that combines comfort with classic design.",
+  description,
   isFavorite,
   onToggleFavorite
 }) => {
@@ -24,7 +24,7 @@ const ProductCard = ({
 
   return (
     <div 
-      className="bg-white border border-gray-100 rounded-lg shadow-sm overflow-hidden w-full max-w-[280px] mx-auto h-[400px] flex flex-col hover:shadow-md transition-shadow duration-200 cursor-pointer"
+      className="bg-white border border-gray-100 rounded-lg overflow-hidden w-full max-w-[280px] mx-auto h-[400px] flex flex-col transition-shadow duration-200 cursor-pointer hover:border-black"
       onClick={handleCardClick}
     >
       <div className="relative h-[200px]">
@@ -36,11 +36,12 @@ const ProductCard = ({
        
         <div className="absolute top-3 right-3 flex gap-2">
           <button
+
             onClick={(e) => {
               e.stopPropagation();
               onToggleFavorite?.();
             }}
-            className="p-2 bg-white rounded-full shadow-sm hover:bg-gray-50 transition-colors duration-200"
+            className="p-2 bg-white rounded-full hover:bg-gray-50 transition-colors duration-200"
           >
             <Heart
               className={isFavorite ? 'text-red-500 fill-red-500' : 'text-gray-600'}
@@ -49,7 +50,7 @@ const ProductCard = ({
           </button>
           <button
             onClick={(e) => e.stopPropagation()}
-            className="p-2 bg-white rounded-full shadow-sm hover:bg-gray-50 transition-colors duration-200"
+            className="p-2 bg-white rounded-full hover:bg-gray-50 transition-colors duration-200"
           >
             <ShoppingBag
               className="text-gray-600"

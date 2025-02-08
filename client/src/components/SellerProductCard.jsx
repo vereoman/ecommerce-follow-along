@@ -1,18 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { UserCircle, Pencil, Trash2, X, Check } from "lucide-react";
-import axios from "axios";
-import ProductForm from "../components/ProductForm";
-import SellerProductCard from '../components/SellerProductCard';
+import React, { useState } from 'react';
+import { Pencil, Trash2 } from 'lucide-react';
+import axios from 'axios';
 
 const EditForm = ({ product, onCancel, onSave, error }) => {
     const [editedProduct, setEditedProduct] = useState(product);
-    const categories = {
-        athletic: ['running', 'training', 'basketball', 'tennis', 'soccer', 'golf', 'hiking'],
-        casual: ['sneakers', 'loafers', 'boots', 'sandals', 'slip-ons'],
-        formal: ['dress-shoes', 'oxfords', 'derby', 'loafers', 'boots'],
-        specialty: ['dance', 'skateboarding', 'wrestling', 'cycling', 'boxing']
-    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -35,8 +26,6 @@ const EditForm = ({ product, onCancel, onSave, error }) => {
                     onChange={(e) => setEditedProduct({...editedProduct, name: e.target.value})}
                     className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     required
-                    minLength="2"
-                    maxLength="100"
                 />
             </div>
 
@@ -48,12 +37,10 @@ const EditForm = ({ product, onCancel, onSave, error }) => {
                     className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     rows="3"
                     required
-                    minLength="10"
-                    maxLength="1000"
                 />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4">
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Price</label>
                     <input
@@ -75,32 +62,30 @@ const EditForm = ({ product, onCancel, onSave, error }) => {
                         className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         required
                     >
-                        {Object.entries(categories).map(([group, items]) => (
-                            <optgroup key={group} label={group.charAt(0).toUpperCase() + group.slice(1)}>
-                                {items.map(item => (
-                                    <option key={item} value={item}>
-                                        {item.charAt(0).toUpperCase() + item.slice(1)}
-                                    </option>
-                                ))}
-                            </optgroup>
-                        ))}
+                        <option value="running">Running</option>
+                        <option value="training">Training</option>
+                        <option value="basketball">Basketball</option>
+                        <option value="tennis">Tennis</option>
+                        <option value="soccer">Soccer</option>
+                        <option value="golf">Golf</option>
+                        <option value="hiking">Hiking</option>
                     </select>
                 </div>
+            </div>
 
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
-                    <select
-                        value={editedProduct.gender}
-                        onChange={(e) => setEditedProduct({...editedProduct, gender: e.target.value})}
-                        className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        required
-                    >
-                        <option value="mens">Men's</option>
-                        <option value="womens">Women's</option>
-                        <option value="kids">Kids</option>
-                        <option value="unisex">Unisex</option>
-                    </select>
-                </div>
+            <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+                <select
+                    value={editedProduct.gender}
+                    onChange={(e) => setEditedProduct({...editedProduct, gender: e.target.value})}
+                    className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    required
+                >
+                    <option value="mens">Men's</option>
+                    <option value="womens">Women's</option>
+                    <option value="kids">Kids</option>
+                    <option value="unisex">Unisex</option>
+                </select>
             </div>
 
             <div className="flex justify-end space-x-3 pt-4">
@@ -122,7 +107,7 @@ const EditForm = ({ product, onCancel, onSave, error }) => {
     );
 };
 
-const ProductCard = ({ product, onDelete, onUpdate }) => {
+const SellerProductCard = ({ product, onDelete, onUpdate }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const [error, setError] = useState("");
@@ -244,126 +229,4 @@ const ProductCard = ({ product, onDelete, onUpdate }) => {
     );
 };
 
-const ProfilePage = ({ onSignOut }) => {
-    const navigate = useNavigate();
-    const [products, setProducts] = useState([]);
-    const [user, setUser] = useState(() => JSON.parse(localStorage.getItem('user')) || {});
-
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            navigate('/login');
-            return;
-        }
-
-        if (user?.isSeller) {
-            fetchProducts();
-        }
-    }, [user, navigate]);
-
-    const fetchProducts = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                throw new Error('No authentication token found');
-            }
-
-            const response = await axios.get('http://localhost:5000/api/products/seller', {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-            setProducts(response.data || []);
-        } catch (error) {
-            console.error('Error fetching products:', error);
-            if (error.response?.status === 401) {
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-                onSignOut();
-                navigate('/login');
-            }
-            setProducts([]);
-        }
-    };
-
-    const handleProductUpdate = (updatedProduct) => {
-        setProducts(products.map(p => 
-            p._id === updatedProduct._id ? updatedProduct : p
-        ));
-    };
-
-    const handleProductDelete = (productId) => {
-        setProducts(products.filter(p => p._id !== productId));
-    };
-
-    const handleProductCreate = async (newProduct) => {
-        await fetchProducts(); // Fetch the updated list of products after creation
-    };
-
-    const handleSignOut = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        onSignOut();
-        navigate('/');
-    };
-
-    return (
-        <div className="min-h-screen bg-white py-8">
-            <div className="max-w-7xl mx-auto px-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                    <div className="bg-white border border-gray-100 rounded-lg shadow-sm p-6">
-                        <div className="flex flex-col space-y-6">
-                            <div className="flex items-center space-x-4">
-                                {user?.imageUrl ? (
-                                    <img src={user.imageUrl} alt="Profile" className="w-24 h-24 rounded-full border-2 border-blue-500"/>
-                                ) : (
-                                    <UserCircle className="w-24 h-24 text-blue-500 border-2 border-blue-500 rounded-full"/>
-                                )}
-                                <div>
-                                    <h2 className="text-2xl font-bold text-gray-900">{user?.email || "Guest"}</h2>
-                                    <p className="text-lg text-gray-600">{user?.isSeller ? "Seller Account" : "Customer Account"}</p>
-                                </div>
-                            </div>
-                            <button
-                                onClick={handleSignOut}
-                                className="w-full bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 transition-colors duration-200"
-                            >
-                                Sign Out
-                            </button>
-                        </div>
-                    </div>
-
-                    {user?.isSeller && (
-                        <div className="bg-white border border-gray-100 rounded-lg shadow-sm p-6">
-                            <h3 className="text-2xl font-bold text-gray-900 mb-6">Add New Product</h3>
-                            <ProductForm onSuccess={handleProductCreate} />
-                        </div>
-                    )}
-                </div>
-
-                {user?.isSeller && (
-                    <div className="bg-white border border-gray-100 rounded-lg shadow-sm p-6">
-                        <h3 className="text-2xl font-bold text-gray-900 mb-6">Your Products</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                            {products.length > 0 ? (
-                                products.map((product) => (
-                                    <SellerProductCard
-                                        key={product._id}
-                                        product={product}
-                                        onDelete={handleProductDelete}
-                                        onUpdate={handleProductUpdate}
-                                    />
-                                ))
-                            ) : (
-                                <p className="text-gray-500 col-span-full">No products available.</p>
-                            )}
-                        </div>
-                    </div>
-                )}
-            </div>
-        </div>
-    );
-};
-
-export default ProfilePage;
+export default SellerProductCard;

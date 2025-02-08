@@ -87,7 +87,7 @@ const getProducts = async (req, res) => {
         const query = {};
         
         // Add seller filter if accessing /seller endpoint
-        if (req.path === '/seller') {
+        if (req.path === '/seller' && req.user) {
             query.seller = req.user.userId;
         }
         
@@ -96,6 +96,7 @@ const getProducts = async (req, res) => {
             query.category = req.query.category.toLowerCase();
         }
 
+        // Remove authentication requirement for fetching products
         const products = await Product.find(query)
             .select('-cloudinaryId')
             .populate('seller', 'email -_id')

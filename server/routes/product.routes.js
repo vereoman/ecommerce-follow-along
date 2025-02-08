@@ -24,12 +24,14 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
+// Public routes - no authentication required
+router.get('/', getProducts);
+router.get('/:id', getProductById);
+
 // Protected routes - require authentication
 router.post('/', authMiddleware, upload.single('image'), createProduct);
-router.get('/', authMiddleware, getProducts);
 router.get('/seller', authMiddleware, getProducts);
 router.delete('/:id', authMiddleware, deleteProduct);
 router.put('/:id', authMiddleware, upload.single('image'), updateProduct);
-router.get('/:id', getProductById);
 
 module.exports = router;

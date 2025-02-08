@@ -9,6 +9,7 @@ const LandingPage = () => {
     const [isAnimating, setIsAnimating] = useState(false);
     const [trendingShoes, setTrendingShoes] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const navigate = useNavigate(); // Hook for navigation
 
     const heroSections = [
@@ -29,13 +30,12 @@ const LandingPage = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const token = localStorage.getItem('token');
-                const response = await axios.get('http://localhost:5000/api/products', {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+                // Remove token from request as it's now a public endpoint
+                const response = await axios.get('http://localhost:5000/api/products');
                 setTrendingShoes(response.data);
             } catch (error) {
                 console.error('Error fetching products:', error);
+                setError('Failed to load products');
             } finally {
                 setLoading(false);
             }
@@ -63,30 +63,23 @@ const LandingPage = () => {
         {
             title: "Men's Shoes",
             description: "Elevate your game with Nike's innovative designs, performance-driven comfort, and iconic style for men.",
-            imageUrl: "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco,u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/094579db-49d1-4b9a-a650-6232340c3072/AIR+JORDAN+1+MID+SE.png", // Example image URL for Men's Shoes - Replace with your own
+            imageUrl: "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco,u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/094579db-49d1-4b9a-a650-6232340c3072/AIR+JORDAN+1+MID+SE.png",
             buttonText: "Shop Men",
-            shopNowLink: "/products?category=men" // Example link, adjust as needed
+            shopNowLink: "/products?category=men"
         },
         {
             title: "Women's Shoes",
             description: "Empowering strides with Nike's versatile footwear, blending fashion-forward aesthetics and ultimate support for women.",
-            imageUrl: "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco,u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/b0aecb4c-3e97-4080-a944-dcbd89af7ee7/WMNS+AIR+JORDAN+1+RETRO+HI+OG.png", // Example image URL for Women's Shoes - Replace with your own
+            imageUrl: "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco,u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/b0aecb4c-3e97-4080-a944-dcbd89af7ee7/WMNS+AIR+JORDAN+1+RETRO+HI+OG.png",
             buttonText: "Shop Women",
-            shopNowLink: "/products?category=women" // Example link, adjust as needed
+            shopNowLink: "/products?category=women"
         },
         {
             title: "Kids' Shoes",
             description: "Fuel their dreams with Nike's playful designs, durable construction, and comfortable fit for growing feet.",
-            imageUrl: "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco,u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/439e49c1-f774-48c8-bece-93458b13afa8/AIR+JORDAN+1+MID+%28GS%29.png", // Example image URL for Kids' Shoes - Replace with your own
+            imageUrl: "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco,u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/439e49c1-f774-48c8-bece-93458b13afa8/AIR+JORDAN+1+MID+%28GS%29.png",
             buttonText: "Shop Kids",
-            shopNowLink: "/products?category=kids" // Example link, adjust as needed
-        },
-        {
-            title: "Unisex Shoes",
-            description: "Breaking boundaries with Nike's inclusive footwear, offering versatile style and performance for everyone.",
-            imageUrl: "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco,u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/4caf3277-8878-4559-aa37-eef8c708a39b/AIR+JORDAN+1+RETRO+HIGH+OG.png", // Example image URL for Unisex Shoes - Replace with your own
-            buttonText: "Shop Unisex",
-            shopNowLink: "/products?category=unisex" // Example link, adjust as needed
+            shopNowLink: "/products?category=kids"
         }
     ];
 
@@ -122,10 +115,10 @@ const LandingPage = () => {
                 </div>
             </section>
 
-            {/* Category Section - **MOVED TO BE FIRST AFTER HERO** */}
-            <section className="py-16"> {/* Optional: Different background for category section */}
+            {/* Category Section */}
+            <section className="py-16">
                 <div className="container mx-auto px-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"> {/* Updated to grid-cols-4 */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 max-w-5xl mx-auto"> {/* Updated grid and added max-width + center */}
                         {categoryData.map((category, index) => (
                             <CategoryCard
                                 key={index}
@@ -133,18 +126,25 @@ const LandingPage = () => {
                                 title={category.title}
                                 description={category.description}
                                 buttonText={category.buttonText}
-                                onShopNow={() => handleShopNow(category.shopNowLink)} // Pass shopNowLink
+                                onShopNow={() => handleShopNow(category.shopNowLink)}
                             />
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* Trending Section (Featured Shoes) - **NOW COMES AFTER CATEGORY** */}
+            {/* Trending Section (Featured Shoes) */}
             <section className="py-16">
                 <div className="container mx-auto px-4">
+                    <h2 className="text-3xl font-bold text-gray-900 mb-8">Featured Products</h2>
                     {loading ? (
-                        <div className="text-center py-8">Loading products...</div>
+                        <div className="text-center py-8">
+                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
+                        </div>
+                    ) : error ? (
+                        <div className="text-center text-red-600 py-8">{error}</div>
+                    ) : trendingShoes.length === 0 ? (
+                        <div className="text-center text-gray-600 py-8">No products available.</div>
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                             {trendingShoes.map((shoe) => (

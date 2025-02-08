@@ -46,14 +46,13 @@ const LoginPage = ({ setIsAuthenticated }) => {
     };
 
     return (
-        <div className="h-screen w-full flex">
+        <div className="h-screen w-full flex overflow-hidden">
             <div className="w-1/2 bg-white p-8 flex items-center justify-center overflow-y-auto">
                 <div className="w-full max-w-md">
-                    <h1 className="text-2xl font-bold text-gray-900 mb-2">Welcome back</h1>
                     <p className="text-gray-600 mb-8">Please enter your details</p>
 
                     {error && (
-                        <div className="mb-4 p-4 bg-red-50 border border-red-400 text-red-700 rounded-md">
+                        <div className="mb-4 p-4 bg-red-50 border border-red-400 text-red-700 rounded-lg">
                             {error}
                         </div>
                     )}
@@ -67,7 +66,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
                                 required
                             />
                         </div>
@@ -81,7 +80,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
                                     type={showPassword ? "text" : "password"}
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
                                     required
                                 />
                                 <button
@@ -103,7 +102,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full bg-black text-white rounded-md py-3 hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+                            className="w-full bg-black text-white rounded-lg py-3 hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
                         >
                             {isLoading ? 'Signing in...' : 'Sign in'}
                         </button>
@@ -121,7 +120,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
                     <button
                         type="button"
                         onClick={handleGoogleLogin}
-                        className="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-md py-3 hover:bg-gray-50 transition-colors"
+                        className="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-lg py-3 hover:bg-gray-50 transition-colors"
                     >
                         <img
                             src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
@@ -143,9 +142,9 @@ const LoginPage = ({ setIsAuthenticated }) => {
                 </div>
             </div>
 
-            <div className="w-1/2">
+            <div className="w-1/2 h-full">
                 <div
-                    className="h-screen w-full bg-cover bg-center relative"
+                    className="h-full w-full bg-cover bg-center relative"
                     style={{
                         backgroundImage: "url('https://images.unsplash.com/photo-1604871000636-074fa5117945?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')"
                     }}
