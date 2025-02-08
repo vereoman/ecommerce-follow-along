@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import ProductCard from '../components/ProductCard';
+import CategoryCard from '../components/CategoryCard'; // Import CategoryCard
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate if you want to use react-router navigation
 
 const LandingPage = () => {
     const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
     const [isAnimating, setIsAnimating] = useState(false);
     const [trendingShoes, setTrendingShoes] = useState([]);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate(); // Hook for navigation
 
     const heroSections = [
         {
@@ -23,8 +26,8 @@ const LandingPage = () => {
         }
     ];
 
-    useEffect(function () {
-        const fetchProducts = async function () {
+    useEffect(() => {
+        const fetchProducts = async () => {
             try {
                 const token = localStorage.getItem('token');
                 const response = await axios.get('http://localhost:5000/api/products', {
@@ -41,7 +44,7 @@ const LandingPage = () => {
         fetchProducts();
     }, []);
 
-    useEffect(function () {
+    useEffect(() => {
         const interval = setInterval(() => {
             setIsAnimating(true);
             setTimeout(() => {
@@ -50,10 +53,49 @@ const LandingPage = () => {
                     setIsAnimating(false);
                 }, 50);
             }, 500);
-        }, 5000); // Adjusted timing
+        }, 5000);
 
         return () => clearInterval(interval);
     }, []);
+
+    // Category Data for Category Cards
+    const categoryData = [
+        {
+            title: "Men's Shoes",
+            description: "Elevate your game with Nike's innovative designs, performance-driven comfort, and iconic style for men.",
+            imageUrl: "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco,u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/094579db-49d1-4b9a-a650-6232340c3072/AIR+JORDAN+1+MID+SE.png", // Example image URL for Men's Shoes - Replace with your own
+            buttonText: "Shop Men",
+            shopNowLink: "/products?category=men" // Example link, adjust as needed
+        },
+        {
+            title: "Women's Shoes",
+            description: "Empowering strides with Nike's versatile footwear, blending fashion-forward aesthetics and ultimate support for women.",
+            imageUrl: "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco,u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/b0aecb4c-3e97-4080-a944-dcbd89af7ee7/WMNS+AIR+JORDAN+1+RETRO+HI+OG.png", // Example image URL for Women's Shoes - Replace with your own
+            buttonText: "Shop Women",
+            shopNowLink: "/products?category=women" // Example link, adjust as needed
+        },
+        {
+            title: "Kids' Shoes",
+            description: "Fuel their dreams with Nike's playful designs, durable construction, and comfortable fit for growing feet.",
+            imageUrl: "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco,u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/439e49c1-f774-48c8-bece-93458b13afa8/AIR+JORDAN+1+MID+%28GS%29.png", // Example image URL for Kids' Shoes - Replace with your own
+            buttonText: "Shop Kids",
+            shopNowLink: "/products?category=kids" // Example link, adjust as needed
+        },
+        {
+            title: "Unisex Shoes",
+            description: "Breaking boundaries with Nike's inclusive footwear, offering versatile style and performance for everyone.",
+            imageUrl: "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco,u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/4caf3277-8878-4559-aa37-eef8c708a39b/AIR+JORDAN+1+RETRO+HIGH+OG.png", // Example image URL for Unisex Shoes - Replace with your own
+            buttonText: "Shop Unisex",
+            shopNowLink: "/products?category=unisex" // Example link, adjust as needed
+        }
+    ];
+
+    const handleShopNow = (link) => {
+        // Using react-router-dom's useNavigate to navigate to the link
+        navigate(link);
+        // If you are not using react-router-dom, you can use:
+        // window.location.href = link;
+    };
 
     return (
         <div className="min-h-screen flex flex-col">
@@ -80,10 +122,27 @@ const LandingPage = () => {
                 </div>
             </section>
 
-            {/* Trending Section */}
-            <section className="py-16 bg-white">
+            {/* Category Section - **MOVED TO BE FIRST AFTER HERO** */}
+            <section className="py-16"> {/* Optional: Different background for category section */}
                 <div className="container mx-auto px-4">
-                    <h2 className="text-3xl font-bold mb-8">Trending Now</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"> {/* Updated to grid-cols-4 */}
+                        {categoryData.map((category, index) => (
+                            <CategoryCard
+                                key={index}
+                                imageUrl={category.imageUrl}
+                                title={category.title}
+                                description={category.description}
+                                buttonText={category.buttonText}
+                                onShopNow={() => handleShopNow(category.shopNowLink)} // Pass shopNowLink
+                            />
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Trending Section (Featured Shoes) - **NOW COMES AFTER CATEGORY** */}
+            <section className="py-16">
+                <div className="container mx-auto px-4">
                     {loading ? (
                         <div className="text-center py-8">Loading products...</div>
                     ) : (

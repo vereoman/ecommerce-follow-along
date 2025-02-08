@@ -19,13 +19,7 @@ const productSchema = new mongoose.Schema(
         price: {
             type: Number,
             required: [true, 'Price is required'],
-            min: [0, 'Price cannot be negative'],
-            validate: {
-                validator: function(v) {
-                    return v === parseFloat(v.toFixed(2));
-                },
-                message: 'Price can only have up to 2 decimal places'
-            }
+            min: [0, 'Price cannot be negative']
         },
         imageUrl: {
             type: String,
@@ -39,8 +33,21 @@ const productSchema = new mongoose.Schema(
             type: String,
             required: [true, 'Product category is required'],
             enum: {
-                values: ['sports', 'lifestyle'],
+                values: [
+                    'running', 'training', 'basketball', 'tennis', 'soccer', 'golf', 'hiking',
+                    'sneakers', 'loafers', 'boots', 'sandals', 'slip-ons',
+                    'dress-shoes', 'oxfords', 'derby',
+                    'dance', 'skateboarding', 'wrestling', 'cycling', 'boxing'
+                ],
                 message: '{VALUE} is not a supported category'
+            }
+        },
+        gender: {
+            type: String,
+            required: [true, 'Gender is required'],
+            enum: {
+                values: ['mens', 'womens', 'kids', 'unisex'],
+                message: '{VALUE} is not a supported gender'
             }
         },
         seller: {

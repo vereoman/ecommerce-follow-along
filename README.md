@@ -210,3 +210,102 @@ project-root/
 - **GitHub Updates**: Committed all changes related to the endpoint, frontend integration, and dynamic display to the repository.
 
 ---
+
+## Milestone 13: Product Update Endpoint and Form Auto-fill
+
+- **Update Endpoint**: Developed a PUT endpoint to receive updated product data and modify the corresponding document in MongoDB.
+- **Frontend Integration**: Added an "Edit" button to the product card. Clicking it pre-fills the product form with existing data for editing.
+- **Form Auto-fill**: Implemented functionality to populate the product form with the selected product's details, enabling easy modification.
+- **Data Persistence**: Ensured that the updated product data is correctly saved to the MongoDB database.
+- **Testing**: Verified the update functionality using Postman and by testing the edit flow in the application.
+- **GitHub Updates**: Committed all changes related to the update endpoint and form auto-fill to the repository.
+
+---
+
+## Milestone 14: Product Delete Endpoint
+
+- **Delete Endpoint**: Created a DELETE endpoint to remove a product from MongoDB based on its ID.
+- **Frontend Integration**: Added a "Delete" button to the product card. Clicking it triggers the deletion of the corresponding product.
+- **Confirmation**: Implemented a confirmation dialog before deleting a product to prevent accidental deletions.
+- **Data Removal**: Ensured that the product is successfully removed from the MongoDB database.
+- **Testing**: Verified the delete functionality using Postman and by testing the delete flow in the application.
+- **GitHub Updates**: Committed all changes related to the delete endpoint and frontend integration to the repository.
+
+```
+server/
+├── config/
+│   ├── cloudinary.js
+│   ├── database.js
+│   └── multer.js
+├── controllers/
+│   ├── product.controller.js
+│   └── user.controller.js
+├── middlewares/
+│   └── auth.middleware.js
+├── models/
+│   ├── product.model.js
+│   └── user.model.js
+├── routes/
+│   ├── product.routes.js
+│   └── user.routes.js
+├── uploads/
+├── .env
+├── package-lock.json
+├── package.json
+├── server.js
+└── .gitignore
+```
+
+---
+
+## Milestone 15: Navigation Component
+
+- **Navigation Component**: Created a reusable `Nav` component with links to "Home," "My Products," "Add Product," and "Cart" pages.
+- **Responsive Design**: Made the `Nav` component responsive to different screen sizes using Tailwind CSS.
+- **Page Integration**: Integrated the `Nav` component into all pages of the application, providing consistent navigation.
+- **Smooth Navigation**: Ensured smooth transitions between pages using React Router.
+- **Testing**: Verified the navigation functionality and responsiveness across different devices.
+- **GitHub Updates**: Committed all changes related to the `Nav` component and its integration to the repository.
+
+---
+
+## Milestone 16: Product Details Page
+
+- **Product Details Page**: Created a new page to display detailed information about individual products.
+- **Dynamic Data**: Implemented dynamic rendering of product details based on the selected product.
+- **Quantity and Add to Cart**: Added quantity selection and "Add to Cart" functionality to the product details page.
+- **Testing**: Verified the product details page functionality and data display.
+- **GitHub Updates**: Committed all changes related to the product details page to the repository.
+
+```
+client/
+├── src/
+│   ├── components/
+│   │   ├── CategoryCard.jsx
+│   │   ├── Footer.jsx
+│   │   ├── Header.jsx
+│   │   ├── ProductCard.jsx
+│   │   └── ProductForm.jsx
+│   ├── pages/
+│   │   ├── FavouritePage.jsx
+│   │   ├── LandingPage.jsx
+│   │   ├── LoginPage.jsx
+│   │   ├── ProductPage.jsx
+│   │   ├── ProfilePage.jsx
+│   │   ├── SearchPage.jsx
+│   │   └── SignupPage.jsx
+│   ├── styles/
+│   ├── App.jsx
+│   └── main.jsx
+├── .gitignore
+├── eslint.config.js
+├── index.html
+├── package-lock.json
+├── package.json
+├── postcss.config.js
+├── tailwind.config.js
+└── vite.config.js
+```
+
+---
+

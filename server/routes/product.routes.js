@@ -2,7 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middlewares/auth.middleware');
-const { createProduct, getProducts, deleteProduct } = require('../controllers/product.controller');
+const { createProduct, getProducts, deleteProduct, updateProduct, getProductById } = require('../controllers/product.controller');
 const multer = require('multer');
 const fs = require('fs');
 
@@ -29,5 +29,7 @@ router.post('/', authMiddleware, upload.single('image'), createProduct);
 router.get('/', authMiddleware, getProducts);
 router.get('/seller', authMiddleware, getProducts);
 router.delete('/:id', authMiddleware, deleteProduct);
+router.put('/:id', authMiddleware, upload.single('image'), updateProduct);
+router.get('/:id', getProductById);
 
 module.exports = router;

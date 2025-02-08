@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { HouseSimple, MagnifyingGlass, SneakerMove, Sneaker, HeartStraight, SignIn, User } from '@phosphor-icons/react';
+import { HouseSimple, MagnifyingGlass, Sneaker, HeartStraight, SignIn, User } from '@phosphor-icons/react';
 
 const Header = function ({ isSignedIn }) {
     return (
@@ -18,18 +18,12 @@ const Header = function ({ isSignedIn }) {
                                 <MagnifyingGlass size={20} color="#FFFFFF" />
                                 SEARCH
                             </Link>
-                            <Link to="/lifestyle" className="text-white flex items-center gap-x-2 px-6 py-5 rounded-full hover:bg-blue-600 transition-all duration-200 font-medium text-sm">
-                                <Sneaker size={20} color="#FFFFFF" />
-                                LIFESTYLE
-                            </Link>
-                            <Link to="/sports" className="text-white flex items-center gap-x-2 px-6 py-5 rounded-full hover:bg-blue-600 transition-all duration-200 font-medium text-sm">
-                                <SneakerMove size={20} color="#FFFFFF" />
-                                SPORTS
-                            </Link>
+
                             <Link to="/favorites" className="text-white flex items-center gap-x-2 px-6 py-5 rounded-full hover:bg-blue-600 transition-all duration-200 font-medium text-sm">
                                 <HeartStraight size={20} color="#FFFFFF" />
                                 FAVOURITES
                             </Link>
+
                             {isSignedIn ? (
                                 <Link to="/profile" className="text-white flex items-center gap-x-2 px-6 py-5 rounded-full hover:bg-blue-600 transition-all duration-200 font-medium text-sm">
                                     <User size={20} color="#FFFFFF" />
