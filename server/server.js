@@ -3,6 +3,7 @@ const express = require('express');
 const connectDB = require('./config/database');
 const userRouter = require('./routes/user.routes');
 const productRouter = require('./routes/product.routes');
+const cartRouter = require('./routes/cart.routes');
 const cors = require("cors");
 
 const app = express();
@@ -19,6 +20,7 @@ app.use('/uploads', express.static('uploads'));
 // API routes with /api prefix
 app.use('/api/users', userRouter);
 app.use('/api/products', productRouter);
+app.use('/api/cart', cartRouter);
 
 // Health check route
 app.get('/', (req, res) => {

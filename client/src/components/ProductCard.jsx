@@ -1,6 +1,7 @@
 import React from 'react';
-import { Heart, ShoppingBag } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { ArrowRight } from '@phosphor-icons/react';
 
 const ProductCard = ({
   id,
@@ -10,12 +11,11 @@ const ProductCard = ({
   originalPrice,
   description,
   isFavorite,
-  onToggleFavorite
+  onToggleFavorite,
 }) => {
   const navigate = useNavigate();
 
   const handleCardClick = (e) => {
-    // Prevent navigation if clicking on the favorite or cart buttons
     if (e.target.closest('button')) {
       return;
     }
@@ -23,20 +23,15 @@ const ProductCard = ({
   };
 
   return (
-    <div 
-      className="bg-white border border-gray-100 rounded-lg overflow-hidden w-full max-w-[280px] mx-auto h-[400px] flex flex-col transition-shadow duration-200 cursor-pointer hover:border-black"
+    <div
+      className="bg-white border border-gray-100 rounded-lg overflow-hidden w-full max-w-[280px] mx-auto h-[500px] flex flex-col transition-shadow duration-200 cursor-pointer hover:border-black"
       onClick={handleCardClick}
     >
-      <div className="relative h-[200px]">
-        <img
-          src={image}
-          alt={name}
-          className="w-full h-full object-cover"
-        />
-       
-        <div className="absolute top-3 right-3 flex gap-2">
+      <div className="relative h-[280px]">
+        {/* Increased height for the image */}
+        <img src={image} alt={name} className="w-full h-full object-cover" />
+        <div className="absolute top-3 right-3">
           <button
-
             onClick={(e) => {
               e.stopPropagation();
               onToggleFavorite?.();
@@ -44,28 +39,17 @@ const ProductCard = ({
             className="p-2 bg-white rounded-full hover:bg-gray-50 transition-colors duration-200"
           >
             <Heart
-              className={isFavorite ? 'text-red-500 fill-red-500' : 'text-gray-600'}
-              size={16}
-            />
-          </button>
-          <button
-            onClick={(e) => e.stopPropagation()}
-            className="p-2 bg-white rounded-full hover:bg-gray-50 transition-colors duration-200"
-          >
-            <ShoppingBag
-              className="text-gray-600"
+              className={
+                isFavorite ? 'text-red-500 fill-red-500' : 'text-gray-600'
+              }
               size={16}
             />
           </button>
         </div>
       </div>
-     
-      <div className="p-4 flex flex-col space-y-2">
-        <h3 className="text-lg font-medium text-gray-900">
-          {name}
-        </h3>
-       
-        <div className="flex items-center gap-2">
+      <div className="p-4 flex flex-col flex-grow">
+        <h3 className="text-lg font-medium text-gray-900 mb-2">{name}</h3>
+        <div className="flex items-center gap-2 mb-2">
           <span className="text-lg font-semibold text-gray-900">
             ${price}
           </span>
@@ -73,10 +57,22 @@ const ProductCard = ({
             ${originalPrice}
           </span>
         </div>
-       
-        <p className="text-sm text-gray-500 overflow-hidden overflow-ellipsis line-clamp-3">
+        <p className="text-sm text-gray-500 overflow-hidden overflow-ellipsis line-clamp-2 mb-4">
           {description}
         </p>
+        <div className="mt-auto">
+          {/* Changed to mt-auto to push button to bottom */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              // Add your cart functionality here
+            }}
+            className="w-full bg-black hover:bg-gray-800 text-white py-3 px-4 rounded-lg transition-colors duration-200 font-medium flex items-center justify-center gap-2"
+          >
+            Add to Basket
+            <ArrowRight size={20} />
+          </button>
+        </div>
       </div>
     </div>
   );

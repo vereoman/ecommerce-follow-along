@@ -43,10 +43,12 @@ const App = () => {
 
   const hideHeaderFooterRoutes = ['/login', '/signup'];
   const shouldHideHeaderFooter = hideHeaderFooterRoutes.includes(location.pathname);
+  const isProductPage = location.pathname.startsWith('/product/');
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
       {!shouldHideHeaderFooter && <Header isSignedIn={isAuthenticated} />}
+      {!shouldHideHeaderFooter && <div className="mb-8"></div>} {/* Add space below the header */}
       <main className="flex-grow">
         <Routes>
           {/* Public Routes */}
@@ -86,7 +88,7 @@ const App = () => {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
-      {!shouldHideHeaderFooter && <Footer />}
+      {!shouldHideHeaderFooter && !isProductPage && <Footer />} {/* Remove footer on product page */}
     </div>
   );
 };
