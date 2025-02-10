@@ -298,7 +298,7 @@ const ProfilePage = ({ onSignOut }) => {
     };
 
     const handleProductCreate = async (newProduct) => {
-        await fetchProducts(); // Fetch the updated list of products after creation
+        setProducts(prevProducts => [...prevProducts, newProduct]);
     };
 
     const handleSignOut = () => {

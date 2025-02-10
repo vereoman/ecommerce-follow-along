@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { HeartStraight, ShoppingBag } from '@phosphor-icons/react';
 
@@ -10,6 +10,7 @@ const ProductPage = () => {
   const [selectedSize, setSelectedSize] = useState(null);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const { id } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -57,6 +58,36 @@ const ProductPage = () => {
 
   const toggleDescription = () => {
     setIsDescriptionExpanded(!isDescriptionExpanded);
+  };
+
+  const handleAddToCart = async () => {
+    try {
+      if (!selectedSize) {
+        alert('Please select a size');
+        return;
+      }
+
+      const token = localStorage.getItem('token');
+      if (!token) {
+        navigate('/login');
+        return;
+      }
+
+      await axios.post('http://localhost:5000/api/cart/add', {
+        productId: product._id,
+        quantity: 1,
+        size: selectedSize
+      }, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      alert('Product added to cart!');
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      alert('Failed to add product to cart');
+    }
   };
 
   return (
@@ -122,7 +153,11 @@ const ProductPage = () => {
 
             {/* Action Buttons */}
             <div className="flex gap-4 mt-6">
-              <button className="flex-1 bg-black text-white py-4 rounded-lg hover:bg-gray-800 transition-colors duration-200 flex items-center justify-center gap-2">
+              <button 
+                onClick={handleAddToCart}
+                className="flex-1 bg-black text-white py-4 rounded-lg hover:bg-gray-800 transition-colors duration-200 flex items-center justify-center gap-2"
+                disabled={!selectedSize}
+              >
                 <ShoppingBag size={22} />
                 Add to Basket
               </button>

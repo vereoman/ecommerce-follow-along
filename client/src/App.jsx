@@ -9,6 +9,7 @@ import SignupPage from './pages/SignupPage';
 import SearchPage from './pages/SearchPage';
 import AuthGuard from './components/AuthGuard';
 import ProductPage from './pages/ProductPage';
+import BasketPage from './pages/BasketPage';
 
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
@@ -80,6 +81,14 @@ const App = () => {
             element={
               <AuthGuard>
                 <ProfilePage onSignOut={handleSignOut} />
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/basket"
+            element={
+              <AuthGuard>
+                <BasketPage />
               </AuthGuard>
             }
           />

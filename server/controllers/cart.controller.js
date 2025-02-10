@@ -12,35 +12,68 @@ const getCart = async (req, res) => {
         
         res.json(cart);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Get cart error:', error);
+        res.status(500).json({ message: 'Error fetching cart' });
     }
 };
 
 const addToCart = async (req, res) => {
     try {
+        console.log('Add to cart request:', req.body);
+        console.log('User:', req.user);
+
         const { productId, quantity, size } = req.body;
-        
-        let cart = await Cart.findOne({ user: req.user._id });
-        if (!cart) {
-            cart = await Cart.create({ user: req.user._id, items: [] });
+
+        // Validate input
+        if (!productId || !quantity || !size) {
+            console.log('Missing required fields:', { productId, quantity, size });
+            return res.status(400).json({ message: 'Missing required fields' });
         }
 
-        const existingItem = cart.items.find(
+        // Verify product exists
+        const product = await Product.findById(productId);
+        if (!product) {
+            console.log('Product not found:', productId);
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        let cart = await Cart.findOne({ user: req.user._id });
+        console.log('Existing cart:', cart);
+        
+        // Create cart if it doesn't exist
+        if (!cart) {
+            cart = new Cart({ user: req.user._id, items: [] });
+            console.log('Created new cart:', cart);
+        }
+
+        // Check if product with same size already exists
+        const existingItemIndex = cart.items.findIndex(
             item => item.product.toString() === productId && item.size === size
         );
 
-        if (existingItem) {
-            existingItem.quantity += quantity;
+        if (existingItemIndex > -1) {
+            // Update quantity if item exists
+            cart.items[existingItemIndex].quantity += quantity;
+            console.log('Updated existing item quantity');
         } else {
+            // Add new item
             cart.items.push({ product: productId, quantity, size });
+            console.log('Added new item to cart');
         }
 
         await cart.save();
-        cart = await cart.populate('items.product');
+        console.log('Saved cart:', cart);
+        
+        // Populate product details before sending response
+        cart = await Cart.findById(cart._id).populate('items.product');
         
         res.json(cart);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Add to cart error:', error);
+        res.status(500).json({ 
+            message: 'Error adding item to cart',
+            error: error.message 
+        });
     }
 };
 
@@ -49,12 +82,17 @@ const removeFromCart = async (req, res) => {
         const { itemId } = req.params;
         const cart = await Cart.findOne({ user: req.user._id });
         
+        if (!cart) {
+            return res.status(404).json({ message: 'Cart not found' });
+        }
+
         cart.items = cart.items.filter(item => item._id.toString() !== itemId);
         await cart.save();
         
         res.json(cart);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Remove from cart error:', error);
+        res.status(500).json({ message: 'Error removing item from cart' });
     }
 };
 
@@ -63,18 +101,35 @@ const updateCartItem = async (req, res) => {
         const { itemId } = req.params;
         const { quantity } = req.body;
         
+        if (!quantity || quantity < 1) {
+            return res.status(400).json({ message: 'Invalid quantity' });
+        }
+
         const cart = await Cart.findOne({ user: req.user._id });
+        
+        if (!cart) {
+            return res.status(404).json({ message: 'Cart not found' });
+        }
+
         const item = cart.items.find(item => item._id.toString() === itemId);
         
-        if (item) {
-            item.quantity = quantity;
-            await cart.save();
+        if (!item) {
+            return res.status(404).json({ message: 'Item not found in cart' });
         }
+
+        item.quantity = quantity;
+        await cart.save();
         
         res.json(cart);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Update cart error:', error);
+        res.status(500).json({ message: 'Error updating cart item' });
     }
 };
 
-module.exports = { getCart, addToCart, removeFromCart, updateCartItem };
+module.exports = {
+    getCart,
+    addToCart,
+    removeFromCart,
+    updateCartItem
+};

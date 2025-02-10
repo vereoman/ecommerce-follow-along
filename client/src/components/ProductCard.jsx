@@ -2,6 +2,7 @@ import React from 'react';
 import { Heart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight } from '@phosphor-icons/react';
+import axios from 'axios';
 
 const ProductCard = ({
   id,
@@ -20,6 +21,48 @@ const ProductCard = ({
       return;
     }
     navigate(`/product/${id}`);
+  };
+
+  const handleAddToCart = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        navigate('/login');
+        return;
+      }
+
+      console.log('Adding to cart:', {
+        productId: id,
+        quantity: 1,
+        size: '9'
+      });
+
+      const response = await axios.post(
+        'http://localhost:5000/api/cart/add',
+        {
+          productId: id,
+          quantity: 1,
+          size: '9'
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      console.log('Cart response:', response.data);
+      alert('Product added to cart!');
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      if (error.response) {
+        console.error('Error response:', error.response.data);
+        alert(error.response.data.message || 'Failed to add product to cart');
+      } else {
+        alert('Failed to add product to cart');
+      }
+    }
   };
 
   return (
@@ -63,14 +106,10 @@ const ProductCard = ({
         <div className="mt-auto">
           {/* Changed to mt-auto to push button to bottom */}
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-              // Add your cart functionality here
-            }}
-            className="w-full bg-black hover:bg-gray-800 text-white py-3 px-4 rounded-lg transition-colors duration-200 font-medium flex items-center justify-center gap-2"
+            onClick={handleAddToCart}
+            className="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition-colors duration-200"
           >
             Add to Basket
-            <ArrowRight size={20} />
           </button>
         </div>
       </div>

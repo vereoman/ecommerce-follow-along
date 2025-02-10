@@ -65,7 +65,7 @@ const ProductForm = ({ onSuccess }) => {
         }
 
         try {
-            await axios.post('http://localhost:5000/api/products', formData, {
+            const response = await axios.post('http://localhost:5000/api/products', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${token}`
@@ -74,7 +74,9 @@ const ProductForm = ({ onSuccess }) => {
             e.target.reset();
             setImage(null);
             setPreviewUrl(null);
-            onSuccess();
+            if (onSuccess) {
+                onSuccess(response.data);
+            }
         } catch (error) {
             if (error.response?.status === 401) {
                 setError('Session expired. Please login again.');

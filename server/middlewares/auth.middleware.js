@@ -4,17 +4,28 @@ const User = require('../models/user.model');
 
 const authMiddleware = async (req, res, next) => {
     try {
-        const token = req.headers.authorization?.split(' ')[1];
+        // Get token from header
+        const token = req.header('Authorization')?.replace('Bearer ', '');
         
         if (!token) {
-            return res.status(401).json({ message: 'Authentication required' });
+            return res.status(401).json({ message: 'No authentication token, access denied' });
         }
 
+        // Verify token
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = decoded;
+        
+        // Find user
+        const user = await User.findById(decoded.userId);
+        if (!user) {
+            return res.status(401).json({ message: 'User not found' });
+        }
+
+        // Add user to request
+        req.user = user;
         next();
     } catch (error) {
-        res.status(401).json({ message: 'Invalid or expired token' });
+        console.error('Auth middleware error:', error);
+        res.status(401).json({ message: 'Token is invalid or expired' });
     }
 };
 
