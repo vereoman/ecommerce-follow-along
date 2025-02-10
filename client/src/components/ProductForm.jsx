@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { motion } from "framer-motion";
 
 const ProductForm = ({ onSuccess }) => {
     const [image, setImage] = useState(null);
@@ -9,38 +10,8 @@ const ProductForm = ({ onSuccess }) => {
     const [category, setCategory] = useState('running');
     const [gender, setGender] = useState('unisex');
 
-    const categories = {
-        athletic: [
-            'running',
-            'training',
-            'basketball',
-            'tennis',
-            'soccer',
-            'golf',
-            'hiking'
-        ],
-        casual: [
-            'sneakers',
-            'loafers',
-            'boots',
-            'sandals',
-            'slip-ons'
-        ],
-        formal: [
-            'dress-shoes',
-            'oxfords',
-            'derby',
-            'loafers',
-            'boots'
-        ],
-        specialty: [
-            'dance',
-            'skateboarding',
-            'wrestling',
-            'cycling',
-            'boxing'
-        ]
-    };
+    const categories = ['running', 'training', 'basketball', 'sneakers', 'slip-ons'];
+    const genders = ['mens', 'womens', 'kids'];
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -106,14 +77,29 @@ const ProductForm = ({ onSuccess }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <motion.form
+            onSubmit={handleSubmit}
+            className="space-y-4 p-6 bg-white rounded-lg shadow-md"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+        >
             {error && (
-                <div className="bg-red-50 border border-red-500 text-red-700 px-4 py-3 rounded-lg">
+                <motion.div
+                    className="bg-red-50 border border-red-500 text-red-700 px-4 py-3 rounded-lg"
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    transition={{ duration: 0.3 }}
+                >
                     {error}
-                </div>
+                </motion.div>
             )}
 
-            <div>
+            <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+            >
                 <label className="block text-sm font-medium text-gray-700 mb-2">Product Name</label>
                 <input
                     name="name"
@@ -121,9 +107,13 @@ const ProductForm = ({ onSuccess }) => {
                     className="w-full p-3 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="Enter product name"
                 />
-            </div>
+            </motion.div>
 
-            <div>
+            <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+            >
                 <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
                 <textarea
                     name="description"
@@ -132,9 +122,14 @@ const ProductForm = ({ onSuccess }) => {
                     placeholder="Enter product description"
                     rows={4}
                 />
-            </div>
+            </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <motion.div
+                className="grid grid-cols-1 md:grid-cols-2 gap-4"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+            >
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
                     <select
@@ -142,34 +137,11 @@ const ProductForm = ({ onSuccess }) => {
                         onChange={(e) => setCategory(e.target.value)}
                         className="w-full p-3 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
-                        <optgroup label="Athletic">
-                            {categories.athletic.map(cat => (
-                                <option key={cat} value={cat}>
-                                    {cat.charAt(0).toUpperCase() + cat.slice(1)}
-                                </option>
-                            ))}
-                        </optgroup>
-                        <optgroup label="Casual">
-                            {categories.casual.map(cat => (
-                                <option key={cat} value={cat}>
-                                    {cat.charAt(0).toUpperCase() + cat.slice(1)}
-                                </option>
-                            ))}
-                        </optgroup>
-                        <optgroup label="Formal">
-                            {categories.formal.map(cat => (
-                                <option key={cat} value={cat}>
-                                    {cat.charAt(0).toUpperCase() + cat.slice(1)}
-                                </option>
-                            ))}
-                        </optgroup>
-                        <optgroup label="Specialty">
-                            {categories.specialty.map(cat => (
-                                <option key={cat} value={cat}>
-                                    {cat.charAt(0).toUpperCase() + cat.slice(1)}
-                                </option>
-                            ))}
-                        </optgroup>
+                        {categories.map(cat => (
+                            <option key={cat} value={cat}>
+                                {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                            </option>
+                        ))}
                     </select>
                 </div>
 
@@ -180,15 +152,20 @@ const ProductForm = ({ onSuccess }) => {
                         onChange={(e) => setGender(e.target.value)}
                         className="w-full p-3 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
-                        <option value="mens">Men's</option>
-                        <option value="womens">Women's</option>
-                        <option value="kids">Kids</option>
-                        <option value="unisex">Unisex</option>
+                        {genders.map(gen => (
+                            <option key={gen} value={gen}>
+                                {gen.charAt(0).toUpperCase() + gen.slice(1)}
+                            </option>
+                        ))}
                     </select>
                 </div>
-            </div>
+            </motion.div>
 
-            <div>
+            <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+            >
                 <label className="block text-sm font-medium text-gray-700 mb-2">Price</label>
                 <input
                     type="number"
@@ -199,9 +176,13 @@ const ProductForm = ({ onSuccess }) => {
                     className="w-full p-3 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="Enter price"
                 />
-            </div>
+            </motion.div>
 
-            <div>
+            <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+            >
                 <label className="block text-sm font-medium text-gray-700 mb-2">Product Image</label>
                 <input
                     type="file"
@@ -210,20 +191,28 @@ const ProductForm = ({ onSuccess }) => {
                     className="w-full p-3 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
                 {previewUrl && (
-                    <div className="mt-4">
+                    <motion.div
+                        className="mt-4"
+                        initial={{ opacity: 0, scale: 0.5 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.5 }}
+                    >
                         <img src={previewUrl} alt="Preview" className="w-32 h-32 object-cover rounded-lg" />
-                    </div>
+                    </motion.div>
                 )}
-            </div>
+            </motion.div>
 
-            <button
+            <motion.button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-200 disabled:bg-blue-800 disabled:cursor-not-allowed"
+                className="w-full bg-black text-white py-3 px-4 rounded-lg hover:bg-gray-800 transition-colors duration-200 disabled:bg-blue-800 disabled:cursor-not-allowed"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.3 }}
             >
                 {isSubmitting ? 'Creating Product...' : 'Create Product'}
-            </button>
-        </form>
+            </motion.button>
+        </motion.form>
     );
 };
 

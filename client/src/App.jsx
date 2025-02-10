@@ -6,10 +6,10 @@ import LandingPage from './pages/LandingPage';
 import ProfilePage from './pages/ProfilePage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
-import SearchPage from './pages/SearchPage';
-import AuthGuard from './components/AuthGuard';
 import ProductPage from './pages/ProductPage';
+import SearchResults from './components/SearchResults';
 import BasketPage from './pages/BasketPage';
+import FavoritesPage from './pages/FavoritesPage';
 
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
@@ -28,8 +28,12 @@ const PublicRoute = ({ children }) => {
 };
 
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    localStorage.getItem('isAuthenticated') === 'true'
+  );
   const location = useLocation();
+  const [searchResults, setSearchResults] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -39,6 +43,7 @@ const App = () => {
   const handleSignOut = () => {
     setIsAuthenticated(false);
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     localStorage.removeItem('isAuthenticated');
   };
 
@@ -46,18 +51,38 @@ const App = () => {
   const shouldHideHeaderFooter = hideHeaderFooterRoutes.includes(location.pathname);
   const isProductPage = location.pathname.startsWith('/product/');
 
+  const handleSearch = async (query) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`/api/products/search?q=${encodeURIComponent(query)}`);
+      const data = await response.json();
+      setSearchResults(data);
+    } catch (error) {
+      console.error('Error searching products:', error);
+      setSearchResults([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-white">
-      {!shouldHideHeaderFooter && <Header isSignedIn={isAuthenticated} />}
-      {!shouldHideHeaderFooter && <div className="mb-8"></div>} {/* Add space below the header */}
+      {!shouldHideHeaderFooter && (
+        <Header
+          isSignedIn={isAuthenticated}
+          onSearch={handleSearch}
+          searchResults={searchResults}
+          isLoading={isLoading}
+        />
+      )}
+      {!shouldHideHeaderFooter && <div className="mb-8"></div>}
       <main className="flex-grow">
         <Routes>
-          {/* Public Routes */}
           <Route path="/" element={<LandingPage />} />
-          <Route path="/search" element={<SearchPage />} />
+          <Route path="/search" element={<SearchResults />} />
           <Route path="/product/:id" element={<ProductPage />} />
+          <Route path="/favorites" element={<FavoritesPage />} />
 
-          {/* Authentication Routes */}
           <Route
             path="/login"
             element={
@@ -75,21 +100,20 @@ const App = () => {
             }
           />
 
-          {/* Protected Routes */}
           <Route
             path="/profile"
             element={
-              <AuthGuard>
+              <ProtectedRoute>
                 <ProfilePage onSignOut={handleSignOut} />
-              </AuthGuard>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/basket"
             element={
-              <AuthGuard>
+              <ProtectedRoute>
                 <BasketPage />
-              </AuthGuard>
+              </ProtectedRoute>
             }
           />
 
@@ -97,7 +121,7 @@ const App = () => {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
-      {!shouldHideHeaderFooter && !isProductPage && <Footer />} {/* Remove footer on product page */}
+      {!shouldHideHeaderFooter && !isProductPage && <Footer />}
     </div>
   );
 };

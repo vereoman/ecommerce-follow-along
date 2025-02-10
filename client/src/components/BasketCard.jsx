@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trash2, Minus, Plus } from 'lucide-react';
+import { TrashSimple, Minus, Plus } from '@phosphor-icons/react';
 
 const BasketCard = ({ item, onUpdateQuantity, onRemove }) => {
   return (
@@ -38,10 +38,11 @@ const BasketCard = ({ item, onUpdateQuantity, onRemove }) => {
             onClick={() => onRemove(item._id)}
             className="p-2 hover:bg-red-100 rounded-lg transition-colors duration-200"
           >
-            <Trash2 size={18} className="text-red-600" />
+            <TrashSimple size={18} className="text-red-600" />
           </button>
         </div>
         <div className="text-center mt-2">
+
           <p className="text-lg font-medium text-gray-900">
             ${(item.product.price * item.quantity).toFixed(2)}
           </p>

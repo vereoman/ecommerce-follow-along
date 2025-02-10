@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Pencil, Trash2 } from 'lucide-react';
+import { PencilSimple, TrashSimple } from '@phosphor-icons/react';
 import axios from 'axios';
 
 const EditForm = ({ product, onCancel, onSave, error }) => {
@@ -181,16 +181,18 @@ const SellerProductCard = ({ product, onDelete, onUpdate }) => {
                         onClick={() => setIsEditing(true)}
                         className="p-2 bg-white rounded-full shadow-sm hover:bg-gray-100 transition-colors duration-200"
                     >
-                        <Pencil size={16} className="text-gray-600" />
+                        <PencilSimple size={16} className="text-gray-600" />
                     </button>
                     <button
                         onClick={() => setIsDeleting(true)}
+
                         className="p-2 bg-white rounded-full shadow-sm hover:bg-gray-100 transition-colors duration-200"
                     >
-                        <Trash2 size={16} className="text-red-600" />
+                        <TrashSimple size={16} className="text-red-600" />
                     </button>
                 </div>
             </div>
+
             <div className="p-4">
                 <h4 className="text-lg font-medium text-gray-900">{product.name}</h4>
                 <p className="text-sm text-gray-500 line-clamp-2">{product.description}</p>

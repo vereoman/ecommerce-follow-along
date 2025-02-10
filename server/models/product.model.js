@@ -34,10 +34,7 @@ const productSchema = new mongoose.Schema(
             required: [true, 'Product category is required'],
             enum: {
                 values: [
-                    'running', 'training', 'basketball', 'tennis', 'soccer', 'golf', 'hiking',
-                    'sneakers', 'loafers', 'boots', 'sandals', 'slip-ons',
-                    'dress-shoes', 'oxfords', 'derby',
-                    'dance', 'skateboarding', 'wrestling', 'cycling', 'boxing'
+                    'running', 'training', 'basketball', 'sneakers', 'slip-ons'
                 ],
                 message: '{VALUE} is not a supported category'
             }
@@ -63,7 +60,6 @@ const productSchema = new mongoose.Schema(
     }
 );
 
-// Add indexes for better query performance
 productSchema.index({ seller: 1, category: 1 });
 productSchema.index({ createdAt: -1 });
 

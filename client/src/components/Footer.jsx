@@ -1,56 +1,96 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Info, Phone, Shield, Question, ShareNetwork } from '@phosphor-icons/react';
+import React from "react";
+import { motion, useInView } from "framer-motion";
+import { FacebookLogo, TwitterLogo, InstagramLogo, LinkedinLogo, YoutubeLogo, EnvelopeSimple } from "@phosphor-icons/react";
 
-const Footer = function () {
-    return (
-        <footer className="w-full px-6 pb-6">
-            <div className="max-w-[1100px] w-full mx-auto relative">
-                <div className="bg-black rounded-full py-2">
-                    <div className="flex justify-between items-center min-h-[64px] px-6">
-                        {/* Desktop Navigation */}
-                        <nav className="flex items-center w-full justify-center gap-3">
-                            <Link
-                                to="/about"
-                                className="text-white flex items-center gap-x-2 px-6 py-5 rounded-full hover:bg-blue-600 transition-all duration-200 font-medium text-sm"
-                            >
-                                <Info size={20} color="#ffffff" />
-                                ABOUT
-                            </Link>
-                            <Link
-                                to="/contact"
-                                className="text-white flex items-center gap-x-2 px-6 py-5 rounded-full hover:bg-blue-600 transition-all duration-200 font-medium text-sm"
-                            >
-                                <Phone size={20} color="#ffffff" />
-                                CONTACT
-                            </Link>
-                            <Link
-                                to="/privacy"
-                                className="text-white flex items-center gap-x-2 px-6 py-5 rounded-full hover:bg-blue-600 transition-all duration-200 font-medium text-sm"
-                            >
-                                <Shield size={20} color="#ffffff" />
-                                PRIVACY
-                            </Link>
-                            <Link
-                                to="/faq"
-                                className="text-white flex items-center gap-x-2 px-6 py-5 rounded-full hover:bg-blue-600 transition-all duration-200 font-medium text-sm"
-                            >
-                                <Question size={20} color="#ffffff" />
-                                QUESTIONS
-                            </Link>
-                            <Link
-                                to="/socials"
-                                className="text-white flex items-center gap-x-2 px-6 py-5 rounded-full hover:bg-blue-600 transition-all duration-200 font-medium text-sm"
-                            >
-                                <ShareNetwork size={20} color="#ffffff" />
-                                SOCIALS
-                            </Link>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </footer>
-    );
+const Footer = () => {
+  const containerVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 10 },
+    visible: {
+      opacity: 1,
+      y: 0
+    }
+  };
+
+  const iconVariants = {
+    rest: {
+      scale: 1,
+      transition: {
+        type: "spring",
+        stiffness: 400,
+        damping: 17
+      }
+    },
+    hover: {
+      scale: 1.2,
+      transition: {
+        type: "spring",
+        stiffness: 400,
+        damping: 10,
+        duration: 0.3
+      }
+    }
+  };
+
+  const socialIcons = [
+    { icon: FacebookLogo, link: "#" },
+    { icon: TwitterLogo, link: "#" },
+    { icon: YoutubeLogo, link: "#" },
+    { icon: InstagramLogo, link: "#" },
+    { icon: LinkedinLogo, link: "#" },
+    { icon: EnvelopeSimple, link: "#" }
+  ];
+
+  const ref = React.useRef(null);
+  const isInView = useInView(ref, { once: true });
+
+  return (
+    <motion.footer
+      ref={ref}
+      className="bg-black text-white py-8"
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
+      variants={containerVariants}
+    >
+      <div className="max-w-6xl mx-auto px-4">
+        <motion.div variants={itemVariants} className="flex justify-center space-x-8">
+          {socialIcons.map((social, index) => (
+            <motion.a
+              key={index}
+              href={social.link}
+              className="w-12 h-12 rounded-full flex items-center justify-center group"
+              variants={itemVariants}
+              whileHover="hover"
+              initial="rest"
+              animate="rest"
+            >
+              <motion.div
+                className="w-full h-full rounded-full flex items-center justify-center bg-transparent group-hover:bg-white transition-colors duration-300"
+                variants={iconVariants}
+              >
+                <social.icon 
+                  size={24} 
+                  className="text-white group-hover:text-black transition-colors duration-300"
+                  weight="fill"
+                />
+              </motion.div>
+            </motion.a>
+          ))}
+        </motion.div>
+      </div>
+    </motion.footer>
+  );
 };
 
 export default Footer;

@@ -12,7 +12,6 @@ const getCart = async (req, res) => {
         
         res.json(cart);
     } catch (error) {
-        console.error('Get cart error:', error);
         res.status(500).json({ message: 'Error fetching cart' });
     }
 };
@@ -24,13 +23,11 @@ const addToCart = async (req, res) => {
 
         const { productId, quantity, size } = req.body;
 
-        // Validate input
         if (!productId || !quantity || !size) {
             console.log('Missing required fields:', { productId, quantity, size });
             return res.status(400).json({ message: 'Missing required fields' });
         }
 
-        // Verify product exists
         const product = await Product.findById(productId);
         if (!product) {
             console.log('Product not found:', productId);
@@ -40,23 +37,19 @@ const addToCart = async (req, res) => {
         let cart = await Cart.findOne({ user: req.user._id });
         console.log('Existing cart:', cart);
         
-        // Create cart if it doesn't exist
         if (!cart) {
             cart = new Cart({ user: req.user._id, items: [] });
             console.log('Created new cart:', cart);
         }
 
-        // Check if product with same size already exists
         const existingItemIndex = cart.items.findIndex(
             item => item.product.toString() === productId && item.size === size
         );
 
         if (existingItemIndex > -1) {
-            // Update quantity if item exists
             cart.items[existingItemIndex].quantity += quantity;
             console.log('Updated existing item quantity');
         } else {
-            // Add new item
             cart.items.push({ product: productId, quantity, size });
             console.log('Added new item to cart');
         }
@@ -64,12 +57,10 @@ const addToCart = async (req, res) => {
         await cart.save();
         console.log('Saved cart:', cart);
         
-        // Populate product details before sending response
         cart = await Cart.findById(cart._id).populate('items.product');
         
         res.json(cart);
     } catch (error) {
-        console.error('Add to cart error:', error);
         res.status(500).json({ 
             message: 'Error adding item to cart',
             error: error.message 
@@ -91,7 +82,6 @@ const removeFromCart = async (req, res) => {
         
         res.json(cart);
     } catch (error) {
-        console.error('Remove from cart error:', error);
         res.status(500).json({ message: 'Error removing item from cart' });
     }
 };
@@ -122,14 +112,8 @@ const updateCartItem = async (req, res) => {
         
         res.json(cart);
     } catch (error) {
-        console.error('Update cart error:', error);
         res.status(500).json({ message: 'Error updating cart item' });
     }
 };
 
-module.exports = {
-    getCart,
-    addToCart,
-    removeFromCart,
-    updateCartItem
-};
+module.exports = { getCart, addToCart, removeFromCart, updateCartItem };

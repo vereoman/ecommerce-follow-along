@@ -14,15 +14,12 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Static folder for uploads
 app.use('/uploads', express.static('uploads'));
 
-// API routes with /api prefix
 app.use('/api/users', userRouter);
 app.use('/api/products', productRouter);
 app.use('/api/cart', cartRouter);
 
-// Health check route
 app.get('/', (req, res) => {
     try {
         res.send('Server is running');

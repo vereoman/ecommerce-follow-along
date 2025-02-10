@@ -1,20 +1,31 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Heart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight } from '@phosphor-icons/react';
 import axios from 'axios';
 
-const ProductCard = ({
-  id,
-  image,
-  name,
-  price,
-  originalPrice,
-  description,
-  isFavorite,
-  onToggleFavorite,
-}) => {
+const ProductCard = ({ id, image, name, price, originalPrice, description }) => {
   const navigate = useNavigate();
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  useEffect(() => {
+    const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    setIsFavorite(favorites.includes(id));
+  }, [id]);
+
+  const handleToggleFavorite = (e) => {
+    e.stopPropagation();
+    const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    let updatedFavorites;
+    
+    if (isFavorite) {
+      updatedFavorites = favorites.filter(favId => favId !== id);
+    } else {
+      updatedFavorites = [...favorites, id];
+    }
+    
+    localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+    setIsFavorite(!isFavorite);
+  };
 
   const handleCardClick = (e) => {
     if (e.target.closest('button')) {
@@ -71,20 +82,14 @@ const ProductCard = ({
       onClick={handleCardClick}
     >
       <div className="relative h-[280px]">
-        {/* Increased height for the image */}
         <img src={image} alt={name} className="w-full h-full object-cover" />
         <div className="absolute top-3 right-3">
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onToggleFavorite?.();
-            }}
+            onClick={handleToggleFavorite}
             className="p-2 bg-white rounded-full hover:bg-gray-50 transition-colors duration-200"
           >
             <Heart
-              className={
-                isFavorite ? 'text-red-500 fill-red-500' : 'text-gray-600'
-              }
+              className={isFavorite ? 'text-red-500 fill-red-500' : 'text-gray-600'}
               size={16}
             />
           </button>
@@ -104,7 +109,6 @@ const ProductCard = ({
           {description}
         </p>
         <div className="mt-auto">
-          {/* Changed to mt-auto to push button to bottom */}
           <button
             onClick={handleAddToCart}
             className="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition-colors duration-200"

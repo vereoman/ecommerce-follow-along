@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Eye, EyeSlash } from '@phosphor-icons/react';
+import { motion } from "framer-motion";
 
 const LoginPage = ({ setIsAuthenticated }) => {
     const [email, setEmail] = useState("");
@@ -24,14 +25,13 @@ const LoginPage = ({ setIsAuthenticated }) => {
                 withCredentials: true
             });
 
-            if (response.data.token && response.data.user) {
-                localStorage.setItem('token', response.data.token);
-                localStorage.setItem('user', JSON.stringify(response.data.user));
-                setIsAuthenticated(true);
-                navigate("/");
-            } else {
-                setError("Invalid response from server");
-            }
+            const { token, user } = response.data;
+
+            localStorage.setItem('token', token);
+            localStorage.setItem('user', JSON.stringify(user));
+            localStorage.setItem('isAuthenticated', 'true');
+            setIsAuthenticated(true);
+            navigate('/');
         } catch (error) {
             console.error('Login error:', error);
             setError(error.response?.data?.message || 'Invalid email or password');
@@ -45,20 +45,52 @@ const LoginPage = ({ setIsAuthenticated }) => {
         window.location.href = 'http://localhost:5000/auth/google';
     };
 
+    const formVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                duration: 0.5,
+                staggerChildren: 0.1
+            }
+        }
+    };
+
+    const itemVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: { opacity: 1, y: 0 }
+    };
+
     return (
-        <div className="h-screen w-full flex overflow-hidden">
+        <motion.div
+            className="h-screen w-full flex overflow-hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+        >
             <div className="w-1/2 bg-white p-8 flex items-center justify-center overflow-y-auto">
-                <div className="w-full max-w-md">
-                    <p className="text-gray-600 mb-8">Please enter your details</p>
+                <motion.div
+                    className="w-full max-w-md"
+                    variants={formVariants}
+                    initial="hidden"
+                    animate="visible"
+                >
+                    <motion.p variants={itemVariants} className="text-gray-600 mb-8">
+                        Please enter your details
+                    </motion.p>
 
                     {error && (
-                        <div className="mb-4 p-4 bg-red-50 border border-red-400 text-red-700 rounded-lg">
+                        <motion.div
+                            variants={itemVariants}
+                            className="mb-4 p-4 bg-red-50 border border-red-400 text-red-700 rounded-lg"
+                        >
                             {error}
-                        </div>
+                        </motion.div>
                     )}
 
                     <form onSubmit={handleSubmit} className="space-y-4">
-                        <div>
+                        <motion.div variants={itemVariants}>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                                 Email address
                             </label>
@@ -69,9 +101,9 @@ const LoginPage = ({ setIsAuthenticated }) => {
                                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
                                 required
                             />
-                        </div>
+                        </motion.div>
 
-                        <div>
+                        <motion.div variants={itemVariants}>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                                 Password
                             </label>
@@ -91,21 +123,24 @@ const LoginPage = ({ setIsAuthenticated }) => {
                                     {showPassword ? <EyeSlash size={20} /> : <Eye size={20} />}
                                 </button>
                             </div>
-                        </div>
+                        </motion.div>
 
-                        <div className="flex items-center justify-end">
+                        <motion.div variants={itemVariants} className="flex items-center justify-end">
                             <a href="#" className="text-sm text-blue-600 hover:text-blue-700">
                                 Forgot password?
                             </a>
-                        </div>
+                        </motion.div>
 
-                        <button
+                        <motion.button
+                            variants={itemVariants}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
                             type="submit"
                             disabled={isLoading}
                             className="w-full bg-black text-white rounded-lg py-3 hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
                         >
                             {isLoading ? 'Signing in...' : 'Sign in'}
-                        </button>
+                        </motion.button>
                     </form>
 
                     <div className="relative my-6">
@@ -139,27 +174,24 @@ const LoginPage = ({ setIsAuthenticated }) => {
                             Sign up
                         </button>
                     </p>
-                </div>
+                </motion.div>
             </div>
 
-            <div className="w-1/2 h-full">
+            <motion.div
+                className="w-1/2 h-full"
+                initial={{ x: 100, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.7, ease: "easeOut" }}
+            >
                 <div
                     className="h-full w-full bg-cover bg-center relative"
                     style={{
-                        backgroundImage: "url('https://images.unsplash.com/photo-1604871000636-074fa5117945?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')"
+                        backgroundImage: "url('https://static1.squarespace.com/static/5e949a92e17d55230cd1d44f/t/630bad28aafe481ca503ea3e/1661709622152/Ember_iPad.png')"
                     }}
                 >
-                    <div className="absolute inset-0 bg-black bg-opacity-20" />
-                    <div className="absolute bottom-16 left-16 text-white z-10">
-                        <h2 className="text-4xl font-bold mb-4">Welcome back.</h2>
-                        <p className="text-xl">
-                            Sign in to continue your journey<br />
-                            and explore our platform.
-                        </p>
-                    </div>
                 </div>
-            </div>
-        </div>
+            </motion.div>
+        </motion.div>
     );
 };
 
