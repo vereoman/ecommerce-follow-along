@@ -18,9 +18,8 @@ const ProductForm = ({ onSuccess }) => {
         setIsSubmitting(true);
         setError('');
 
-        const token = localStorage.getItem('token');
-        if (!token) {
-            setError('Authentication token not found. Please login again.');
+        if (!image) {
+            setError('Product image is required');
             setIsSubmitting(false);
             return;
         }
@@ -31,24 +30,41 @@ const ProductForm = ({ onSuccess }) => {
         formData.append('price', e.target.price.value);
         formData.append('category', category);
         formData.append('gender', gender);
-        if (image) {
-            formData.append('image', image);
-        }
+        formData.append('image', image);
 
         try {
-            const response = await axios.post('http://localhost:5000/api/products', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'Authorization': `Bearer ${token}`
-                },
-            });
+            const token = localStorage.getItem('token');
+            if (!token) {
+                setError('Authentication token not found. Please login again.');
+                setIsSubmitting(false);
+                return;
+            }
+
+            // Log FormData contents for debugging
+            for (let pair of formData.entries()) {
+                console.log('FormData:', pair[0], pair[1]);
+            }
+
+            const response = await axios.post(
+                'http://localhost:5000/api/products',
+                formData,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'multipart/form-data'
+                    },
+                }
+            );
+
             e.target.reset();
             setImage(null);
             setPreviewUrl(null);
             if (onSuccess) {
-                onSuccess(response.data);
+                onSuccess(response.data.product);
             }
         } catch (error) {
+            console.error('Form submission error:', error);
+            console.error('Error response:', error.response?.data);
             if (error.response?.status === 401) {
                 setError('Session expired. Please login again.');
                 localStorage.removeItem('token');
@@ -69,6 +85,7 @@ const ProductForm = ({ onSuccess }) => {
                 setError('Please upload an image file');
                 return;
             }
+            console.log('Selected image:', file); // Debug log
             setImage(file);
             const reader = new FileReader();
             reader.onload = () => setPreviewUrl(reader.result);

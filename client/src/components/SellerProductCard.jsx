@@ -137,14 +137,28 @@ const SellerProductCard = ({ product, onDelete, onUpdate }) => {
     const handleDelete = async () => {
         try {
             const token = localStorage.getItem('token');
-            await axios.delete(`http://localhost:5000/api/products/${product._id}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
+            if (!token) {
+                throw new Error('No authentication token found');
+            }
+
+            await axios.delete(
+                `http://localhost:5000/api/products/${product._id}`,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
                 }
-            });
-            onDelete(product._id);
+            );
+
+            // Call the onDelete callback to update the UI
+            if (onDelete) {
+                onDelete(product._id);
+            }
         } catch (error) {
-            setError(error.response?.data?.message || "Error deleting product");
+            console.error('Error deleting product:', error);
+            alert(error.response?.data?.message || 'Error deleting product');
+        } finally {
+            setIsDeleting(false);
         }
     };
 
@@ -171,11 +185,21 @@ const SellerProductCard = ({ product, onDelete, onUpdate }) => {
     return (
         <div className="bg-white border border-gray-100 rounded-lg shadow-sm overflow-hidden">
             <div className="relative h-48">
-                <img
-                    src={product.imageUrl}
-                    alt={product.name}
-                    className="w-full h-full object-cover"
-                />
+                {product.imageUrl ? (
+                    <img
+                        src={product.imageUrl}
+                        alt={product.name}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                            console.error('Image load error:', e);
+                            e.target.src = 'fallback-image-url'; // Add a fallback image URL
+                        }}
+                    />
+                ) : (
+                    <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                        <span className="text-gray-500">No image available</span>
+                    </div>
+                )}
                 <div className="absolute top-2 right-2 flex space-x-2">
                     <button
                         onClick={() => setIsEditing(true)}

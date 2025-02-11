@@ -5,7 +5,14 @@ const fs = require('fs');
 
 const createProduct = async (req, res) => {
     try {
-        const user = await User.findById(req.user.userId);
+        console.log('Request body:', req.body);
+        console.log('Request file:', req.file);
+        
+        if (!req.user || !req.user._id) {
+            return res.status(401).json({ message: 'User not authenticated' });
+        }
+
+        const user = await User.findById(req.user._id);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -23,6 +30,7 @@ const createProduct = async (req, res) => {
             return res.status(400).json({ message: 'Product image is required' });
         }
 
+        // Upload to Cloudinary
         let result;
         try {
             result = await cloudinary.uploader.upload(req.file.path, {
@@ -31,6 +39,7 @@ const createProduct = async (req, res) => {
                 unique_filename: true
             });
             
+            // Clean up the temporary file
             fs.unlinkSync(req.file.path);
         } catch (error) {
             console.error('Cloudinary upload error:', error);
@@ -50,19 +59,16 @@ const createProduct = async (req, res) => {
 
         await product.save();
 
+        // Send back the complete product object
+        const savedProduct = await Product.findById(product._id)
+            .populate('seller', 'email name');
+
         res.status(201).json({
             message: 'Product created successfully',
-            product: {
-                _id: product._id,
-                name: product.name,
-                description: product.description,
-                price: product.price,
-                category: product.category,
-                gender: product.gender,
-                imageUrl: product.imageUrl
-            }
+            product: savedProduct
         });
     } catch (error) {
+        // Clean up temporary file if it exists
         if (req.file && req.file.path) {
             fs.unlinkSync(req.file.path);
         }
@@ -77,23 +83,28 @@ const createProduct = async (req, res) => {
 
 const getProducts = async (req, res) => {
     try {
+        console.log('User from request:', req.user); // Debug log
+        
         const query = {};
         
-        if (req.path.includes('/seller') && req.user) {
-            query.seller = req.user.userId;
+        if (req.path.includes('/seller')) {
+            if (!req.user || !req.user._id) {
+                return res.status(401).json({ message: 'User not authenticated' });
+            }
+            query.seller = req.user._id;
         }
         
-        if (req.query.category) {
-            query.category = req.query.category.toLowerCase();
-        }
+        console.log('Query:', query); // Debug log
         
         const products = await Product.find(query)
-            .select('-cloudinaryId')
-            .populate('seller', 'email -_id')
+            .populate('seller', 'email name')
             .sort({ createdAt: -1 });
-
-        res.status(200).json(products);
+            
+        console.log('Found products:', products); // Debug log
+        
+        res.json(products);
     } catch (error) {
+        console.error('Error fetching products:', error);
         res.status(500).json({ 
             message: 'Error fetching products',
             error: error.message 
@@ -103,22 +114,35 @@ const getProducts = async (req, res) => {
 
 const deleteProduct = async (req, res) => {
     try {
+        console.log('Delete request for product:', req.params.id);
+        console.log('User:', req.user);
+
         const product = await Product.findOne({
             _id: req.params.id,
-            seller: req.user.userId
+            seller: req.user._id
         });
 
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
         }
 
+        // Delete image from Cloudinary if it exists
         if (product.cloudinaryId) {
-            await cloudinary.uploader.destroy(product.cloudinaryId);
+            try {
+                await cloudinary.uploader.destroy(product.cloudinaryId);
+                console.log('Image deleted from Cloudinary');
+            } catch (error) {
+                console.error('Error deleting image from Cloudinary:', error);
+            }
         }
 
-        await product.deleteOne();
+        await Product.deleteOne({ _id: product._id });
+        console.log('Product deleted successfully');
 
-        res.status(200).json({ message: 'Product deleted successfully' });
+        res.status(200).json({ 
+            message: 'Product deleted successfully',
+            productId: req.params.id 
+        });
     } catch (error) {
         console.error('Error deleting product:', error);
         res.status(500).json({ 

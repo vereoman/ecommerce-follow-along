@@ -10,12 +10,17 @@ const authMiddleware = async (req, res, next) => {
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const user = await User.findById(decoded.userId);
         
+        // Set userId in req.user
+        req.user = { userId: decoded.userId };
+        
+        // Verify user exists
+        const user = await User.findById(decoded.userId);
         if (!user) {
-            return res.status(401).json({ message: 'User not found' });
+            return res.status(404).json({ message: 'User not found' });
         }
 
+        // Add full user object to request
         req.user = user;
         next();
     } catch (error) {

@@ -69,10 +69,16 @@ const ProfilePage = ({ onSignOut }) => {
             const token = localStorage.getItem('token');
             if (!token) throw new Error('No authentication token found');
 
+            console.log('Fetching products with token:', token);
+
             const response = await axios.get('http://localhost:5000/api/products/seller', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
+
+            console.log('Fetched products:', response.data);
             setProducts(response.data);
+            
+            console.log('Products in state after setting:', products);
         } catch (error) {
             console.error('Error fetching products:', error);
             if (error.response?.status === 401) {
@@ -86,14 +92,30 @@ const ProfilePage = ({ onSignOut }) => {
         }
     };
 
+    useEffect(() => {
+        console.log('Current products in state:', products);
+    }, [products]);
+
     const handleProductCreate = async (newProduct) => {
         try {
             const token = localStorage.getItem('token');
             if (!token) throw new Error('No authentication token found');
 
             const formData = new FormData();
-            for (const [key, value] of Object.entries(newProduct)) {
-                formData.append(key, value);
+            
+            console.log('New Product Data:', newProduct);
+            
+            Object.keys(newProduct).forEach(key => {
+                if (key === 'image' && newProduct[key]) {
+                    formData.append('image', newProduct[key]);
+                } else {
+                    formData.append(key, newProduct[key]);
+                }
+            });
+
+            // Log FormData contents
+            for (let pair of formData.entries()) {
+                console.log('FormData entry:', pair[0], pair[1]);
             }
 
             const response = await axios.post(
@@ -107,20 +129,33 @@ const ProfilePage = ({ onSignOut }) => {
                 }
             );
 
+            console.log('Product creation response:', response.data);
+
+            // Update the products state with the new product
             setProducts(prevProducts => [...prevProducts, response.data.product]);
-            setError(null);
+            
+            // Trigger a refresh of the products list
+            await fetchProducts();
+            
+            return response.data.product;
         } catch (error) {
             console.error('Error creating product:', error);
-            if (error.response?.status === 401) {
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-                onSignOut();
-                navigate('/login');
-            } else {
-                setError(error.response?.data?.message || 'Failed to create product. Please try again.');
-            }
+            console.error('Error response:', error.response?.data);
+            setError(error.response?.data?.message || 'Failed to create product');
+            throw error;
         }
     };
+
+    // Add this function to refresh products periodically
+    useEffect(() => {
+        if (user?.isSeller) {
+            const interval = setInterval(() => {
+                fetchProducts();
+            }, 5000); // Refresh every 5 seconds
+            
+            return () => clearInterval(interval);
+        }
+    }, [user]);
 
     const handleProductUpdate = (updatedProduct) => {
         setProducts(products.map(p =>
@@ -128,8 +163,24 @@ const ProfilePage = ({ onSignOut }) => {
         ));
     };
 
-    const handleProductDelete = (productId) => {
-        setProducts(products.filter(p => p._id !== productId));
+    const handleProductDelete = async (productId) => {
+        try {
+            console.log('Deleting product:', productId);
+            
+            // Update the local state to remove the deleted product
+            setProducts(prevProducts => 
+                prevProducts.filter(product => product._id !== productId)
+            );
+            
+            // Show success message
+            setError(null);
+            
+            // Refresh the products list
+            await fetchProducts();
+        } catch (error) {
+            console.error('Error handling product deletion:', error);
+            setError(error.response?.data?.message || 'Failed to delete product');
+        }
     };
 
     const handleSignOut = () => {
@@ -326,6 +377,10 @@ const ProfilePage = ({ onSignOut }) => {
                         className="bg-white border border-gray-100 rounded-lg shadow-sm p-6"
                     >
                         <h3 className="text-2xl font-bold text-gray-900 mb-6">Your Products</h3>
+                        <div className="mb-4 text-sm text-gray-500">
+                            Debug Info: {products.length} products loaded
+                        </div>
+                        
                         {error && (
                             <motion.div
                                 initial={{ opacity: 0, y: -10 }}
@@ -335,25 +390,29 @@ const ProfilePage = ({ onSignOut }) => {
                                 {error}
                             </motion.div>
                         )}
+                        
                         <AnimatePresence>
                             <motion.div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                                 {products.length > 0 ? (
-                                    products.map((product) => (
-                                        <motion.div
-                                            key={product._id}
-                                            variants={itemVariants}
-                                            initial="hidden"
-                                            animate="visible"
-                                            exit="exit"
-                                            layout
-                                        >
-                                            <SellerProductCard
-                                                product={product}
-                                                onDelete={handleProductDelete}
-                                                onUpdate={handleProductUpdate}
-                                            />
-                                        </motion.div>
-                                    ))
+                                    products.map((product) => {
+                                        console.log('Rendering product:', product);
+                                        return (
+                                            <motion.div
+                                                key={product._id}
+                                                variants={itemVariants}
+                                                initial="hidden"
+                                                animate="visible"
+                                                exit="exit"
+                                                layout
+                                            >
+                                                <SellerProductCard
+                                                    product={product}
+                                                    onDelete={handleProductDelete}
+                                                    onUpdate={handleProductUpdate}
+                                                />
+                                            </motion.div>
+                                        );
+                                    })
                                 ) : (
                                     <motion.p
                                         variants={itemVariants}
