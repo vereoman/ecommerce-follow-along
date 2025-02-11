@@ -4,11 +4,10 @@ const { Signup, Login, uploadProfilePhoto } = require('../controllers/user.contr
 const multer = require('multer');
 const auth = require('../middlewares/auth.middleware');
 
-// Configure multer for file uploads
 const upload = multer({ 
     dest: 'uploads/',
     limits: {
-        fileSize: 5 * 1024 * 1024 // 5MB limit
+        fileSize: 50 * 1024 * 1024
     },
     fileFilter: (req, file, cb) => {
         if (file.mimetype.startsWith('image/')) {

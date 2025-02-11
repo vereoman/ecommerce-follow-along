@@ -1,41 +1,55 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { User, ShoppingBag, MapPin, PencilSimple, SignOut } from "@phosphor-icons/react";
+import { User, MapPin, PencilSimple, SignOut, Plus } from "@phosphor-icons/react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import ProductForm from "../components/ProductForm";
 import SellerProductCard from '../components/SellerProductCard';
-
-const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-        opacity: 1,
-        transition: { staggerChildren: 0.1 }
-    }
-};
-
-const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-        y: 0,
-        opacity: 1,
-        transition: { type: "spring", stiffness: 100 }
-    },
-    exit: {
-        y: -20,
-        opacity: 0,
-        transition: { duration: 0.2 }
-    }
-};
+import EditUserForm from '../components/EditUserForm';
+import AddressForm from '../components/AddressForm';
 
 const ProfilePage = ({ onSignOut }) => {
+    // Navigation and state management
     const navigate = useNavigate();
     const [products, setProducts] = useState([]);
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [showAddressForm, setShowAddressForm] = useState(false);
+    const [showEditForm, setShowEditForm] = useState(false);
+    const [showProductForm, setShowProductForm] = useState(false);
     const [uploading, setUploading] = useState(false);
+    const [productsLoading, setProductsLoading] = useState(false);
+    const [productsError, setProductsError] = useState(null);
 
+    // Function to fetch seller's products from the server
+    const fetchProducts = async () => {
+        setProductsLoading(true);
+        setProductsError(null);
+        
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) throw new Error('No authentication token found');
+
+            const response = await axios.get(
+                'http://localhost:5000/api/products/seller-products',
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }
+            );
+
+            setProducts(response.data);
+        } catch (error) {
+            console.error('Error fetching products:', error);
+            setProductsError('Failed to load products. Please try again later.');
+        } finally {
+            setProductsLoading(false);
+        }
+    };
+
+    // Initialize user data and fetch products if user is a seller
     useEffect(() => {
         const initializeUser = async () => {
             const storedUser = localStorage.getItem('user');
@@ -64,136 +78,7 @@ const ProfilePage = ({ onSignOut }) => {
         initializeUser();
     }, [navigate]);
 
-    const fetchProducts = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            if (!token) throw new Error('No authentication token found');
-
-            console.log('Fetching products with token:', token);
-
-            const response = await axios.get('http://localhost:5000/api/products/seller', {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-
-            console.log('Fetched products:', response.data);
-            setProducts(response.data);
-            
-            console.log('Products in state after setting:', products);
-        } catch (error) {
-            console.error('Error fetching products:', error);
-            if (error.response?.status === 401) {
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-                onSignOut();
-                navigate('/login');
-            } else {
-                setError(error.response?.data?.message || 'Failed to fetch products');
-            }
-        }
-    };
-
-    useEffect(() => {
-        console.log('Current products in state:', products);
-    }, [products]);
-
-    const handleProductCreate = async (newProduct) => {
-        try {
-            const token = localStorage.getItem('token');
-            if (!token) throw new Error('No authentication token found');
-
-            const formData = new FormData();
-            
-            console.log('New Product Data:', newProduct);
-            
-            Object.keys(newProduct).forEach(key => {
-                if (key === 'image' && newProduct[key]) {
-                    formData.append('image', newProduct[key]);
-                } else {
-                    formData.append(key, newProduct[key]);
-                }
-            });
-
-            // Log FormData contents
-            for (let pair of formData.entries()) {
-                console.log('FormData entry:', pair[0], pair[1]);
-            }
-
-            const response = await axios.post(
-                'http://localhost:5000/api/products',
-                formData,
-                {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'multipart/form-data'
-                    }
-                }
-            );
-
-            console.log('Product creation response:', response.data);
-
-            // Update the products state with the new product
-            setProducts(prevProducts => [...prevProducts, response.data.product]);
-            
-            // Trigger a refresh of the products list
-            await fetchProducts();
-            
-            return response.data.product;
-        } catch (error) {
-            console.error('Error creating product:', error);
-            console.error('Error response:', error.response?.data);
-            setError(error.response?.data?.message || 'Failed to create product');
-            throw error;
-        }
-    };
-
-    // Add this function to refresh products periodically
-    useEffect(() => {
-        if (user?.isSeller) {
-            const interval = setInterval(() => {
-                fetchProducts();
-            }, 5000); // Refresh every 5 seconds
-            
-            return () => clearInterval(interval);
-        }
-    }, [user]);
-
-    const handleProductUpdate = (updatedProduct) => {
-        setProducts(products.map(p =>
-            p._id === updatedProduct._id ? updatedProduct : p
-        ));
-    };
-
-    const handleProductDelete = async (productId) => {
-        try {
-            console.log('Deleting product:', productId);
-            
-            // Update the local state to remove the deleted product
-            setProducts(prevProducts => 
-                prevProducts.filter(product => product._id !== productId)
-            );
-            
-            // Show success message
-            setError(null);
-            
-            // Refresh the products list
-            await fetchProducts();
-        } catch (error) {
-            console.error('Error handling product deletion:', error);
-            setError(error.response?.data?.message || 'Failed to delete product');
-        }
-    };
-
-    const handleSignOut = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        onSignOut();
-        navigate('/');
-    };
-
-    const handleOrders = () => navigate('/orders');
-    const handleAddress = () => navigate('/address');
-    const handleEditProfile = () => navigate('/edit-profile');
-
+    // Handle profile photo upload
     const handleProfilePhotoUpload = async (event) => {
         try {
             const file = event.target.files[0];
@@ -222,211 +107,253 @@ const ProfilePage = ({ onSignOut }) => {
             localStorage.setItem('user', JSON.stringify(updatedUser));
 
         } catch (error) {
-            console.error('Error uploading profile photo:', error);
-            setError(error.response?.data?.message || 'Failed to upload profile photo');
+            setError('Failed to upload profile photo');
         } finally {
             setUploading(false);
         }
     };
 
+    // Handle product deletion
+    const handleProductDelete = async (productId) => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) throw new Error('No authentication token found');
+
+            await axios.delete(
+                `http://localhost:5000/api/products/${productId}`,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }
+            );
+
+            setProducts(products.filter(p => p._id !== productId));
+        } catch (error) {
+            console.error('Error deleting product:', error);
+            // You might want to show an error toast or message here
+        }
+    };
+
+    // Handle product update
+    const handleProductUpdate = async (updatedProduct) => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) throw new Error('No authentication token found');
+
+            const response = await axios.put(
+                `http://localhost:5000/api/products/${updatedProduct._id}`,
+                updatedProduct,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+
+            setProducts(products.map(p => 
+                p._id === response.data._id ? response.data : p
+            ));
+        } catch (error) {
+            console.error('Error updating product:', error);
+            // You might want to show an error toast or message here
+        }
+    };
+
+    // Handle user sign out
+    const handleSignOut = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        onSignOut();
+        navigate('/');
+    };
+
+    // Show loading state while initializing
     if (loading) {
         return (
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="min-h-screen flex items-center justify-center"
-            >
+            <div className="min-h-screen flex items-center justify-center">
                 <div className="text-xl">Loading...</div>
-            </motion.div>
+            </div>
         );
     }
 
     return (
-        <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="min-h-screen bg-gray-50 py-8 pt-24"
-        >
-            <div className="max-w-7xl mx-auto px-6">
-                <motion.div
-                    variants={containerVariants}
-                    initial="hidden"
-                    animate="visible"
-                    className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8"
-                >
-                    <motion.div
-                        variants={itemVariants}
-                        className="bg-white border border-gray-100 rounded-lg shadow-sm p-6"
-                    >
-                        <div className="flex flex-col items-center space-y-4">
-                            <div className="relative">
-                                {user?.imageUrl ? (
-                                    <motion.img
-                                        whileHover={{ scale: 1.05 }}
-                                        src={user.imageUrl}
-                                        alt="Profile"
-                                        className="w-24 h-24 rounded-full object-cover"
-                                    />
-                                ) : (
-                                    <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center">
-                                        <User className="w-12 h-12 text-gray-500" />
-                                    </div>
-                                )}
-                                <label 
-                                    className="absolute bottom-0 right-0 bg-gray-900 text-white rounded-full p-1 w-6 h-6 flex items-center justify-center text-sm cursor-pointer"
-                                    htmlFor="profile-photo-upload"
-                                >
-                                    {uploading ? (
-                                        <motion.div
-                                            animate={{ rotate: 360 }}
-                                            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                                        >
-                                            ⟳
-                                        </motion.div>
-                                    ) : (
-                                        "+"
-                                    )}
-                                </label>
+        <div className="min-h-screen bg-gray-50 py-8 pt-24">
+            <div className="max-w-4xl mx-auto px-4">
+                {/* Profile Section */}
+                <div className="bg-white rounded-lg shadow-sm p-8 mb-8">
+                    <div className="flex flex-col items-center space-y-4">
+                        {/* Profile Photo */}
+                        <div className="relative">
+                            {user?.imageUrl ? (
+                                <img
+                                    src={user.imageUrl}
+                                    alt="Profile"
+                                    className="w-32 h-32 rounded-full object-cover"
+                                />
+                            ) : (
+                                <div className="w-32 h-32 bg-gray-200 rounded-full flex items-center justify-center">
+                                    <User className="w-16 h-16 text-gray-500" />
+                                </div>
+                            )}
+                            <label className="absolute bottom-0 right-0 bg-gray-900 text-white rounded-full p-2 cursor-pointer">
+                                <PencilSimple className="w-4 h-4" />
                                 <input
                                     type="file"
-                                    id="profile-photo-upload"
                                     className="hidden"
-                                    accept="image/*"
                                     onChange={handleProfilePhotoUpload}
+                                    accept="image/*"
                                     disabled={uploading}
                                 />
-                            </div>
-
-                            <div className="text-center space-y-2">
-                                <p className="text-lg text-gray-900">
-                                    {user?.email || "email@example.com"}
-                                </p>
-                                <p className="text-gray-600">
-                                    {user?.isSeller ? "Seller Account" : "Customer Account"}
-                                </p>
-                                <p className="text-gray-600 flex items-center justify-center">
-                                    <MapPin className="w-4 h-4 mr-1" />
-                                    {user?.location || "Location not set"}
-                                </p>
-                            </div>
-
-                            <div className="flex justify-center space-x-12 py-4">
-                                <div className="text-center">
-                                    <div className="font-semibold">316</div>
-                                    <div className="text-sm text-gray-500">Followers</div>
-                                </div>
-                                <div className="text-center">
-                                    <div className="font-semibold">1.2k</div>
-                                    <div className="text-sm text-gray-500">Following</div>
-                                </div>
-                            </div>
-
-                            <div className="grid grid-cols-4 gap-4 w-full">
-                                <motion.button
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    onClick={handleOrders}
-                                    className="flex items-center justify-center p-3 bg-gray-100 text-gray-900 rounded-lg hover:bg-gray-200 transition-colors"
-                                >
-                                    <ShoppingBag className="w-5 h-5" />
-                                </motion.button>
-                                <motion.button
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    onClick={handleAddress}
-                                    className="flex items-center justify-center p-3 bg-gray-100 text-gray-900 rounded-lg hover:bg-gray-200 transition-colors"
-                                >
-                                    <MapPin className="w-5 h-5" />
-                                </motion.button>
-                                <motion.button
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    onClick={handleEditProfile}
-                                    className="flex items-center justify-center p-3 bg-gray-100 text-gray-900 rounded-lg hover:bg-gray-200 transition-colors"
-                                >
-                                    <PencilSimple className="w-5 h-5" />
-                                </motion.button>
-                                <motion.button
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    onClick={handleSignOut}
-                                    className="flex items-center justify-center p-3 bg-gray-100 text-gray-900 rounded-lg hover:bg-gray-200 transition-colors"
-                                >
-                                    <SignOut className="w-5 h-5" />
-                                </motion.button>
-                            </div>
+                            </label>
                         </div>
-                    </motion.div>
 
-                    {user?.isSeller && (
-                        <motion.div
-                            variants={itemVariants}
-                            className="bg-white border border-gray-100 rounded-lg shadow-sm p-6"
-                        >
-                            <h3 className="text-2xl font-bold text-gray-900 mb-6">Add New Product</h3>
-                            <ProductForm onSuccess={handleProductCreate} />
-                        </motion.div>
-                    )}
-                </motion.div>
-
-                {user?.isSeller && (
-                    <motion.div
-                        variants={containerVariants}
-                        initial="hidden"
-                        animate="visible"
-                        className="bg-white border border-gray-100 rounded-lg shadow-sm p-6"
-                    >
-                        <h3 className="text-2xl font-bold text-gray-900 mb-6">Your Products</h3>
-                        <div className="mb-4 text-sm text-gray-500">
-                            Debug Info: {products.length} products loaded
+                        {/* User Details */}
+                        <div className="text-center space-y-2">
+                            <h2 className="text-2xl font-bold text-gray-900">{user?.name}</h2>
+                            <p className="text-gray-600">{user?.email}</p>
                         </div>
-                        
-                        {error && (
-                            <motion.div
-                                initial={{ opacity: 0, y: -10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                className="mb-4 p-4 bg-red-50 text-red-600 rounded-lg"
+
+                        {/* Action Buttons */}
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-lg mt-6">
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() => setShowAddressForm(true)}
+                                className="flex flex-col items-center justify-center p-4 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
                             >
-                                {error}
-                            </motion.div>
+                                <MapPin className="w-6 h-6 mb-2" />
+                                <span className="text-sm">Address</span>
+                            </motion.button>
+
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() => setShowEditForm(true)}
+                                className="flex flex-col items-center justify-center p-4 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                            >
+                                <PencilSimple className="w-6 h-6 mb-2" />
+                                <span className="text-sm">Edit Profile</span>
+                            </motion.button>
+
+                            {user?.isSeller && (
+                                <motion.button
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    onClick={() => setShowProductForm(true)}
+                                    className="flex flex-col items-center justify-center p-4 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                                >
+                                    <Plus className="w-6 h-6 mb-2" />
+                                    <span className="text-sm">Add Product</span>
+                                </motion.button>
+                            )}
+
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={handleSignOut}
+                                className="flex flex-col items-center justify-center p-4 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                            >
+                                <SignOut className="w-6 h-6 mb-2" />
+                                <span className="text-sm">Sign Out</span>
+                            </motion.button>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Products Section */}
+                {user?.isSeller && (
+                    <div className="mt-8">
+                        <div className="flex justify-between items-center mb-6">
+                            <h2 className="text-2xl font-bold text-gray-900">Your Products</h2>
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() => setShowProductForm(true)}
+                                className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800"
+                            >
+                                <Plus className="w-5 h-5" />
+                                <span>Add Product</span>
+                            </motion.button>
+                        </div>
+
+                        {productsLoading ? (
+                            <div className="text-center py-8">
+                                <div className="text-xl text-gray-600">Loading products...</div>
+                            </div>
+                        ) : productsError ? (
+                            <div className="text-center py-8">
+                                <div className="text-xl text-red-600">{productsError}</div>
+                                <button
+                                    onClick={fetchProducts}
+                                    className="mt-4 px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800"
+                                >
+                                    Retry
+                                </button>
+                            </div>
+                        ) : products.length === 0 ? (
+                            <div className="text-center py-12 bg-white rounded-lg shadow-sm">
+                                <div className="text-xl text-gray-600 mb-4">
+                                    You haven't added any products yet
+                                </div>
+                                <motion.button
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    onClick={() => setShowProductForm(true)}
+                                    className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 mx-auto"
+                                >
+                                    <Plus className="w-5 h-5" />
+                                    <span>Add Your First Product</span>
+                                </motion.button>
+                            </div>
+                        ) : (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {products.map((product) => (
+                                    <SellerProductCard
+                                        key={product._id}
+                                        product={product}
+                                        onDelete={handleProductDelete}
+                                        onUpdate={handleProductUpdate}
+                                    />
+                                ))}
+                            </div>
                         )}
-                        
-                        <AnimatePresence>
-                            <motion.div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                                {products.length > 0 ? (
-                                    products.map((product) => {
-                                        console.log('Rendering product:', product);
-                                        return (
-                                            <motion.div
-                                                key={product._id}
-                                                variants={itemVariants}
-                                                initial="hidden"
-                                                animate="visible"
-                                                exit="exit"
-                                                layout
-                                            >
-                                                <SellerProductCard
-                                                    product={product}
-                                                    onDelete={handleProductDelete}
-                                                    onUpdate={handleProductUpdate}
-                                                />
-                                            </motion.div>
-                                        );
-                                    })
-                                ) : (
-                                    <motion.p
-                                        variants={itemVariants}
-                                        className="text-gray-500 col-span-full"
-                                    >
-                                        No products available.
-                                    </motion.p>
-                                )}
-                            </motion.div>
-                        </AnimatePresence>
-                    </motion.div>
+                    </div>
                 )}
+
+                {/* Modal Forms */}
+                <AnimatePresence>
+                    {showAddressForm && (
+                        <AddressForm 
+                            onClose={() => setShowAddressForm(false)}
+                            userId={user?._id}
+                        />
+                    )}
+
+                    {showEditForm && (
+                        <EditUserForm
+                            user={user}
+                            onClose={() => setShowEditForm(false)}
+                            onUpdate={(updatedUser) => {
+                                setUser(updatedUser);
+                                localStorage.setItem('user', JSON.stringify(updatedUser));
+                            }}
+                        />
+                    )}
+
+                    {showProductForm && (
+                        <ProductForm
+                            onClose={() => setShowProductForm(false)}
+                            onSuccess={(newProduct) => {
+                                setProducts([...products, newProduct]);
+                                setShowProductForm(false);
+                            }}
+                        />
+                    )}
+                </AnimatePresence>
             </div>
-        </motion.div>
+        </div>
     );
 };
 

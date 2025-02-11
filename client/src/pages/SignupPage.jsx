@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Eye, EyeSlash } from '@phosphor-icons/react';
+import { Eye, EyeSlash } from "@phosphor-icons/react";
 import { motion } from "framer-motion";
 
 const SignupPage = ({ setIsAuthenticated }) => {
@@ -19,54 +19,58 @@ const SignupPage = ({ setIsAuthenticated }) => {
             y: 0,
             transition: {
                 duration: 0.5,
-                staggerChildren: 0.1
-            }
-        }
+                staggerChildren: 0.1,
+            },
+        },
     };
 
     const itemVariants = {
         hidden: { opacity: 0, y: 20 },
-        visible: { opacity: 1, y: 0 }
+        visible: { opacity: 1, y: 0 },
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:5000/api/users/signup', {
-                email,
-                password,
-                name,
-                isSeller
-            }, {
-                withCredentials: true
-            });
+            const response = await axios.post(
+                "http://localhost:5000/api/users/signup",
+                {
+                    email,
+                    password,
+                    name,
+                    isSeller,
+                },
+                {
+                    withCredentials: true,
+                }
+            );
 
             if (response.status === 201) {
-                localStorage.setItem('token', response.data.token);
-                localStorage.setItem('user', JSON.stringify(response.data.user));
+                localStorage.setItem("token", response.data.token);
+                localStorage.setItem("user", JSON.stringify(response.data.user));
                 setIsAuthenticated(true);
                 navigate("/");
             }
         } catch (error) {
-            console.error('Signup error:', error);
-            alert(error.response?.data?.message || 'Signup failed');
+            console.error("Signup error:", error);
+            alert(error.response?.data?.message || "Signup failed");
         }
     };
 
     const handleGoogleSignup = (e) => {
         e.preventDefault();
-        window.location.href = 'http://localhost:3000/auth/google';
+        window.location.href = "http://localhost:3000/auth/google";
     };
 
     return (
-        <motion.div 
+        <motion.div
             className="h-screen w-full flex overflow-hidden"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
         >
             <div className="w-1/2 bg-white p-8 flex items-center justify-center overflow-y-auto">
-                <motion.div 
+                <motion.div
                     className="w-full max-w-md"
                     variants={formVariants}
                     initial="hidden"
@@ -114,12 +118,19 @@ const SignupPage = ({ setIsAuthenticated }) => {
                                     onClick={() => setShowPassword(!showPassword)}
                                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
                                 >
-                                    {showPassword ? <EyeSlash size={20} /> : <Eye size={20} />}
+                                    {showPassword ? (
+                                        <EyeSlash size={20} />
+                                    ) : (
+                                        <Eye size={20} />
+                                    )}
                                 </button>
                             </div>
                         </motion.div>
 
-                        <motion.div variants={itemVariants} className="flex w-full mt-4 space-x-4">
+                        <motion.div
+                            variants={itemVariants}
+                            className="flex w-full mt-4 space-x-4"
+                        >
                             <motion.button
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
@@ -127,8 +138,8 @@ const SignupPage = ({ setIsAuthenticated }) => {
                                 onClick={() => setIsSeller(false)}
                                 className={`w-full px-4 py-2 rounded-md ${
                                     !isSeller
-                                        ? 'border-2 border-black text-black'
-                                        : 'border border-gray-300 text-gray-700 hover:bg-gray-100'
+                                        ? "border-2 border-black text-black"
+                                        : "border border-gray-300 text-gray-700 hover:bg-gray-100"
                                 }`}
                             >
                                 Customer
@@ -140,8 +151,8 @@ const SignupPage = ({ setIsAuthenticated }) => {
                                 onClick={() => setIsSeller(true)}
                                 className={`w-full px-4 py-2 rounded-md ${
                                     isSeller
-                                        ? 'border-2 border-black text-black'
-                                        : 'border border-gray-300 text-gray-700 hover:bg-gray-100'
+                                        ? "border-2 border-black text-black"
+                                        : "border border-gray-300 text-gray-700 hover:bg-gray-100"
                                 }`}
                             >
                                 Seller
@@ -196,7 +207,7 @@ const SignupPage = ({ setIsAuthenticated }) => {
                 </motion.div>
             </div>
 
-            <motion.div 
+            <motion.div
                 className="w-1/2 h-full"
                 initial={{ x: 100, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
@@ -205,10 +216,10 @@ const SignupPage = ({ setIsAuthenticated }) => {
                 <div
                     className="h-full w-full bg-cover bg-center relative"
                     style={{
-                        backgroundImage: "url('https://static1.squarespace.com/static/5e949a92e17d55230cd1d44f/t/630bad28aafe481ca503ea3e/1661709622152/Ember_iPad.png')"
+                        backgroundImage:
+                            "url('https://static1.squarespace.com/static/5e949a92e17d55230cd1d44f/t/630bad28aafe481ca503ea3e/1661709622152/Ember_iPad.png')",
                     }}
-                >
-                </div>
+                ></div>
             </motion.div>
         </motion.div>
     );

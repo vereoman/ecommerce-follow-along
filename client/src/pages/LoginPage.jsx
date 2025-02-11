@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Eye, EyeSlash } from '@phosphor-icons/react';
+import { Eye, EyeSlash } from "@phosphor-icons/react";
 import { motion } from "framer-motion";
 
 const LoginPage = ({ setIsAuthenticated }) => {
@@ -18,23 +18,29 @@ const LoginPage = ({ setIsAuthenticated }) => {
         setIsLoading(true);
 
         try {
-            const response = await axios.post('http://localhost:5000/api/users/login', {
-                email,
-                password
-            }, {
-                withCredentials: true
-            });
+            const response = await axios.post(
+                "http://localhost:5000/api/users/login",
+                {
+                    email,
+                    password,
+                },
+                {
+                    withCredentials: true,
+                }
+            );
 
             const { token, user } = response.data;
 
-            localStorage.setItem('token', token);
-            localStorage.setItem('user', JSON.stringify(user));
-            localStorage.setItem('isAuthenticated', 'true');
+            localStorage.setItem("token", token);
+            localStorage.setItem("user", JSON.stringify(user));
+            localStorage.setItem("isAuthenticated", "true");
             setIsAuthenticated(true);
-            navigate('/');
+            navigate("/");
         } catch (error) {
-            console.error('Login error:', error);
-            setError(error.response?.data?.message || 'Invalid email or password');
+            console.error("Login error:", error);
+            setError(
+                error.response?.data?.message || "Invalid email or password"
+            );
         } finally {
             setIsLoading(false);
         }
@@ -42,7 +48,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
 
     const handleGoogleLogin = (e) => {
         e.preventDefault();
-        window.location.href = 'http://localhost:5000/auth/google';
+        window.location.href = "http://localhost:5000/auth/google";
     };
 
     const formVariants = {
@@ -52,14 +58,14 @@ const LoginPage = ({ setIsAuthenticated }) => {
             y: 0,
             transition: {
                 duration: 0.5,
-                staggerChildren: 0.1
-            }
-        }
+                staggerChildren: 0.1,
+            },
+        },
     };
 
     const itemVariants = {
         hidden: { opacity: 0, y: 20 },
-        visible: { opacity: 1, y: 0 }
+        visible: { opacity: 1, y: 0 },
     };
 
     return (
@@ -120,13 +126,23 @@ const LoginPage = ({ setIsAuthenticated }) => {
                                     onClick={() => setShowPassword(!showPassword)}
                                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
                                 >
-                                    {showPassword ? <EyeSlash size={20} /> : <Eye size={20} />}
+                                    {showPassword ? (
+                                        <EyeSlash size={20} />
+                                    ) : (
+                                        <Eye size={20} />
+                                    )}
                                 </button>
                             </div>
                         </motion.div>
 
-                        <motion.div variants={itemVariants} className="flex items-center justify-end">
-                            <a href="#" className="text-sm text-blue-600 hover:text-blue-700">
+                        <motion.div
+                            variants={itemVariants}
+                            className="flex items-center justify-end"
+                        >
+                            <a
+                                href="#"
+                                className="text-sm text-blue-600 hover:text-blue-700"
+                            >
                                 Forgot password?
                             </a>
                         </motion.div>
@@ -139,7 +155,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
                             disabled={isLoading}
                             className="w-full bg-black text-white rounded-lg py-3 hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
                         >
-                            {isLoading ? 'Signing in...' : 'Sign in'}
+                            {isLoading ? "Signing in..." : "Sign in"}
                         </motion.button>
                     </form>
 
@@ -186,10 +202,10 @@ const LoginPage = ({ setIsAuthenticated }) => {
                 <div
                     className="h-full w-full bg-cover bg-center relative"
                     style={{
-                        backgroundImage: "url('https://static1.squarespace.com/static/5e949a92e17d55230cd1d44f/t/630bad28aafe481ca503ea3e/1661709622152/Ember_iPad.png')"
+                        backgroundImage:
+                            "url('https://static1.squarespace.com/static/5e949a92e17d55230cd1d44f/t/630bad28aafe481ca503ea3e/1661709622152/Ember_iPad.png')",
                     }}
-                >
-                </div>
+                ></div>
             </motion.div>
         </motion.div>
     );

@@ -5,53 +5,60 @@ import { motion } from "framer-motion";
 const ProductForm = ({ onSuccess }) => {
     const [image, setImage] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [error, setError] = useState('');
+    const [error, setError] = useState("");
     const [previewUrl, setPreviewUrl] = useState(null);
-    const [category, setCategory] = useState('running');
-    const [gender, setGender] = useState('unisex');
+    const [category, setCategory] = useState("running");
+    const [gender, setGender] = useState("unisex");
 
-    const categories = ['running', 'training', 'basketball', 'sneakers', 'slip-ons'];
-    const genders = ['mens', 'womens', 'kids'];
+    const categories = [
+        "running",
+        "training",
+        "basketball",
+        "sneakers",
+        "slip-ons",
+    ];
+    const genders = ["mens", "womens", "kids"];
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
-        setError('');
+        setError("");
 
         if (!image) {
-            setError('Product image is required');
+            setError("Product image is required");
             setIsSubmitting(false);
             return;
         }
 
         const formData = new FormData();
-        formData.append('name', e.target.name.value);
-        formData.append('description', e.target.description.value);
-        formData.append('price', e.target.price.value);
-        formData.append('category', category);
-        formData.append('gender', gender);
-        formData.append('image', image);
+        formData.append("name", e.target.name.value);
+        formData.append("description", e.target.description.value);
+        formData.append("price", e.target.price.value);
+        formData.append("category", category);
+        formData.append("gender", gender);
+        formData.append("image", image);
 
         try {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem("token");
             if (!token) {
-                setError('Authentication token not found. Please login again.');
+                setError(
+                    "Authentication token not found. Please login again."
+                );
                 setIsSubmitting(false);
                 return;
             }
 
-            // Log FormData contents for debugging
             for (let pair of formData.entries()) {
-                console.log('FormData:', pair[0], pair[1]);
+                console.log("FormData:", pair[0], pair[1]);
             }
 
             const response = await axios.post(
-                'http://localhost:5000/api/products',
+                "http://localhost:5000/api/products",
                 formData,
                 {
                     headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'multipart/form-data'
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "multipart/form-data",
                     },
                 }
             );
@@ -63,15 +70,17 @@ const ProductForm = ({ onSuccess }) => {
                 onSuccess(response.data.product);
             }
         } catch (error) {
-            console.error('Form submission error:', error);
-            console.error('Error response:', error.response?.data);
+            console.error("Form submission error:", error);
+            console.error("Error response:", error.response?.data);
             if (error.response?.status === 401) {
-                setError('Session expired. Please login again.');
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-                window.location.href = '/login';
+                setError("Session expired. Please login again.");
+                localStorage.removeItem("token");
+                localStorage.removeItem("user");
+                window.location.href = "/login";
             } else {
-                setError(error.response?.data?.message || 'Error creating product');
+                setError(
+                    error.response?.data?.message || "Error creating product"
+                );
             }
         } finally {
             setIsSubmitting(false);
@@ -81,11 +90,11 @@ const ProductForm = ({ onSuccess }) => {
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            if (!file.type.startsWith('image/')) {
-                setError('Please upload an image file');
+            if (!file.type.startsWith("image/")) {
+                setError("Please upload an image file");
                 return;
             }
-            console.log('Selected image:', file); // Debug log
+            console.log("Selected image:", file);
             setImage(file);
             const reader = new FileReader();
             reader.onload = () => setPreviewUrl(reader.result);
@@ -105,7 +114,7 @@ const ProductForm = ({ onSuccess }) => {
                 <motion.div
                     className="bg-red-50 border border-red-500 text-red-700 px-4 py-3 rounded-lg"
                     initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
+                    animate={{ opacity: 1, height: "auto" }}
                     transition={{ duration: 0.3 }}
                 >
                     {error}
@@ -117,7 +126,9 @@ const ProductForm = ({ onSuccess }) => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
             >
-                <label className="block text-sm font-medium text-gray-700 mb-2">Product Name</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Product Name
+                </label>
                 <input
                     name="name"
                     required
@@ -131,7 +142,9 @@ const ProductForm = ({ onSuccess }) => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
             >
-                <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Description
+                </label>
                 <textarea
                     name="description"
                     required
@@ -148,13 +161,15 @@ const ProductForm = ({ onSuccess }) => {
                 transition={{ duration: 0.5, delay: 0.2 }}
             >
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Category
+                    </label>
                     <select
                         value={category}
                         onChange={(e) => setCategory(e.target.value)}
                         className="w-full p-3 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
-                        {categories.map(cat => (
+                        {categories.map((cat) => (
                             <option key={cat} value={cat}>
                                 {cat.charAt(0).toUpperCase() + cat.slice(1)}
                             </option>
@@ -163,13 +178,15 @@ const ProductForm = ({ onSuccess }) => {
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Gender</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Gender
+                    </label>
                     <select
                         value={gender}
                         onChange={(e) => setGender(e.target.value)}
                         className="w-full p-3 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
-                        {genders.map(gen => (
+                        {genders.map((gen) => (
                             <option key={gen} value={gen}>
                                 {gen.charAt(0).toUpperCase() + gen.slice(1)}
                             </option>
@@ -183,7 +200,9 @@ const ProductForm = ({ onSuccess }) => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.3 }}
             >
-                <label className="block text-sm font-medium text-gray-700 mb-2">Price</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Price
+                </label>
                 <input
                     type="number"
                     name="price"
@@ -200,7 +219,9 @@ const ProductForm = ({ onSuccess }) => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.4 }}
             >
-                <label className="block text-sm font-medium text-gray-700 mb-2">Product Image</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Product Image
+                </label>
                 <input
                     type="file"
                     onChange={handleImageChange}
@@ -214,7 +235,11 @@ const ProductForm = ({ onSuccess }) => {
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.5 }}
                     >
-                        <img src={previewUrl} alt="Preview" className="w-32 h-32 object-cover rounded-lg" />
+                        <img
+                            src={previewUrl}
+                            alt="Preview"
+                            className="w-32 h-32 object-cover rounded-lg"
+                        />
                     </motion.div>
                 )}
             </motion.div>
@@ -227,7 +252,7 @@ const ProductForm = ({ onSuccess }) => {
                 whileTap={{ scale: 0.95 }}
                 transition={{ duration: 0.3 }}
             >
-                {isSubmitting ? 'Creating Product...' : 'Create Product'}
+                {isSubmitting ? "Creating Product..." : "Create Product"}
             </motion.button>
         </motion.form>
     );
