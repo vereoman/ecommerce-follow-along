@@ -26,13 +26,13 @@ const ProfilePage = ({ onSignOut }) => {
     const fetchProducts = async () => {
         setProductsLoading(true);
         setProductsError(null);
-        
+
         try {
             const token = localStorage.getItem('token');
             if (!token) throw new Error('No authentication token found');
 
             const response = await axios.get(
-                'http://localhost:5000/api/products/seller-products',
+                'http://localhost:5000/api/products/seller',
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -96,8 +96,7 @@ const ProfilePage = ({ onSignOut }) => {
                 formData,
                 {
                     headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'multipart/form-data'
+                        'Authorization': `Bearer ${token}`
                     }
                 }
             );
@@ -152,7 +151,7 @@ const ProfilePage = ({ onSignOut }) => {
                 }
             );
 
-            setProducts(products.map(p => 
+            setProducts(products.map(p =>
                 p._id === response.data._id ? response.data : p
             ));
         } catch (error) {
@@ -179,7 +178,7 @@ const ProfilePage = ({ onSignOut }) => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 py-8 pt-24">
+        <div className="min-h-screen py-8">
             <div className="max-w-4xl mx-auto px-4">
                 {/* Profile Section */}
                 <div className="bg-white rounded-lg shadow-sm p-8 mb-8">
@@ -221,20 +220,18 @@ const ProfilePage = ({ onSignOut }) => {
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                                 onClick={() => setShowAddressForm(true)}
-                                className="flex flex-col items-center justify-center p-4 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                                className="flex flex-col items-center justify-center p-4 bg-gray-100 rounded-lg hover:bg-gray-200 hover:border transition-colors"
                             >
                                 <MapPin className="w-6 h-6 mb-2" />
-                                <span className="text-sm">Address</span>
                             </motion.button>
 
                             <motion.button
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                                 onClick={() => setShowEditForm(true)}
-                                className="flex flex-col items-center justify-center p-4 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                                className="flex flex-col items-center justify-center p-4 bg-gray-100 rounded-lg hover:bg-gray-200 hover:border transition-colors"
                             >
                                 <PencilSimple className="w-6 h-6 mb-2" />
-                                <span className="text-sm">Edit Profile</span>
                             </motion.button>
 
                             {user?.isSeller && (
@@ -242,10 +239,9 @@ const ProfilePage = ({ onSignOut }) => {
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
                                     onClick={() => setShowProductForm(true)}
-                                    className="flex flex-col items-center justify-center p-4 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                                    className="flex flex-col items-center justify-center p-4 bg-gray-100 rounded-lg hover:bg-gray-200 hover:border transition-colors"
                                 >
                                     <Plus className="w-6 h-6 mb-2" />
-                                    <span className="text-sm">Add Product</span>
                                 </motion.button>
                             )}
 
@@ -253,31 +249,16 @@ const ProfilePage = ({ onSignOut }) => {
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                                 onClick={handleSignOut}
-                                className="flex flex-col items-center justify-center p-4 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                                className="flex flex-col items-center justify-center p-4 bg-gray-100 rounded-lg hover:bg-gray-200 hover:border transition-colors"
                             >
                                 <SignOut className="w-6 h-6 mb-2" />
-                                <span className="text-sm">Sign Out</span>
                             </motion.button>
                         </div>
                     </div>
                 </div>
 
-                {/* Products Section */}
                 {user?.isSeller && (
                     <div className="mt-8">
-                        <div className="flex justify-between items-center mb-6">
-                            <h2 className="text-2xl font-bold text-gray-900">Your Products</h2>
-                            <motion.button
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                onClick={() => setShowProductForm(true)}
-                                className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800"
-                            >
-                                <Plus className="w-5 h-5" />
-                                <span>Add Product</span>
-                            </motion.button>
-                        </div>
-
                         {productsLoading ? (
                             <div className="text-center py-8">
                                 <div className="text-xl text-gray-600">Loading products...</div>
@@ -322,34 +303,72 @@ const ProfilePage = ({ onSignOut }) => {
                     </div>
                 )}
 
-                {/* Modal Forms */}
                 <AnimatePresence>
                     {showAddressForm && (
-                        <AddressForm 
-                            onClose={() => setShowAddressForm(false)}
-                            userId={user?._id}
-                        />
+                        <motion.div
+                            key="address-form"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                        >
+                            <div className="fixed inset-0 flex items-center justify-center z-50">
+                                <div
+                                  className="absolute inset-0 bg-black opacity-50"
+                                  onClick={() => setShowAddressForm(false)}
+                                ></div>
+                                <AddressForm
+                                    onClose={() => setShowAddressForm(false)}
+                                    userId={user?._id}
+                                />
+                            </div>
+                        </motion.div>
                     )}
 
                     {showEditForm && (
-                        <EditUserForm
-                            user={user}
-                            onClose={() => setShowEditForm(false)}
-                            onUpdate={(updatedUser) => {
-                                setUser(updatedUser);
-                                localStorage.setItem('user', JSON.stringify(updatedUser));
-                            }}
-                        />
+                        <motion.div
+                            key="edit-form"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                        >
+                            <div className="fixed inset-0 flex items-center justify-center z-50">
+                                <div
+                                  className="absolute inset-0 bg-black opacity-50"
+                                  onClick={() => setShowEditForm(false)}
+                                ></div>
+                                <EditUserForm
+                                    user={user}
+                                    onClose={() => setShowEditForm(false)}
+                                    onUpdate={(updatedUser) => {
+                                        setUser(updatedUser);
+                                        localStorage.setItem('user', JSON.stringify(updatedUser));
+                                    }}
+                                />
+                            </div>
+                        </motion.div>
                     )}
 
                     {showProductForm && (
-                        <ProductForm
-                            onClose={() => setShowProductForm(false)}
-                            onSuccess={(newProduct) => {
-                                setProducts([...products, newProduct]);
-                                setShowProductForm(false);
-                            }}
-                        />
+                        <motion.div
+                            key="product-form"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                        >
+                            <div className="fixed inset-0 flex items-center justify-center z-50">
+                                <div
+                                  className="absolute inset-0 bg-black opacity-50"
+                                  onClick={() => setShowProductForm(false)}
+                                ></div>
+                                <ProductForm
+                                    onClose={() => setShowProductForm(false)}
+                                    onSuccess={(newProduct) => {
+                                        setProducts([...products, newProduct]);
+                                        setShowProductForm(false);
+                                    }}
+                                />
+                            </div>
+                        </motion.div>
                     )}
                 </AnimatePresence>
             </div>

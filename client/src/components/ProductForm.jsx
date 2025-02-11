@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
 
-const ProductForm = ({ onSuccess }) => {
+const ProductForm = ({ onSuccess, onClose }) => {
     const [image, setImage] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState("");
@@ -41,9 +41,7 @@ const ProductForm = ({ onSuccess }) => {
         try {
             const token = localStorage.getItem("token");
             if (!token) {
-                setError(
-                    "Authentication token not found. Please login again."
-                );
+                setError("Authentication token not found. Please login again.");
                 setIsSubmitting(false);
                 return;
             }
@@ -57,9 +55,8 @@ const ProductForm = ({ onSuccess }) => {
                 formData,
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "multipart/form-data",
-                    },
+                        Authorization: `Bearer ${token}`
+                    }
                 }
             );
 
@@ -78,9 +75,7 @@ const ProductForm = ({ onSuccess }) => {
                 localStorage.removeItem("user");
                 window.location.href = "/login";
             } else {
-                setError(
-                    error.response?.data?.message || "Error creating product"
-                );
+                setError(error.response?.data?.message || "Error creating product");
             }
         } finally {
             setIsSubmitting(false);
@@ -105,11 +100,22 @@ const ProductForm = ({ onSuccess }) => {
     return (
         <motion.form
             onSubmit={handleSubmit}
-            className="space-y-4 p-6 bg-white rounded-lg shadow-md"
+            className="relative space-y-4 p-6 bg-white rounded-lg shadow-md"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
         >
+            {/* Close button */}
+            {onClose && (
+                <button
+                    type="button"
+                    onClick={onClose}
+                    className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+                >
+                    &#x2715;
+                </button>
+            )}
+
             {error && (
                 <motion.div
                     className="bg-red-50 border border-red-500 text-red-700 px-4 py-3 rounded-lg"

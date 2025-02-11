@@ -2,14 +2,18 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { Trash, Plus, Minus } from "@phosphor-icons/react";
+import { useNavigate } from "react-router-dom";
 
 const BasketPage = () => {
     const [cartItems, setCartItems] = useState([]);
+    const [addresses, setAddresses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetchCartItems();
+        fetchAddresses();
     }, []);
 
     const fetchCartItems = async () => {
@@ -24,6 +28,18 @@ const BasketPage = () => {
             setError("Failed to load cart items");
         } finally {
             setLoading(false);
+        }
+    };
+
+    const fetchAddresses = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            const response = await axios.get("http://localhost:5000/api/addresses", {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            setAddresses(response.data);
+        } catch (error) {
+            console.error("Error fetching addresses:", error);
         }
     };
 
@@ -65,7 +81,7 @@ const BasketPage = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center mt-24">
+            <div className="min-h-screen pt-28 flex items-center justify-center">
                 <div className="text-xl text-gray-600">Loading cart...</div>
             </div>
         );
@@ -73,7 +89,7 @@ const BasketPage = () => {
 
     if (error) {
         return (
-            <div className="min-h-screen flex items-center justify-center mt-24">
+            <div className="min-h-screen pt-28 flex items-center justify-center">
                 <div className="text-xl text-red-600">{error}</div>
             </div>
         );
@@ -81,7 +97,7 @@ const BasketPage = () => {
 
     return (
         <motion.div
-            className="min-h-screen py-8 px-4 mt-24"
+            className="min-h-screen px-4 pb-8 pt-20"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
@@ -150,9 +166,7 @@ const BasketPage = () => {
                                     </div>
 
                                     <button
-                                        onClick={() =>
-                                            handleRemoveItem(item._id)
-                                        }
+                                        onClick={() => handleRemoveItem(item._id)}
                                         className="p-2 text-red-500 hover:text-red-600"
                                     >
                                         <Trash size={20} />
@@ -168,7 +182,24 @@ const BasketPage = () => {
                                     ${calculateTotal().toFixed(2)}
                                 </span>
                             </div>
-                            <button className="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition-colors">
+                            {addresses.length > 0 && (
+                                <div className="mb-4">
+                                    <h3 className="text-lg font-bold mb-2">
+                                        Shipping Addresses:
+                                    </h3>
+                                    <ul>
+                                        {addresses.map((address) => (
+                                            <li key={address._id} className="text-sm text-gray-700">
+                                                {address.street}, {address.city}, {address.state}, {address.postalCode}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+                            <button
+                                onClick={() => navigate("/checkout")}
+                                className="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition-colors"
+                            >
                                 Proceed to Checkout
                             </button>
                         </div>

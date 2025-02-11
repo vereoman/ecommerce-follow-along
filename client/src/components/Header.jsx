@@ -1,58 +1,72 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { HouseSimple, ShoppingBag, SignIn, User } from '@phosphor-icons/react';
+import { motion } from 'framer-motion';
 
 const Header = ({ isSignedIn }) => {
-    const [isVisible, setIsVisible] = useState(true);
-    const [prevScrollPos, setPrevScrollPos] = useState(window.pageYOffset);
+    const NavLink = ({ to, icon: Icon, text }) => {
+        const linkVariants = {
+            initial: { 
+                backgroundColor: 'rgba(255, 255, 255, 0)',
+                color: 'white',
+                scale: 1
+            },
+            hover: { 
+                backgroundColor: 'rgba(255, 255, 255, 1)',
+                color: 'black',
+                scale: 1.05,
+                transition: { 
+                    duration: 0.3,
+                    ease: [0.4, 0, 0.2, 1],
+                    scale: {
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 25
+                    }
+                }
+            }
+        };
 
-    const handleScroll = () => {
-        const currentScrollPos = window.pageYOffset;
-        setIsVisible(currentScrollPos <= prevScrollPos);
-        setPrevScrollPos(currentScrollPos);
+        return (
+            <motion.div
+                initial="initial"
+                whileHover="hover"
+                variants={linkVariants}
+                className="rounded-lg"
+            >
+                <Link
+                    to={to}
+                    className="flex items-center gap-2 text-sm px-4 py-2 no-underline focus:outline-none"
+                >
+                    <Icon size={20} weight="fill" />
+                    {text}
+                </Link>
+            </motion.div>
+        );
     };
-
-    useEffect(() => {
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, [prevScrollPos]);
 
     const headerVariants = {
-        visible: {
+        initial: { y: -100 },
+        animate: { 
             y: 0,
-            opacity: 1,
-            transition: {
-                duration: 0.5,
-            },
-        },
-        hidden: {
-            y: "-100%",
-            opacity: 0,
-            transition: {
-                duration: 0.5,
-            },
-        },
+            transition: { 
+                type: "spring",
+                stiffness: 100,
+                damping: 20
+            }
+        }
     };
-
-    const NavLink = ({ to, icon: Icon, text }) => (
-        <div className="relative">
-            <Link to={to} className="flex items-center gap-x-2 text-sm px-4 py-2 rounded-lg text-white">
-                <Icon size={20} className="transition-colors duration-300 text-white" weight="fill" />
-                {text}
-            </Link>
-        </div>
-    );
 
     return (
         <motion.header
+            initial="initial"
+            animate="animate"
             variants={headerVariants}
-            initial="hidden"
-            animate={isVisible ? "visible" : "hidden"}
-            className="w-full px-6 py-6 fixed top-0 left-0 bg-black z-50"
+            className="fixed top-0 left-0 w-full bg-black z-50 py-8"
+            style={{ willChange: 'transform' }}
         >
-            <div className="max-w-[1100px] w-full mx-auto flex justify-center">
-                <nav className="flex items-center w-full justify-center gap-8">
+            <div className="max-w-[1100px] h-full mx-auto flex items-center justify-center">
+                <nav className="flex items-center gap-8 w-full justify-center">
                     <NavLink to="/" icon={HouseSimple} text="HOME" />
                     <NavLink to="/basket" icon={ShoppingBag} text="BASKET" />
                     {isSignedIn ? (

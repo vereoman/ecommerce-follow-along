@@ -338,3 +338,44 @@ client/
 - **Sync Optimization**: Added debouncing to quantity update API calls.
 - **Testing**: Verified quantity synchronization between frontend and database.
 - **GitHub Updates**: Committed cart page components and quantity management endpoints.
+
+---
+
+## Milestone 20: User Profile and Data Management
+
+- **Backend Endpoint for User Data**: Created a backend endpoint to send all user data via email.
+- **Frontend Profile Page**: Developed a frontend profile page to display user data.
+- **Profile Information Display**:
+  - Displayed profile photo, name, and email in one section.
+  - Displayed address information in another section with an "Add address" button.
+- **Address Handling**:
+  - Displayed "No address found" if no addresses are available.
+- **Navigation**:
+  - Implemented navigation to the address form page when "Add address" is clicked.
+- **Testing**: Verified the display of user data and navigation functionality.
+- **GitHub Updates**: Committed backend endpoint and frontend profile page components.
+
+---
+
+## Milestone 21: Address Form Integration
+
+- **Address Form Frontend Page**: Created a frontend form to input address details.
+- **Address Fields**:
+  - Included fields for country, city, address1, address2, zip code, and address type.
+- **State Management**: Implemented state to store input address data.
+- **Navigation Integration**:
+  - Enabled navigation from the profile page to the address form page upon clicking "Add address".
+- **Testing**: Verified form functionality and state management.
+- **GitHub Updates**: Committed address form components and state management logic.
+
+---
+
+## Milestone 22: Address Storage Endpoint
+
+- **Backend Endpoint for Address Storage**: Developed a backend endpoint to store address data in the user profile.
+- **Database Integration**:
+  - Added address data to the address array within the user collection in the database.
+- **Testing**: Verified address storage functionality and database updates.
+- **GitHub Updates**: Committed backend endpoint for address storage.
+
+---

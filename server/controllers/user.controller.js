@@ -74,6 +74,7 @@ const Login = async function (req, res) {
             user: {
                 email: user.email,
                 isSeller: user.isSeller,
+                imageUrl: user.imageUrl
             },
         });
     } catch (error) {
@@ -108,6 +109,7 @@ const verifyToken = async function (req, res) {
             user: {
                 email: user.email,
                 isSeller: user.isSeller,
+                imageUrl: user.imageUrl
             },
         });
     } catch (error) {

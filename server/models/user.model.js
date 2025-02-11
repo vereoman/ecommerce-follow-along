@@ -20,6 +20,9 @@ const userSchema = new mongoose.Schema(
         isSeller: {
             type: Boolean,
             default: false
+        },
+        imageUrl: {  
+            type: String
         }
     }
 );

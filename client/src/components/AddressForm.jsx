@@ -10,12 +10,11 @@ const AddressForm = ({ onClose, userId }) => {
         try {
             const token = localStorage.getItem('token');
             await axios.post(
-                'http://localhost:5000/api/users/address',
-                { ...data, userId },
+                'http://localhost:5000/api/addresses',
+                data,
                 {
                     headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
+                        'Authorization': `Bearer ${token}`
                     }
                 }
             );

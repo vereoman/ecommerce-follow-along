@@ -75,7 +75,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
         >
-            <div className="w-1/2 bg-white p-8 flex items-center justify-center overflow-y-auto">
+            <div className="w-1/2 bg-white p-8 flex items-center justify-center">
                 <motion.div
                     className="w-full max-w-md"
                     variants={formVariants}
@@ -203,7 +203,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
                     className="h-full w-full bg-cover bg-center relative"
                     style={{
                         backgroundImage:
-                            "url('https://static1.squarespace.com/static/5e949a92e17d55230cd1d44f/t/630bad28aafe481ca503ea3e/1661709622152/Ember_iPad.png')",
+                            "url('https://images.unsplash.com/photo-1604871000636-074fa5117945?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
                     }}
                 ></div>
             </motion.div>

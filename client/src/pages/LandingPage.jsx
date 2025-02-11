@@ -37,7 +37,7 @@ const LandingPage = () => {
             setCurrentHeroIndex(
                 (prev) => (prev + 1) % heroSections.length
             );
-        }, 5000);
+        }, 10000);
 
         return () => clearInterval(interval);
     }, []);
@@ -98,7 +98,7 @@ const LandingPage = () => {
                 </AnimatePresence>
             </section>
 
-            <section ref={featuredProductsRef} className="py-16 text-center">
+            <section ref={featuredProductsRef} className="py-8 text-center">
                 <div className="container mx-auto px-4">
                     <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
                         Featured Products
@@ -112,7 +112,7 @@ const LandingPage = () => {
                 </div>
             </section>
 
-            <section className="py-24">
+            <section className="py-12">
                 <div className="container mx-auto px-4">
                     {loading ? (
                         <div className="text-center py-8">

@@ -7,6 +7,7 @@ import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import ProductPage from "./pages/ProductPage";
 import BasketPage from "./pages/BasketPage";
+import CheckoutPage from "./pages/CheckoutPage";
 
 const ProtectedRoute = ({ children }) => {
     const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
@@ -49,10 +50,8 @@ const App = () => {
 
     return (
         <div className="min-h-screen flex flex-col bg-white">
-            {!shouldHideHeaderFooter && (
-                <Header isSignedIn={isAuthenticated} />
-            )}
-            <main className="flex-grow">
+            {!shouldHideHeaderFooter && <Header isSignedIn={isAuthenticated} />}
+            <main className="flex-grow mt-20">
                 <Routes>
                     <Route path="/" element={<LandingPage />} />
                     <Route path="/product/:id" element={<ProductPage />} />
@@ -85,6 +84,14 @@ const App = () => {
                         element={
                             <ProtectedRoute>
                                 <BasketPage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/checkout"
+                        element={
+                            <ProtectedRoute>
+                                <CheckoutPage />
                             </ProtectedRoute>
                         }
                     />

@@ -151,7 +151,7 @@ const updateProduct = async (req, res) => {
 
         const product = await Product.findOne({
             _id: req.params.id,
-            seller: req.user.userId,
+            seller: req.user._id,
         });
 
         if (!product) {
