@@ -80,7 +80,7 @@ const BasketPage = () => {
       transition={{ duration: 0.5 }}
     >
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8">Your Basket</h1>
+        <h1 className="text-6xl font-bold mb-8 text-center">Your Shoes.</h1>
         
         {cartItems.length === 0 ? (
           <div className="text-center py-8">

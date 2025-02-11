@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { HeartStraight, ShoppingBag } from '@phosphor-icons/react';
+import { ShoppingBag } from '@phosphor-icons/react';
 import { motion } from 'framer-motion';
 
 const ProductPage = () => {
@@ -10,7 +10,6 @@ const ProductPage = () => {
   const [error, setError] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -22,8 +21,6 @@ const ProductPage = () => {
           headers: { Authorization: `Bearer ${token}` }
         });
         setProduct(response.data);
-        const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-        setIsFavorite(favorites.includes(response.data._id));
       } catch (err) {
         setError('Failed to load product details');
         console.error('Error fetching product:', err);
@@ -42,16 +39,54 @@ const ProductPage = () => {
     };
   }, [id]);
 
-  const toggleFavorite = () => {
-    const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-    if (isFavorite) {
-      const updatedFavorites = favorites.filter(favId => favId !== product._id);
-      localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
-    } else {
-      favorites.push(product._id);
-      localStorage.setItem('favorites', JSON.stringify(favorites));
+  const toggleDescription = () => {
+    setIsDescriptionExpanded(!isDescriptionExpanded);
+  };
+
+  const handleAddToCart = async () => {
+    try {
+      console.log('Add to cart button clicked');
+      
+      if (!selectedSize) {
+        alert('Please select a size');
+        return;
+      }
+
+      const token = localStorage.getItem('token');
+      console.log('Token:', token ? 'exists' : 'missing');
+      
+      if (!token) {
+        navigate('/login');
+        return;
+      }
+
+      console.log('Product:', product);
+      console.log('Selected size:', selectedSize);
+
+      const response = await axios.post(
+        'http://localhost:5000/api/cart/add',
+        {
+          productId: product._id,
+          size: selectedSize,
+          quantity: 1
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          withCredentials: true
+        }
+      );
+
+      console.log('Cart response:', response.data);
+      alert(`Added ${product.name} (Size ${selectedSize}) to your cart!`);
+    } catch (error) {
+      console.error('Full error object:', error);
+      console.error('Error response:', error.response);
+      console.error('Error message:', error.message);
+      alert(error.response?.data?.message || 'Failed to add product to cart');
     }
-    setIsFavorite(!isFavorite);
   };
 
   if (loading) {
@@ -83,54 +118,6 @@ const ProductPage = () => {
       </div>
     );
   }
-
-  const toggleDescription = () => {
-    setIsDescriptionExpanded(!isDescriptionExpanded);
-  };
-
-  const handleAddToCart = async () => {
-    try {
-      if (!selectedSize) {
-        alert('Please select a size');
-        return;
-      }
-
-      const token = localStorage.getItem('token');
-      if (!token) {
-        navigate('/login');
-        return;
-      }
-
-      console.log('Sending add to cart request:', {
-        productId: product._id,
-        quantity: 1,
-        size: selectedSize
-      });
-
-      const response = await axios.post(
-        'http://localhost:5000/api/cart/add',
-        {
-          productId: product._id,
-          quantity: 1,
-          size: selectedSize
-        },
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          },
-          withCredentials: true
-        }
-      );
-
-      console.log('Add to cart response:', response.data);
-      alert('Product added to cart!');
-    } catch (error) {
-      console.error('Error adding to cart:', error);
-      console.error('Error response:', error.response?.data);
-      alert(error.response?.data?.message || 'Failed to add product to cart');
-    }
-  };
 
   return (
     <motion.div
@@ -215,15 +202,6 @@ const ProductPage = () => {
                 >
                   <ShoppingBag size={22} />
                   Add to Basket
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={toggleFavorite}
-                  className="flex-1 p-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200 flex items-center justify-center gap-2"
-                >
-                  <HeartStraight size={22} className={`text-gray-600 ${isFavorite ? 'text-red-500' : ''}`} />
-                  {isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
                 </motion.button>
               </div>
             </motion.div>

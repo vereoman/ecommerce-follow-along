@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ProductCard from '../components/ProductCard';
 import axios from 'axios';
@@ -12,6 +12,9 @@ const LandingPage = () => {
   const [error, setError] = useState(null);
   const [visibleProducts, setVisibleProducts] = useState(12);
   const navigate = useNavigate();
+
+  // Create a ref for the Featured Products section
+  const featuredProductsRef = useRef(null);
 
   const handleLoadMore = () => {
     setVisibleProducts(prevCount => Math.min(prevCount + 12, trendingShoes.length));
@@ -41,8 +44,10 @@ const LandingPage = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const handleShopNow = (link) => {
-    navigate(link);
+  const handleShopNow = () => {
+    if (featuredProductsRef.current) {
+      featuredProductsRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   const heroVariants = {
@@ -133,7 +138,7 @@ const LandingPage = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.6 }}
-                  onClick={() => handleShopNow('/products')}
+                  onClick={handleShopNow}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -145,6 +150,36 @@ const LandingPage = () => {
           </motion.div>
         </AnimatePresence>
       </section>
+
+      {/* Featured Products Heading */}
+      <motion.section
+        ref={featuredProductsRef}
+        className="py-16 text-center"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+      >
+        <div className="container mx-auto px-4">
+          <motion.h2
+            className="text-5xl md:text-6xl font-bold text-gray-900 mb-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            Featured Products
+          </motion.h2>
+          <motion.p
+            className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            Discover our top picks designed to elevate your performance and style.
+            Our collection features innovative designs that combine cutting-edge
+            technology with timeless aesthetics.
+          </motion.p>
+        </div>
+      </motion.section>
 
       {/* Featured Products Section with Load More */}
       <motion.section
@@ -185,7 +220,7 @@ const LandingPage = () => {
                       id={shoe._id}
                       name={shoe.name}
                       price={shoe.price}
-                      originalPrice={shoe.price * 1.2}
+                      originalPrice={shoe.price * 2}
                       image={shoe.imageUrl}
                       description={shoe.description}
                     />

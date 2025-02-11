@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { ShoppingBag } from 'lucide-react';
-import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { ShoppingBag as ShoppingBagIcon } from '@phosphor-icons/react';
+"use client";
+
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { ShoppingBag } from "@phosphor-icons/react";
+import { motion } from "framer-motion";
 
 const ProductCard = ({ id, image, name, price, originalPrice, description }) => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleCardClick = (e) => {
-    if (e.target.closest('button')) {
+    if (e.target.closest("button")) {
       return;
     }
     navigate(`/product/${id}`);
@@ -18,26 +19,26 @@ const ProductCard = ({ id, image, name, price, originalPrice, description }) => 
 
   const handleAddToCart = async (e) => {
     e.stopPropagation();
-    
+
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       if (!token) {
-        navigate('/login');
+        navigate("/login");
         return;
       }
 
       setIsLoading(true);
 
       // First, check if the item is already in the cart
-      const cartResponse = await axios.get('http://localhost:5000/api/cart', {
-        headers: { 
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+      const cartResponse = await axios.get("http://localhost:5000/api/cart", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       });
 
       const existingItem = cartResponse.data.items.find(
-        item => item.product._id === id && item.size === '10'
+        (item) => item.product._id === id && item.size === "10"
       );
 
       if (existingItem) {
@@ -47,35 +48,35 @@ const ProductCard = ({ id, image, name, price, originalPrice, description }) => 
           { quantity: existingItem.quantity + 1 },
           {
             headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json'
-            }
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
           }
         );
       } else {
         // If item doesn't exist, add new item
         await axios.post(
-          'http://localhost:5000/api/cart/add',
+          "http://localhost:5000/api/cart/add",
           {
             productId: id,
             quantity: 1,
-            size: '10'
+            size: "10",
           },
           {
             headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json'
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
             },
-            withCredentials: true
+            withCredentials: true,
           }
         );
       }
 
-      alert('Product added to cart!');
+      alert("Product added to cart!");
     } catch (error) {
-      console.error('Error managing cart:', error);
-      console.error('Error response:', error.response?.data);
-      alert(error.response?.data?.message || 'Failed to update cart');
+      console.error("Error managing cart:", error);
+      console.error("Error response:", error.response?.data);
+      alert(error.response?.data?.message || "Failed to update cart");
     } finally {
       setIsLoading(false);
     }
@@ -83,12 +84,12 @@ const ProductCard = ({ id, image, name, price, originalPrice, description }) => 
 
   return (
     <motion.div
-      className="group cursor-pointer"
+      className="group cursor-pointer border border-gray-300 rounded-lg overflow-hidden hover:border-black transition-colors duration-300"
       onClick={handleCardClick}
     >
-      <div className="relative overflow-hidden rounded-lg">
+      <div className="relative overflow-hidden">
         <img
-          src={image}
+          src={image || "/placeholder.svg"}
           alt={name}
           className="w-full h-64 object-cover transition-transform duration-300"
         />
@@ -99,14 +100,14 @@ const ProductCard = ({ id, image, name, price, originalPrice, description }) => 
           onClick={handleAddToCart}
           disabled={isLoading}
         >
-          <ShoppingBagIcon size={20} weight="bold" />
+          <ShoppingBag size={20} weight="bold" />
         </motion.button>
       </div>
-      <div className="mt-4 space-y-2">
-        <h3 className="font-semibold text-gray-800">{name}</h3>
+      <div className="p-4 space-y-2">
+        <h3 className="font-semibold text-gray-800 text-lg">{name}</h3>
         <div className="flex items-center gap-2">
-          <span className="text-lg font-bold">${price}</span>
-          <span className="text-sm text-gray-500 line-through">${originalPrice}</span>
+          <span className="text-lg font-bold">${price.toFixed(2)}</span>
+          <span className="text-sm text-gray-500 line-through">${originalPrice.toFixed(2)}</span>
         </div>
         <p className="text-sm text-gray-600 line-clamp-2">{description}</p>
       </div>
