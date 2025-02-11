@@ -1,6 +1,8 @@
 const User = require('../models/user.model');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const cloudinary = require('../config/cloudinary');
+const fs = require('fs').promises;
 
 const Signup = async function (req, res) {
     try {
@@ -112,4 +114,47 @@ const verifyToken = async function (req, res) {
     }
 };
 
-module.exports = { Signup, Login, verifyToken };
+const uploadProfilePhoto = async function (req, res) {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ message: 'No file uploaded' });
+        }
+
+        // Upload to Cloudinary
+        const result = await cloudinary.uploader.upload(req.file.path, {
+            folder: 'profile_photos',
+            width: 300,
+            height: 300,
+            crop: 'fill'
+        });
+
+        // Clean up the temporary file
+        await fs.unlink(req.file.path);
+
+        // Update user in database
+        const user = await User.findByIdAndUpdate(
+            req.user._id,
+            { imageUrl: result.secure_url },
+            { new: true }
+        ).select('-password');
+
+        res.status(200).json({
+            message: 'Profile photo uploaded successfully',
+            imageUrl: result.secure_url
+        });
+
+    } catch (error) {
+        // Clean up the temporary file if it exists
+        if (req.file && req.file.path) {
+            await fs.unlink(req.file.path).catch(console.error);
+        }
+
+        console.error('Upload error:', error);
+        res.status(500).json({
+            message: 'Error uploading profile photo',
+            error: error.message
+        });
+    }
+};
+
+module.exports = { Signup, Login, verifyToken, uploadProfilePhoto };

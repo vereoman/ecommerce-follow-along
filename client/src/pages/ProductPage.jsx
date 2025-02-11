@@ -101,20 +101,34 @@ const ProductPage = () => {
         return;
       }
 
-      await axios.post('http://localhost:5000/api/cart/add', {
+      console.log('Sending add to cart request:', {
         productId: product._id,
         quantity: 1,
         size: selectedSize
-      }, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
       });
 
+      const response = await axios.post(
+        'http://localhost:5000/api/cart/add',
+        {
+          productId: product._id,
+          quantity: 1,
+          size: selectedSize
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          withCredentials: true
+        }
+      );
+
+      console.log('Add to cart response:', response.data);
       alert('Product added to cart!');
     } catch (error) {
       console.error('Error adding to cart:', error);
-      alert('Failed to add product to cart');
+      console.error('Error response:', error.response?.data);
+      alert(error.response?.data?.message || 'Failed to add product to cart');
     }
   };
 

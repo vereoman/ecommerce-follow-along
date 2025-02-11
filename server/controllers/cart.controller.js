@@ -18,22 +18,24 @@ const getCart = async (req, res) => {
 
 const addToCart = async (req, res) => {
     try {
-        console.log('Add to cart request:', req.body);
+        const { productId, quantity, size } = req.body;
+        console.log('Add to cart request:', { productId, quantity, size });
         console.log('User:', req.user);
 
-        const { productId, quantity, size } = req.body;
-
+        // Validation
         if (!productId || !quantity || !size) {
             console.log('Missing required fields:', { productId, quantity, size });
             return res.status(400).json({ message: 'Missing required fields' });
         }
 
+        // Check if product exists
         const product = await Product.findById(productId);
         if (!product) {
             console.log('Product not found:', productId);
             return res.status(404).json({ message: 'Product not found' });
         }
 
+        // Find or create cart
         let cart = await Cart.findOne({ user: req.user._id });
         console.log('Existing cart:', cart);
         
@@ -42,6 +44,7 @@ const addToCart = async (req, res) => {
             console.log('Created new cart:', cart);
         }
 
+        // Check if item already exists in cart
         const existingItemIndex = cart.items.findIndex(
             item => item.product.toString() === productId && item.size === size
         );
@@ -57,10 +60,12 @@ const addToCart = async (req, res) => {
         await cart.save();
         console.log('Saved cart:', cart);
         
+        // Populate product details before sending response
         cart = await Cart.findById(cart._id).populate('items.product');
         
         res.json(cart);
     } catch (error) {
+        console.error('Server error in addToCart:', error);
         res.status(500).json({ 
             message: 'Error adding item to cart',
             error: error.message 

@@ -34,6 +34,7 @@ const ProfilePage = ({ onSignOut }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [uploading, setUploading] = useState(false);
 
     useEffect(() => {
         const initializeUser = async () => {
@@ -142,6 +143,41 @@ const ProfilePage = ({ onSignOut }) => {
     const handleAddress = () => navigate('/address');
     const handleEditProfile = () => navigate('/edit-profile');
 
+    const handleProfilePhotoUpload = async (event) => {
+        try {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            setUploading(true);
+            const token = localStorage.getItem('token');
+            if (!token) throw new Error('No authentication token found');
+
+            const formData = new FormData();
+            formData.append('image', file);
+
+            const response = await axios.post(
+                'http://localhost:5000/api/users/upload-photo',
+                formData,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }
+            );
+
+            const updatedUser = { ...user, imageUrl: response.data.imageUrl };
+            setUser(updatedUser);
+            localStorage.setItem('user', JSON.stringify(updatedUser));
+
+        } catch (error) {
+            console.error('Error uploading profile photo:', error);
+            setError(error.response?.data?.message || 'Failed to upload profile photo');
+        } finally {
+            setUploading(false);
+        }
+    };
+
     if (loading) {
         return (
             <motion.div
@@ -185,9 +221,29 @@ const ProfilePage = ({ onSignOut }) => {
                                         <User className="w-12 h-12 text-gray-500" />
                                     </div>
                                 )}
-                                <button className="absolute bottom-0 right-0 bg-gray-900 text-white rounded-full p-1 w-6 h-6 flex items-center justify-center text-sm">
-                                    +
-                                </button>
+                                <label 
+                                    className="absolute bottom-0 right-0 bg-gray-900 text-white rounded-full p-1 w-6 h-6 flex items-center justify-center text-sm cursor-pointer"
+                                    htmlFor="profile-photo-upload"
+                                >
+                                    {uploading ? (
+                                        <motion.div
+                                            animate={{ rotate: 360 }}
+                                            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                                        >
+                                            ⟳
+                                        </motion.div>
+                                    ) : (
+                                        "+"
+                                    )}
+                                </label>
+                                <input
+                                    type="file"
+                                    id="profile-photo-upload"
+                                    className="hidden"
+                                    accept="image/*"
+                                    onChange={handleProfilePhotoUpload}
+                                    disabled={uploading}
+                                />
                             </div>
 
                             <div className="text-center space-y-2">
