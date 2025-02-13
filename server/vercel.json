@@ -15,10 +15,5 @@
             "src": "/uploads/(.*)",
             "dest": "/uploads/$1"
         }
-    ],
-    "functions": {
-        "server.js": {
-            "runtime": "nodejs18.x"
-        }
-    }
+    ]
 }
