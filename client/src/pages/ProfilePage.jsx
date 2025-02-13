@@ -30,7 +30,7 @@ const ProfilePage = ({ onSignOut }) => {
             if (!token) throw new Error('No authentication token found');
 
             const response = await axios.get(
-                `${import.meta.env.VITE_API_URL}/products/seller`,
+                `${import.meta.env.VITE_API_URL}/api/products/seller`,
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -88,7 +88,7 @@ const ProfilePage = ({ onSignOut }) => {
             formData.append('image', file);
 
             const response = await axios.post(
-                `${import.meta.env.VITE_API_URL}/users/upload-photo`,
+                `${import.meta.env.VITE_API_URL}/api/users/upload-photo`,
                 formData,
                 {
                     headers: {
@@ -114,7 +114,7 @@ const ProfilePage = ({ onSignOut }) => {
             if (!token) throw new Error('No authentication token found');
 
             await axios.delete(
-                `${import.meta.env.VITE_API_URL}/products/${productId}`,
+                `${import.meta.env.VITE_API_URL}/api/products/${productId}`,
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -134,7 +134,7 @@ const ProfilePage = ({ onSignOut }) => {
             if (!token) throw new Error('No authentication token found');
 
             const response = await axios.put(
-                `${import.meta.env.VITE_API_URL}/products/${updatedProduct._id}`,
+                `${import.meta.env.VITE_API_URL}/api/products/${updatedProduct._id}`,
                 updatedProduct,
                 {
                     headers: {

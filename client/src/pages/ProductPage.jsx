@@ -18,7 +18,7 @@ const ProductPage = () => {
             try {
                 const token = localStorage.getItem("token");
                 const response = await axios.get(
-                    `${import.meta.env.VITE_API_URL}/products/${id}`,
+                    `${import.meta.env.VITE_API_URL}/api/products/${id}`,
                     {
                         headers: { Authorization: `Bearer ${token}` },
                     }
@@ -67,7 +67,7 @@ const ProductPage = () => {
             console.log("Selected size:", selectedSize);
 
             const response = await axios.post(
-                `${import.meta.env.VITE_API_URL}/cart/add`,
+                `${import.meta.env.VITE_API_URL}/api/cart/add`,
                 {
                     productId: product._id,
                     size: selectedSize,

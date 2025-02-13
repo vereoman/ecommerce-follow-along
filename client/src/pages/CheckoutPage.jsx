@@ -13,7 +13,7 @@ const CheckoutPage = () => {
     const fetchCartItems = async () => {
         try {
             const token = localStorage.getItem("token");
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/cart`, {
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/cart`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setCartItems(response.data.items);
@@ -25,7 +25,7 @@ const CheckoutPage = () => {
     const fetchAddresses = async () => {
         try {
             const token = localStorage.getItem("token");
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/addresses`, {
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/addresses`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setAddresses(response.data);

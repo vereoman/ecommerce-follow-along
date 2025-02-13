@@ -18,7 +18,7 @@ const LandingPage = () => {
         const fetchProducts = async () => {
             try {
                 const response = await axios.get(
-                    `${import.meta.env.VITE_API_URL}/products`
+                    `${import.meta.env.VITE_API_URL}/api/products`
                 );
                 setTrendingShoes(response.data);
             } catch (error) {

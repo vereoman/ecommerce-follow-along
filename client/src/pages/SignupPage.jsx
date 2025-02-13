@@ -33,7 +33,7 @@ const SignupPage = ({ setIsAuthenticated }) => {
         e.preventDefault();
         try {
             const response = await axios.post(
-                `${import.meta.env.VITE_API_URL}/users/signup`,
+                `${import.meta.env.VITE_API_URL}/api/users/signup`,
                 {
                     email,
                     password,
