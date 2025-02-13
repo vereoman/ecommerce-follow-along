@@ -17,11 +17,10 @@ if (!fs.existsSync(uploadDir)) {
 
 app.use(
     cors({
-        origin: process.env.CLIENT_URL,
+        origin: `${process.env.CLIENT_URL}`,
         credentials: true,
     })
 );
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -52,19 +51,12 @@ app.use((req, res) => {
     res.status(404).json({ message: "Route not found" });
 });
 
-if (process.env.VERCEL) {
-    connectDB().catch(error =>
-        console.error("Error connecting to DB on Vercel:", error.message)
-    );
-    module.exports = app;
-} else {
-    const PORT = process.env.PORT || 5000;
-    app.listen(PORT, async () => {
-        try {
-            await connectDB();
-            console.log("Server is running on Port:", PORT);
-        } catch (error) {
-            console.error("Server Startup Error:", error.message);
-        }
-    });
-}
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, async () => {
+    try {
+        await connectDB();
+        console.log("Server is running on Port:", PORT);
+    } catch (error) {
+        console.error("Server Startup Error:", error.message);
+    }
+});
