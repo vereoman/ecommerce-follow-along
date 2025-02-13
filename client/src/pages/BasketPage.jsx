@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
-import { Trash, Plus, Minus } from "@phosphor-icons/react";
+import { TrashSimple, Plus, Minus } from "@phosphor-icons/react";
 import { useNavigate } from "react-router-dom";
 import AddressForm from "../components/AddressForm";
 
@@ -135,7 +135,7 @@ const BasketPage = () => {
                                             Size: {item.size}
                                         </p>
                                         <p className="text-gray-800">
-                                            ${item.product.price}
+                                            ₹{item.product.price}
                                         </p>
                                     </div>
 
@@ -171,7 +171,7 @@ const BasketPage = () => {
                                         onClick={() => handleRemoveItem(item._id)}
                                         className="p-2 text-red-500 hover:text-red-600"
                                     >
-                                        <Trash size={20} />
+                                        <TrashSimple size={20} />
                                     </button>
                                 </div>
                             ))}

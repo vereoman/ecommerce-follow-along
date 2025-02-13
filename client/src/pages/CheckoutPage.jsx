@@ -98,7 +98,7 @@ const CheckoutPage = () => {
                                         <h3 className="font-semibold">{item.product.name}</h3>
                                         <p className="text-gray-600">Quantity: {item.quantity}</p>
                                         <p className="text-gray-800">
-                                            Price: ${item.product.price}
+                                            Price: ₹{item.product.price}
                                         </p>
                                     </div>
                                 </div>
@@ -108,7 +108,7 @@ const CheckoutPage = () => {
 
                     <div className="flex justify-between items-center mb-6">
                         <span className="font-bold text-xl">Total:</span>
-                        <span className="font-bold text-xl">${calculateTotal().toFixed(2)}</span>
+                        <span className="font-bold text-xl">₹{calculateTotal().toFixed(2)}</span>
                     </div>
 
                     <div className="flex justify-center">
@@ -178,7 +178,7 @@ const CheckoutPage = () => {
                                     <h3 className="font-semibold">{item.product.name}</h3>
                                     <p className="text-gray-600">Quantity: {item.quantity}</p>
                                     <p className="text-gray-800">
-                                        ${item.product.price}
+                                        ₹{item.product.price}
                                     </p>
                                 </div>
                             </div>
@@ -186,7 +186,7 @@ const CheckoutPage = () => {
                     </div>
                     <div className="flex justify-between items-center mt-4">
                         <span className="font-bold text-xl">Total:</span>
-                        <span className="font-bold text-xl">${calculateTotal().toFixed(2)}</span>
+                        <span className="font-bold text-xl">₹{calculateTotal().toFixed(2)}</span>
                     </div>
                 </div>
 
