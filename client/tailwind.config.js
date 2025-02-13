@@ -6,7 +6,7 @@ module.exports = {
   theme: {
       extend: {
           fontFamily: {
-              sans: ["SF Pro Text", "Helvetica Neue", "Geist", "sans-serif"],
+              sans: ["SF Pro Display", "Helvetica Neue", "Geist", "sans-serif"],
           },
       },
   },

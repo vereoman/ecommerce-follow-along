@@ -181,7 +181,7 @@ const BasketPage = () => {
                             <div className="flex justify-between items-center mb-4">
                                 <span className="font-semibold">Total:</span>
                                 <span className="text-xl font-bold">
-                                    ${calculateTotal().toFixed(2)}
+                                    ₹{calculateTotal().toFixed(2)}
                                 </span>
                             </div>
                             {addresses.length > 0 ? (

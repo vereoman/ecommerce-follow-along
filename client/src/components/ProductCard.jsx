@@ -89,7 +89,7 @@ const ProductCard = ({ id, image, name, price, originalPrice, description }) => 
                     className="w-full h-64 object-cover transition-transform duration-300"
                 />
                 <motion.button
-                    className="absolute top-4 right-4 bg-white text-gray-600 p-3 rounded-full shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    className="absolute top-4 right-4 bg-white text-gray-600 p-3 rounded-lg shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={handleAddToCart}

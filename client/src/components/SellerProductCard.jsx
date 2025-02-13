@@ -244,13 +244,13 @@ const SellerProductCard = ({ product, onDelete, onUpdate }) => {
                 >
                     <button
                         onClick={() => setIsEditing(true)}
-                        className="p-2 bg-white rounded-full shadow-sm hover:bg-gray-100 transition-colors duration-200"
+                        className="p-2 bg-white rounded-lg shadow-sm hover:bg-gray-100 transition-colors duration-200"
                     >
                         <PencilSimple size={16} className="text-gray-600" />
                     </button>
                     <button
                         onClick={() => setIsDeleting(true)}
-                        className="p-2 bg-white rounded-full shadow-sm hover:bg-gray-100 transition-colors duration-200"
+                        className="p-2 bg-white rounded-lg shadow-sm hover:bg-gray-100 transition-colors duration-200"
                     >
                         <TrashSimple size={16} className="text-red-600" />
                     </button>
