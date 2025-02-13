@@ -19,7 +19,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
 
         try {
             const response = await axios.post(
-                "http://localhost:5000/api/users/login",
+                `${import.meta.env.VITE_API_URL}/users/login`,
                 {
                     email,
                     password,
@@ -48,7 +48,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
 
     const handleGoogleLogin = (e) => {
         e.preventDefault();
-        window.location.href = "http://localhost:5000/auth/google";
+        window.location.href = '#';
     };
 
     const formVariants = {

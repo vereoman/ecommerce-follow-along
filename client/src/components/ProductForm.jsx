@@ -51,7 +51,7 @@ const ProductForm = ({ onSuccess, onClose }) => {
             }
 
             const response = await axios.post(
-                "http://localhost:5000/api/products",
+                `${import.meta.env.VITE_API_URL}/products`,
                 formData,
                 {
                     headers: {
@@ -105,7 +105,6 @@ const ProductForm = ({ onSuccess, onClose }) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
         >
-            {/* Close button */}
             {onClose && (
                 <button
                     type="button"

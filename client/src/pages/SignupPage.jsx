@@ -33,7 +33,7 @@ const SignupPage = ({ setIsAuthenticated }) => {
         e.preventDefault();
         try {
             const response = await axios.post(
-                "http://localhost:5000/api/users/signup",
+                `${import.meta.env.VITE_API_URL}/users/signup`,
                 {
                     email,
                     password,
@@ -59,7 +59,7 @@ const SignupPage = ({ setIsAuthenticated }) => {
 
     const handleGoogleSignup = (e) => {
         e.preventDefault();
-        window.location.href = "http://localhost:3000/auth/google";
+        window.location.href = `#`;
     };
 
     return (

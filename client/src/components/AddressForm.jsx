@@ -10,7 +10,7 @@ const AddressForm = ({ onClose, userId }) => {
         try {
             const token = localStorage.getItem('token');
             await axios.post(
-                'http://localhost:5000/api/addresses',
+                `${import.meta.env.VITE_API_URL}/addresses`,
                 data,
                 {
                     headers: {

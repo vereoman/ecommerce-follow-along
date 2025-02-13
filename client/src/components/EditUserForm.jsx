@@ -5,7 +5,6 @@ import axios from 'axios';
 import { AlertCircle } from 'lucide-react';
 
 const EditUserForm = ({ user, onClose, onUpdate }) => {
-    // Initialize form with react-hook-form, using current user data as default values
     const { register, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
             name: user?.name || '',
@@ -15,7 +14,6 @@ const EditUserForm = ({ user, onClose, onUpdate }) => {
         }
     });
 
-    // State for handling form submission status and errors
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState(null);
 
@@ -27,9 +25,8 @@ const EditUserForm = ({ user, onClose, onUpdate }) => {
             const token = localStorage.getItem('token');
             if (!token) throw new Error('No authentication token found');
 
-            // Send update request to the server
             const response = await axios.put(
-                'http://localhost:5000/api/users/profile',
+                `${import.meta.env.VITE_API_URL}/users/profile`,
                 data,
                 {
                     headers: {
@@ -39,7 +36,6 @@ const EditUserForm = ({ user, onClose, onUpdate }) => {
                 }
             );
             
-            // Update local user data and close form
             const updatedUser = response.data;
             onUpdate(updatedUser);
             localStorage.setItem('user', JSON.stringify(updatedUser));
@@ -68,7 +64,6 @@ const EditUserForm = ({ user, onClose, onUpdate }) => {
             >
                 <h2 className="text-2xl font-bold mb-6">Edit Profile</h2>
 
-                {/* Error Alert */}
                 {submitError && (
                     <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2 text-red-700">
                         <AlertCircle className="w-5 h-5" />
@@ -77,7 +72,6 @@ const EditUserForm = ({ user, onClose, onUpdate }) => {
                 )}
 
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                    {/* Name Field */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                             Name
@@ -98,7 +92,6 @@ const EditUserForm = ({ user, onClose, onUpdate }) => {
                         )}
                     </div>
 
-                    {/* Email Field */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                             Email
@@ -120,7 +113,6 @@ const EditUserForm = ({ user, onClose, onUpdate }) => {
                         )}
                     </div>
 
-                    {/* Phone Field */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                             Phone Number (optional)
@@ -141,7 +133,6 @@ const EditUserForm = ({ user, onClose, onUpdate }) => {
                         )}
                     </div>
 
-                    {/* Bio Field */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                             Bio (optional)
@@ -162,7 +153,6 @@ const EditUserForm = ({ user, onClose, onUpdate }) => {
                         )}
                     </div>
 
-                    {/* Form Actions */}
                     <div className="flex justify-end space-x-4 mt-6">
                         <button
                             type="button"

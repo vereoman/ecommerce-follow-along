@@ -51,7 +51,7 @@ const App = () => {
     return (
         <div className="min-h-screen flex flex-col bg-white">
             {!shouldHideHeaderFooter && <Header isSignedIn={isAuthenticated} />}
-            <main className="flex-grow mt-20">
+            <main className={`flex-grow ${shouldHideHeaderFooter ? "" : "mt-20"}`}>
                 <Routes>
                     <Route path="/" element={<LandingPage />} />
                     <Route path="/product/:id" element={<ProductPage />} />

@@ -27,7 +27,7 @@ const ProductCard = ({ id, image, name, price, originalPrice, description }) => 
 
             setIsLoading(true);
 
-            const cartResponse = await axios.get("http://localhost:5000/api/cart", {
+            const cartResponse = await axios.get(`${import.meta.env.VITE_API_URL}/cart`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json",
@@ -40,7 +40,7 @@ const ProductCard = ({ id, image, name, price, originalPrice, description }) => 
 
             if (existingItem) {
                 await axios.put(
-                    `http://localhost:5000/api/cart/items/${existingItem._id}`,
+                    `${import.meta.env.VITE_API_URL}/cart/items/${existingItem._id}`,
                     { quantity: existingItem.quantity + 1 },
                     {
                         headers: {
@@ -51,7 +51,7 @@ const ProductCard = ({ id, image, name, price, originalPrice, description }) => 
                 );
             } else {
                 await axios.post(
-                    "http://localhost:5000/api/cart/add",
+                    `${import.meta.env.VITE_API_URL}/cart/add`,
                     {
                         productId: id,
                         quantity: 1,
@@ -89,7 +89,7 @@ const ProductCard = ({ id, image, name, price, originalPrice, description }) => 
                     className="w-full h-64 object-cover transition-transform duration-300"
                 />
                 <motion.button
-                    className="absolute top-4 right-4 bg-black text-white p-3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    className="absolute top-4 right-4 bg-white text-gray-600 p-3 rounded-full shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={handleAddToCart}
@@ -102,7 +102,7 @@ const ProductCard = ({ id, image, name, price, originalPrice, description }) => 
                 <h3 className="font-semibold text-gray-800 text-lg">{name}</h3>
                 <div className="flex items-center gap-2">
                     <span className="text-lg font-bold">₹{price.toFixed(2)}</span>
-                    <span className="text-sm text-gray-500 line-through">${originalPrice.toFixed(2)}</span>
+                    <span className="text-sm text-gray-500 line-through">₹{originalPrice.toFixed(2)}</span>
                 </div>
                 <p className="text-sm text-gray-600 line-clamp-2">{description}</p>
             </div>

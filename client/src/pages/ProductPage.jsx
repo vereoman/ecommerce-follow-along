@@ -18,7 +18,7 @@ const ProductPage = () => {
             try {
                 const token = localStorage.getItem("token");
                 const response = await axios.get(
-                    `http://localhost:5000/api/products/${id}`,
+                    `${import.meta.env.VITE_API_URL}/products/${id}`,
                     {
                         headers: { Authorization: `Bearer ${token}` },
                     }
@@ -67,7 +67,7 @@ const ProductPage = () => {
             console.log("Selected size:", selectedSize);
 
             const response = await axios.post(
-                "http://localhost:5000/api/cart/add",
+                `${import.meta.env.VITE_API_URL}/cart/add`,
                 {
                     productId: product._id,
                     size: selectedSize,
@@ -196,14 +196,14 @@ const ProductPage = () => {
                                 </h3>
                                 <div className="grid grid-cols-4 gap-2">
                                     {[
+                                        "6",
+                                        "7",
+                                        "8",
                                         "9",
-                                        "9.5",
                                         "10",
-                                        "10.5",
                                         "11",
-                                        "11.5",
                                         "12",
-                                        "12.5",
+                                        "13",
                                     ].map((size) => (
                                         <button
                                             key={size}

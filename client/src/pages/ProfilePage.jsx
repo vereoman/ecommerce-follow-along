@@ -9,7 +9,6 @@ import EditUserForm from '../components/EditUserForm';
 import AddressForm from '../components/AddressForm';
 
 const ProfilePage = ({ onSignOut }) => {
-    // Navigation and state management
     const navigate = useNavigate();
     const [products, setProducts] = useState([]);
     const [user, setUser] = useState(null);
@@ -22,7 +21,6 @@ const ProfilePage = ({ onSignOut }) => {
     const [productsLoading, setProductsLoading] = useState(false);
     const [productsError, setProductsError] = useState(null);
 
-    // Function to fetch seller's products from the server
     const fetchProducts = async () => {
         setProductsLoading(true);
         setProductsError(null);
@@ -32,7 +30,7 @@ const ProfilePage = ({ onSignOut }) => {
             if (!token) throw new Error('No authentication token found');
 
             const response = await axios.get(
-                'http://localhost:5000/api/products/seller',
+                `${import.meta.env.VITE_API_URL}/products/seller`,
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -49,7 +47,6 @@ const ProfilePage = ({ onSignOut }) => {
         }
     };
 
-    // Initialize user data and fetch products if user is a seller
     useEffect(() => {
         const initializeUser = async () => {
             const storedUser = localStorage.getItem('user');
@@ -78,7 +75,6 @@ const ProfilePage = ({ onSignOut }) => {
         initializeUser();
     }, [navigate]);
 
-    // Handle profile photo upload
     const handleProfilePhotoUpload = async (event) => {
         try {
             const file = event.target.files[0];
@@ -92,7 +88,7 @@ const ProfilePage = ({ onSignOut }) => {
             formData.append('image', file);
 
             const response = await axios.post(
-                'http://localhost:5000/api/users/upload-photo',
+                `${import.meta.env.VITE_API_URL}/users/upload-photo`,
                 formData,
                 {
                     headers: {
@@ -112,14 +108,13 @@ const ProfilePage = ({ onSignOut }) => {
         }
     };
 
-    // Handle product deletion
     const handleProductDelete = async (productId) => {
         try {
             const token = localStorage.getItem('token');
             if (!token) throw new Error('No authentication token found');
 
             await axios.delete(
-                `http://localhost:5000/api/products/${productId}`,
+                `${import.meta.env.VITE_API_URL}/products/${productId}`,
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -130,18 +125,16 @@ const ProfilePage = ({ onSignOut }) => {
             setProducts(products.filter(p => p._id !== productId));
         } catch (error) {
             console.error('Error deleting product:', error);
-            // You might want to show an error toast or message here
         }
     };
 
-    // Handle product update
     const handleProductUpdate = async (updatedProduct) => {
         try {
             const token = localStorage.getItem('token');
             if (!token) throw new Error('No authentication token found');
 
             const response = await axios.put(
-                `http://localhost:5000/api/products/${updatedProduct._id}`,
+                `${import.meta.env.VITE_API_URL}/products/${updatedProduct._id}`,
                 updatedProduct,
                 {
                     headers: {
@@ -156,11 +149,9 @@ const ProfilePage = ({ onSignOut }) => {
             ));
         } catch (error) {
             console.error('Error updating product:', error);
-            // You might want to show an error toast or message here
         }
     };
 
-    // Handle user sign out
     const handleSignOut = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
@@ -168,7 +159,6 @@ const ProfilePage = ({ onSignOut }) => {
         navigate('/');
     };
 
-    // Show loading state while initializing
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center">
@@ -180,10 +170,8 @@ const ProfilePage = ({ onSignOut }) => {
     return (
         <div className="min-h-screen py-8">
             <div className="max-w-4xl mx-auto px-4">
-                {/* Profile Section */}
                 <div className="bg-white rounded-lg shadow-sm p-8 mb-8">
                     <div className="flex flex-col items-center space-y-4">
-                        {/* Profile Photo */}
                         <div className="relative">
                             {user?.imageUrl ? (
                                 <img
@@ -208,30 +196,28 @@ const ProfilePage = ({ onSignOut }) => {
                             </label>
                         </div>
 
-                        {/* User Details */}
                         <div className="text-center space-y-2">
                             <h2 className="text-2xl font-bold text-gray-900">{user?.name}</h2>
                             <p className="text-gray-600">{user?.email}</p>
                         </div>
 
-                        {/* Action Buttons */}
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-lg mt-6">
                             <motion.button
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                                 onClick={() => setShowAddressForm(true)}
-                                className="flex flex-col items-center justify-center p-4 bg-gray-100 rounded-lg hover:bg-gray-200 hover:border transition-colors"
+                                className="flex items-center justify-center p-4 bg-gray-100 rounded-lg hover:bg-gray-200 hover:border transition-colors"
                             >
-                                <MapPin className="w-6 h-6 mb-2" />
+                                <MapPin className="w-6 h-6" />
                             </motion.button>
 
                             <motion.button
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                                 onClick={() => setShowEditForm(true)}
-                                className="flex flex-col items-center justify-center p-4 bg-gray-100 rounded-lg hover:bg-gray-200 hover:border transition-colors"
+                                className="flex items-center justify-center p-4 bg-gray-100 rounded-lg hover:bg-gray-200 hover:border transition-colors"
                             >
-                                <PencilSimple className="w-6 h-6 mb-2" />
+                                <PencilSimple className="w-6 h-6" />
                             </motion.button>
 
                             {user?.isSeller && (
@@ -239,9 +225,9 @@ const ProfilePage = ({ onSignOut }) => {
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
                                     onClick={() => setShowProductForm(true)}
-                                    className="flex flex-col items-center justify-center p-4 bg-gray-100 rounded-lg hover:bg-gray-200 hover:border transition-colors"
+                                    className="flex items-center justify-center p-4 bg-gray-100 rounded-lg hover:bg-gray-200 hover:border transition-colors"
                                 >
-                                    <Plus className="w-6 h-6 mb-2" />
+                                    <Plus className="w-6 h-6" />
                                 </motion.button>
                             )}
 
@@ -249,9 +235,9 @@ const ProfilePage = ({ onSignOut }) => {
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                                 onClick={handleSignOut}
-                                className="flex flex-col items-center justify-center p-4 bg-gray-100 rounded-lg hover:bg-gray-200 hover:border transition-colors"
+                                className="flex items-center justify-center p-4 bg-gray-100 rounded-lg hover:bg-gray-200 hover:border transition-colors"
                             >
-                                <SignOut className="w-6 h-6 mb-2" />
+                                <SignOut className="w-6 h-6" />
                             </motion.button>
                         </div>
                     </div>

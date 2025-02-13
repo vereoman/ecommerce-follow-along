@@ -3,12 +3,14 @@ import { motion } from "framer-motion";
 import axios from "axios";
 import { Trash, Plus, Minus } from "@phosphor-icons/react";
 import { useNavigate } from "react-router-dom";
+import AddressForm from "../components/AddressForm";
 
 const BasketPage = () => {
     const [cartItems, setCartItems] = useState([]);
     const [addresses, setAddresses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [showAddressForm, setShowAddressForm] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -19,7 +21,7 @@ const BasketPage = () => {
     const fetchCartItems = async () => {
         try {
             const token = localStorage.getItem("token");
-            const response = await axios.get("http://localhost:5000/api/cart", {
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/cart`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setCartItems(response.data.items);
@@ -34,7 +36,7 @@ const BasketPage = () => {
     const fetchAddresses = async () => {
         try {
             const token = localStorage.getItem("token");
-            const response = await axios.get("http://localhost:5000/api/addresses", {
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/addresses`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setAddresses(response.data);
@@ -47,7 +49,7 @@ const BasketPage = () => {
         try {
             const token = localStorage.getItem("token");
             await axios.put(
-                `http://localhost:5000/api/cart/items/${itemId}`,
+                `${import.meta.env.VITE_API_URL}/cart/items/${itemId}`,
                 { quantity: newQuantity },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -61,7 +63,7 @@ const BasketPage = () => {
         try {
             const token = localStorage.getItem("token");
             await axios.delete(
-                `http://localhost:5000/api/cart/items/${itemId}`,
+                `${import.meta.env.VITE_API_URL}/cart/items/${itemId}`,
                 {
                     headers: { Authorization: `Bearer ${token}` },
                 }
@@ -182,7 +184,7 @@ const BasketPage = () => {
                                     ${calculateTotal().toFixed(2)}
                                 </span>
                             </div>
-                            {addresses.length > 0 && (
+                            {addresses.length > 0 ? (
                                 <div className="mb-4">
                                     <h3 className="text-lg font-bold mb-2">
                                         Shipping Addresses:
@@ -194,6 +196,24 @@ const BasketPage = () => {
                                             </li>
                                         ))}
                                     </ul>
+                                    <button 
+                                        onClick={() => setShowAddressForm(true)} 
+                                        className="mt-2 text-blue-500 underline"
+                                    >
+                                        Add New Address
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="mb-4">
+                                    <p className="text-sm text-gray-700">
+                                        No shipping addresses found.
+                                    </p>
+                                    <button 
+                                        onClick={() => setShowAddressForm(true)} 
+                                        className="mt-2 text-blue-500 underline"
+                                    >
+                                        Add New Address
+                                    </button>
                                 </div>
                             )}
                             <button
@@ -204,6 +224,15 @@ const BasketPage = () => {
                             </button>
                         </div>
                     </>
+                )}
+
+                {showAddressForm && (
+                    <AddressForm
+                        onClose={() => {
+                            setShowAddressForm(false);
+                            fetchAddresses();
+                        }}
+                    />
                 )}
             </div>
         </motion.div>

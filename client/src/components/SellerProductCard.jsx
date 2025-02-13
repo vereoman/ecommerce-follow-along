@@ -152,7 +152,7 @@ const SellerProductCard = ({ product, onDelete, onUpdate }) => {
         try {
             const token = localStorage.getItem("token");
             const response = await axios.put(
-                `http://localhost:5000/api/products/${product._id}`,
+                `${import.meta.env.VITE_API_URL}/products/${product._id}`,
                 editedProduct,
                 {
                     headers: {
@@ -180,7 +180,7 @@ const SellerProductCard = ({ product, onDelete, onUpdate }) => {
             }
 
             await axios.delete(
-                `http://localhost:5000/api/products/${product._id}`,
+                `${import.meta.env.VITE_API_URL}/products/${product._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
