@@ -462,3 +462,13 @@ client/
   - Saved the Razorpay Client ID.
 - **Testing**: Verified that the Razorpay payment buttons are displayed correctly when the "Online Payment" option is selected.
 - **GitHub Updates**: Committed the payment method selection and Razorpay button display logic to the repository.
+
+---
+
+## Milestone 30: Razorpay Payment Integration
+
+- **Razorpay Integration**: Implemented online payment using Razorpay API using the client key you created earlier.
+- **NPM Package**: Downloaded NPM package to provide an component which will display online payment methods.
+- **Payment Processing**: Handled the payment processing logic when a user chooses to pay via Razorpay.
+- **Testing**: Verified that the Razorpay payment is processing correctly.
+- **GitHub Updates**: Committed the Razorpay payment integration and related components.
