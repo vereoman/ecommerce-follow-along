@@ -17,7 +17,6 @@ const LandingPage = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                // Updated endpoint: removed "/api" prefix
                 const response = await axios.get(
                     `${import.meta.env.VITE_API_URL}/products`
                 );

@@ -14,7 +14,7 @@ const MyOrders = () => {
                 `${import.meta.env.VITE_API_URL}/orders`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
-            setOrders(response.data.orders || (Array.isArray(response.data) ? response.data : []));
+            setOrders(response.data || []);
         } catch (error) {
             console.error("Error fetching orders: ", error);
         }
@@ -27,11 +27,6 @@ const MyOrders = () => {
     const handleCancelOrder = async (orderId) => {
         try {
             console.log("Canceling order:", orderId);
-    
-            const token = localStorage.getItem("token");
-            if (!token) {
-                throw new Error("No token available");
-            }
     
             const response = await axios.delete(
                 `${import.meta.env.VITE_API_URL}/orders/${orderId}`,
@@ -62,41 +57,39 @@ const MyOrders = () => {
                         <p className="text-gray-600">You have no orders yet.</p>
                     </div>
                 ) : (
-                    <>
-                        <div className="space-y-4">
-                            {orders.map((order) => (
-                                <div
-                                    key={order._id}
-                                    className="flex items-center gap-4 p-4 bg-white rounded-lg border border-gray-200"
-                                >
-                                    <img
-                                        src={order.product?.imageUrl}
-                                        alt={order.product?.name || "Product"}
-                                        className="w-24 h-24 object-cover rounded-md"
-                                    />
+                    <div className="space-y-4">
+                        {orders.map((order) => (
+                            <div
+                                key={order._id}
+                                className="flex items-center gap-4 p-4 bg-white rounded-lg border border-gray-200"
+                            >
+                                <img
+                                    src={order.product?.imageUrl}
+                                    alt={order.product?.name || "Product"}
+                                    className="w-24 h-24 object-cover rounded-md"
+                                />
 
-                                    <div className="flex-grow">
-                                        <h3 className="font-semibold">{order.product?.name || "N/A"}</h3>
-                                        <p className="text-gray-600">Quantity: {order.quantity}</p>
-                                        <p className="text-gray-800">Status: {order.status}</p>
-                                        <p className="text-gray-600">
-                                            {order.shippingAddress.street}, {order.shippingAddress.city}, 
-                                            {order.shippingAddress.state}, {order.shippingAddress.postalCode}
-                                        </p>
-                                    </div>
-
-                                    {order.status !== "cancelled" && (
-                                        <button
-                                            onClick={() => handleCancelOrder(order._id)}
-                                            className="p-2 text-red-500 hover:text-red-600"
-                                        >
-                                            Cancel Order
-                                        </button>
-                                    )}
+                                <div className="flex-grow">
+                                    <h3 className="font-semibold">{order.product?.name || "N/A"}</h3>
+                                    <p className="text-gray-600">Quantity: {order.quantity}</p>
+                                    <p className="text-gray-800">Status: {order.status}</p>
+                                    <p className="text-gray-600">
+                                        {order.shippingAddress.street}, {order.shippingAddress.city}, 
+                                        {order.shippingAddress.state}, {order.shippingAddress.postalCode}
+                                    </p>
                                 </div>
-                            ))}
-                        </div>
-                    </>
+
+                                {order.status !== "canceled" && (
+                                    <button
+                                        onClick={() => handleCancelOrder(order._id)}
+                                        className="p-2 text-red-500 hover:text-red-600"
+                                    >
+                                        Cancel Order
+                                    </button>
+                                )}
+                            </div>
+                        ))}
+                    </div>
                 )}
 
                 <button

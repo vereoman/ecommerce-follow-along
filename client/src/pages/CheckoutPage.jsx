@@ -54,39 +54,102 @@ const CheckoutPage = () => {
         );
     };
 
+    const loadRazorpay = (src) => {
+        return new Promise((resolve) => {
+            const script = document.createElement("script");
+            script.src = src;
+            script.onload = () => resolve(true);
+            script.onerror = () => resolve(false);
+            document.body.appendChild(script);
+        });
+    };
+
     const handlePlaceOrder = async () => {
         if (!selectedAddress) {
             alert("Please select a shipping address");
             return;
         }
 
+        const token = localStorage.getItem("token");
+        const total = calculateTotal();
+
         try {
-            const token = localStorage.getItem("token");
-
-            const orderPayload = {
-                address: selectedAddress._id,
-                products: cartItems.map((item) => ({
-                    product: item.product._id,
-                    quantity: item.quantity,
-                })),
-            };
-
-            const response = await axios.post(
-                `${import.meta.env.VITE_API_URL}/orders`,
-                orderPayload,
+            const res = await axios.post(
+                `${import.meta.env.VITE_API_URL}/payments/checkout`,
+                { total },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
 
-            if (response.status === 201) {
-                setOrderPlaced(true);
+            if (!res.data.success) {
+                alert("Error initiating payment.");
+                return;
             }
+
+            const { orderId, amount } = res.data;
+
+            const razorpayLoaded = await loadRazorpay("https://checkout.razorpay.com/v1/checkout.js");
+            if (!razorpayLoaded) {
+                alert("Failed to load Razorpay.");
+                return;
+            }
+
+            const options = {
+                key: import.meta.env.VITE_RAZORPAY_KEY,
+                amount,
+                currency: "INR",
+                name: "Your Store",
+                description: "Test Transaction",
+                order_id: orderId,
+                handler: async function (response) {
+                    try {
+                        const verifyRes = await axios.post(
+                            `${import.meta.env.VITE_API_URL}/payments/verify`,
+                            response
+                        );
+
+                        if (verifyRes.data.success) {
+                            alert("Payment successful!");
+
+                            const orderRes = await axios.post(
+                                `${import.meta.env.VITE_API_URL}/orders`,
+                                { products: cartItems, address: selectedAddress._id },
+                                { headers: { Authorization: `Bearer ${token}` } }
+                            );
+
+                            if (orderRes.data.orders) {
+                                setOrderPlaced(true);
+                            } else {
+                                alert("Failed to place order.");
+                            }
+                        } else {
+                            alert("Payment verification failed.");
+                        }
+                    } catch (error) {
+                        console.error("Error verifying payment or placing order:", error);
+                        alert("Payment verification or order creation error.");
+                    }
+                },
+                prefill: {
+                    name: "Customer Name",
+                    email: "customer@example.com",
+                    contact: "9999999999",
+                },
+                notes: {
+                    address: selectedAddress._id,
+                },
+                theme: {
+                    color: "#F37254",
+                },
+            };
+
+            const razorpay = new window.Razorpay(options);
+            razorpay.open();
         } catch (error) {
-            console.error("Error placing order:", error);
-            alert("Error placing order. Please try again.");
+            console.error("Error during order placement:", error);
+            alert("An error occurred while placing the order.");
         }
     };
 
-    // ✅ Clears the cart only AFTER the confirmation page is displayed
     useEffect(() => {
         const clearCart = async () => {
             if (orderPlaced) {

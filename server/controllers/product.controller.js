@@ -221,21 +221,4 @@ const getProductById = async (req, res) => {
     }
 };
 
-const searchProducts = async (req, res) => {
-    try {
-        const { q } = req.query;
-        if (!q) {
-            return res.json([]);
-        }
-
-        const products = await Product.find({
-            name: { $regex: q, $options: "i" },
-        }).limit(10);
-
-        res.json(products);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
-
-module.exports = { createProduct, getProducts, deleteProduct, updateProduct, getProductById, searchProducts };
+module.exports = { createProduct, getProducts, deleteProduct, updateProduct, getProductById };

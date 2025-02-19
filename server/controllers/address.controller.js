@@ -37,4 +37,4 @@ const getAddresses = async (req, res) => {
   }
 };
 
-module.exports = { createAddress, getAddresses }; 
+module.exports = { createAddress, getAddresses };

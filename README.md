@@ -406,3 +406,59 @@ client/
   - Included a "Place Order" button at the bottom of the confirmation page.
 - **Testing**: Verified the order confirmation page functionality.
 - **GitHub Updates**: Committed the order confirmation page and related components.
+
+---
+
+## Milestone 25: Place Order Endpoint Implementation
+
+- **Backend Endpoint**: Created a POST endpoint to receive product details, user information, and the selected delivery address.
+- **User Identification**: Retrieved the user's `_id` from the database using their email address.
+- **Order Creation**: For each product in the cart, a separate order is created and stored in the MongoDB order collection, associated with the user and delivery address.
+- **Data Persistence**: Ensured that all order details are correctly saved to the MongoDB database using the order schema.
+- **Testing**: Verified the endpoint functionality using Postman to simulate order placement.
+- **GitHub Updates**: Committed the place order endpoint implementation to the repository.
+
+---
+
+## Milestone 26: Retrieve User Orders Endpoint
+
+- **Backend Endpoint**: Created a GET endpoint to retrieve all orders associated with a specific user.
+- **User Identification**: Received the user's email and retrieved their `_id` from the database.
+- **Order Retrieval**: Fetched all orders from the MongoDB order collection that match the user's `_id`.
+- **Data Delivery**: Sent all the user's orders in the response.
+- **Testing**: Verified the endpoint functionality using Postman to retrieve orders for a specific user.
+- **GitHub Updates**: Committed the retrieve user orders endpoint implementation to the repository.
+
+---
+
+## Milestone 27: My Orders Page
+
+- **Frontend Page**: Created a "My Orders" page to display all orders placed by the user.
+- **Data Fetching**: Implemented a GET request to the "my-orders" endpoint, sending the user's email to retrieve their orders.
+- **Dynamic Display**: Displayed all user orders on the page.
+- **Navigation**: Added a link to the "My Orders" page in the navigation bar for easy access.
+- **Testing**: Verified the display of user orders on the "My Orders" page.
+- **GitHub Updates**: Committed the "My Orders" page and navigation updates to the repository.
+
+---
+
+## Milestone 28: Cancel Order Functionality
+
+- **Frontend Integration**: Added a "Cancel Order" button to each order displayed on the "My Orders" page, except for orders that are already canceled.
+- **Backend Endpoint**: Created an endpoint to receive the order ID.
+- **Order Status Update**: Retrieved the order using the provided ID, updated the order status to "canceled," and saved the changes to the database.
+- **Conditional Rendering**: Implemented logic to hide the "Cancel Order" button if the order is already canceled.
+- **Testing**: Verified the cancel order functionality by testing the button and confirming the status update in the database.
+- **GitHub Updates**: Committed the cancel order functionality and endpoint implementation to the repository.
+
+---
+
+## Milestone 29: Payment Method Selection and Razorpay Integration
+
+- **Payment Options**: Added radio buttons on the order confirmation page to allow users to select between "Cash on Delivery (COD)" and "Online Payment."
+- **Razorpay Integration**: When the "Online Payment" option is selected, Razorpay payment buttons are displayed.
+- **Razorpay Setup**:
+  - Created a Razorpay account and obtained the necessary API keys.
+  - Saved the Razorpay Client ID.
+- **Testing**: Verified that the Razorpay payment buttons are displayed correctly when the "Online Payment" option is selected.
+- **GitHub Updates**: Committed the payment method selection and Razorpay button display logic to the repository.

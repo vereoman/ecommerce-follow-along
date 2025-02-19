@@ -29,7 +29,6 @@ const ProfilePage = ({ onSignOut }) => {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("No authentication token found");
 
-      // Removed "/api" prefix; now calls /products/seller
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/products/seller`,
         {
@@ -88,7 +87,6 @@ const ProfilePage = ({ onSignOut }) => {
       const formData = new FormData();
       formData.append("image", file);
 
-      // If your server route is /users/upload-photo
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/users/upload-photo`,
         formData,
@@ -114,7 +112,6 @@ const ProfilePage = ({ onSignOut }) => {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("No authentication token found");
 
-      // Removed "/api" prefix; now calls /products/:productId
       await axios.delete(
         `${import.meta.env.VITE_API_URL}/products/${productId}`,
         {
@@ -135,7 +132,6 @@ const ProfilePage = ({ onSignOut }) => {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("No authentication token found");
 
-      // Removed "/api" prefix; now calls /products/:productId
       const response = await axios.put(
         `${import.meta.env.VITE_API_URL}/products/${updatedProduct._id}`,
         updatedProduct,
