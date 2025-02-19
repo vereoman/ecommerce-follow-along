@@ -26,7 +26,7 @@ const EditUserForm = ({ user, onClose, onUpdate }) => {
             if (!token) throw new Error('No authentication token found');
 
             const response = await axios.put(
-                `${import.meta.env.VITE_API_URL}/api/users/profile`,
+                `${import.meta.env.VITE_API_URL}/users/profile`,
                 data,
                 {
                     headers: {

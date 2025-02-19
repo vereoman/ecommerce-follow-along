@@ -1,62 +1,79 @@
-// controllers/order.controller.js
 const Order = require("../models/order.model");
-const User = require("../models/user.model");
 const Address = require("../models/address.model");
 
-/**
- * Create orders for each product.
- * Expects request body to have:
- * - products: an array of objects { product: productId, quantity }
- * - userEmail: the email of the user placing the order
- * - address: either the address _id (string) or full address details { street, city, state, postalCode }
- */
-exports.createOrder = async (req, res) => {
-  try {
-    const { products, userEmail, address } = req.body;
-    if (!products || !userEmail || !address) {
-      return res.status(400).json({ message: "Missing required fields" });
-    }
+const createOrder = async (req, res) => {
+    try {
+        const { products, address } = req.body;
+        const user = req.user;
 
-    // Retrieve user using email
-    const user = await User.findOne({ email: userEmail });
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    
-    // Determine shippingAddress from the provided address info:
-    // If address is a string, assume it's an address _id and fetch the full address
-    let shippingAddress = address;
-    if (typeof address === "string") {
-      const addr = await Address.findById(address);
-      if (!addr) {
-        return res.status(404).json({ message: "Address not found" });
-      }
-      shippingAddress = {
-        street: addr.street,
-        city: addr.city,
-        state: addr.state,
-        postalCode: addr.postalCode,
-      };
-    }
-    // If address is already an object, we assume it contains the required fields
+        if (!products || !address) {
+            return res.status(400).json({ message: "Missing required fields" });
+        }
 
-    // For each product, create a separate order record with the same address
-    const orders = [];
-    for (const item of products) {
-      // Each item should be in the format: { product: <productId>, quantity: <number> }
-      const newOrder = new Order({
-        user: user._id,
-        product: item.product,
-        quantity: item.quantity,
-        shippingAddress,
-        status: "placed",
-      });
-      await newOrder.save();
-      orders.push(newOrder);
+        let shippingAddress = address;
+        if (typeof address === "string") {
+            const addr = await Address.findById(address);
+            if (!addr) {
+                return res.status(404).json({ message: "Address not found" });
+            }
+            shippingAddress = addr.toObject();
+        }
+
+        const orders = [];
+        for (const item of products) {
+            const newOrder = new Order({
+                user: user._id,
+                product: item.product,
+                quantity: item.quantity,
+                shippingAddress,
+                status: "placed",
+            });
+            await newOrder.save();
+            orders.push(newOrder);
+        }
+        res.status(201).json({ message: "Orders created", orders });
+    } catch (error) {
+        console.error("Create order error: ", error);
+        res.status(500).json({ message: "Internal server error" });
     }
-    res.status(201).json({ message: "Orders created", orders });
-  } catch (error) {
-    console.error("Create order error: ", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
 };
+
+const getOrdersByUser = async (req, res) => {
+    try {
+        const user = req.user;
+        const orders = await Order.find({ user: user._id, status: { $ne: "canceled" } })
+            .populate("product");
+
+        res.json(orders);
+    } catch (error) {
+        console.error("Get orders error: ", error);
+        res.status(500).json({ message: "Server Error" });
+    }
+};
+
+const cancelOrder = async (req, res) => {
+    try {
+        const { orderId } = req.params;
+        if (!orderId) {
+            return res.status(400).json({ message: "Order ID is required" });
+        }
+
+        const order = await Order.findById(orderId);
+        if (!order) {
+            return res.status(404).json({ message: "Order not found" });
+        }
+
+        if (order.status === "canceled") {
+            return res.status(400).json({ message: "Order is already canceled" });
+        }
+
+        order.status = "canceled";
+        await order.save();
+
+        res.status(200).json({ message: "Order canceled successfully", order });
+    } catch (error) {
+        res.status(500).json({ message: "Error canceling order", error: error.message });
+    }
+};
+
+module.exports = { createOrder, getOrdersByUser, cancelOrder };

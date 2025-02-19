@@ -21,14 +21,12 @@ const BasketPage = () => {
   const fetchCartItems = async () => {
     try {
       const token = localStorage.getItem("token");
-      // Updated endpoint: no /api prefix
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/cart`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      // Assuming your cart document returns { items: [...] }
       setCartItems(response.data.items);
     } catch (error) {
       console.error("Error fetching cart:", error);
@@ -41,7 +39,6 @@ const BasketPage = () => {
   const fetchAddresses = async () => {
     try {
       const token = localStorage.getItem("token");
-      // Updated endpoint: no /api prefix
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/addresses`,
         {
@@ -57,13 +54,11 @@ const BasketPage = () => {
   const handleQuantityChange = async (itemId, newQuantity) => {
     try {
       const token = localStorage.getItem("token");
-      // Updated endpoint: no /api prefix
       await axios.put(
         `${import.meta.env.VITE_API_URL}/cart/items/${itemId}`,
         { quantity: newQuantity },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      // Re-fetch the cart after updating
       fetchCartItems();
     } catch (error) {
       console.error("Error updating quantity:", error);
@@ -73,14 +68,12 @@ const BasketPage = () => {
   const handleRemoveItem = async (itemId) => {
     try {
       const token = localStorage.getItem("token");
-      // Updated endpoint: no /api prefix
       await axios.delete(
         `${import.meta.env.VITE_API_URL}/cart/items/${itemId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      // Re-fetch the cart after removing the item
       fetchCartItems();
     } catch (error) {
       console.error("Error removing item:", error);
@@ -242,7 +235,7 @@ const BasketPage = () => {
           <AddressForm
             onClose={() => {
               setShowAddressForm(false);
-              fetchAddresses(); // Refresh address list after adding
+              fetchAddresses();
             }}
           />
         )}

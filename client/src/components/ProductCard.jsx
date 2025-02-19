@@ -27,7 +27,7 @@ const ProductCard = ({ id, image, name, price, originalPrice, description }) => 
 
             setIsLoading(true);
 
-            const cartResponse = await axios.get(`${import.meta.env.VITE_API_URL}/api/cart`, {
+            const cartResponse = await axios.get(`${import.meta.env.VITE_API_URL}/cart`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json",
@@ -40,7 +40,7 @@ const ProductCard = ({ id, image, name, price, originalPrice, description }) => 
 
             if (existingItem) {
                 await axios.put(
-                    `${import.meta.env.VITE_API_URL}/api/cart/items/${existingItem._id}`,
+                    `${import.meta.env.VITE_API_URL}/cart/items/${existingItem._id}`,
                     { quantity: existingItem.quantity + 1 },
                     {
                         headers: {
@@ -51,7 +51,7 @@ const ProductCard = ({ id, image, name, price, originalPrice, description }) => 
                 );
             } else {
                 await axios.post(
-                    `${import.meta.env.VITE_API_URL}/api/cart/add`,
+                    `${import.meta.env.VITE_API_URL}/cart/add`,
                     {
                         productId: id,
                         quantity: 1,

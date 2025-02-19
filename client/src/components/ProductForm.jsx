@@ -51,7 +51,7 @@ const ProductForm = ({ onSuccess, onClose }) => {
             }
 
             const response = await axios.post(
-                `${import.meta.env.VITE_API_URL}/api/products`,
+                `${import.meta.env.VITE_API_URL}/products`,
                 formData,
                 {
                     headers: {
