@@ -8,6 +8,7 @@ import SignupPage from "./pages/SignupPage";
 import ProductPage from "./pages/ProductPage";
 import BasketPage from "./pages/BasketPage";
 import CheckoutPage from "./pages/CheckoutPage";
+import MyOrders from "./pages/MyOrders"; // Import MyOrders page
 
 const ProtectedRoute = ({ children }) => {
     const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
@@ -44,9 +45,7 @@ const App = () => {
     };
 
     const hideHeaderFooterRoutes = ["/login", "/signup"];
-    const shouldHideHeaderFooter = hideHeaderFooterRoutes.includes(
-        location.pathname
-    );
+    const shouldHideHeaderFooter = hideHeaderFooterRoutes.includes(location.pathname);
 
     return (
         <div className="min-h-screen flex flex-col bg-white">
@@ -92,6 +91,14 @@ const App = () => {
                         element={
                             <ProtectedRoute>
                                 <CheckoutPage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/orders"
+                        element={
+                            <ProtectedRoute>
+                                <MyOrders />
                             </ProtectedRoute>
                         }
                     />

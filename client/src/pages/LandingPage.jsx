@@ -17,8 +17,9 @@ const LandingPage = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
+                // Updated endpoint: removed "/api" prefix
                 const response = await axios.get(
-                    `${import.meta.env.VITE_API_URL}/api/products`
+                    `${import.meta.env.VITE_API_URL}/products`
                 );
                 setTrendingShoes(response.data);
             } catch (error) {
@@ -104,10 +105,7 @@ const LandingPage = () => {
                         Featured Products
                     </h2>
                     <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-                        Discover our top picks designed to elevate your
-                        performance and style. Our collection features
-                        innovative designs that combine cutting-edge technology
-                        with timeless aesthetics.
+                        Discover our top picks designed to elevate your performance and style. Our collection features innovative designs that combine cutting-edge technology with timeless aesthetics.
                     </p>
                 </div>
             </section>

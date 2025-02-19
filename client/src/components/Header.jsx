@@ -1,6 +1,7 @@
+// src/components/Header.jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { HouseSimple, ShoppingBag, SignIn, User } from '@phosphor-icons/react';
+import { HouseSimple, ShoppingBag, SignIn, User, Receipt } from '@phosphor-icons/react';
 import { motion } from 'framer-motion';
 
 const Header = ({ isSignedIn }) => {
@@ -69,6 +70,9 @@ const Header = ({ isSignedIn }) => {
                 <nav className="flex items-center gap-8 w-full justify-center">
                     <NavLink to="/" icon={HouseSimple} text="HOME" />
                     <NavLink to="/basket" icon={ShoppingBag} text="BASKET" />
+                    {isSignedIn && (
+                        <NavLink to="/orders" icon={Receipt} text="ORDERS" />
+                    )}
                     {isSignedIn ? (
                         <NavLink to="/profile" icon={User} text="ACCOUNT" />
                     ) : (
