@@ -472,3 +472,65 @@ client/
 - **Payment Processing**: Handled the payment processing logic when a user chooses to pay via Razorpay.
 - **Testing**: Verified that the Razorpay payment is processing correctly.
 - **GitHub Updates**: Committed the Razorpay payment integration and related components.
+
+---
+
+## Milestone 31: Global State Management with Redux
+
+- **NPM Package Installation**: Installed `react-redux` to manage global state.
+- **Store Setup**:
+  - Created a `store` folder with `store.js` and `userActions.js`.
+  - Configured a Redux store in `store.js` with a `userReducer` function to handle the global email state.
+- **State Management**:
+  - Created a `setEmail` function inside `userActions.js` to update the global email state.
+- **Provider Setup**:
+  - Wrapped the `App` component inside the `Provider` component in `index.js` and passed the store as a prop.
+
+---
+
+## Milestone 32: Using Redux for Authentication State
+
+- **Dispatch in Login Page**:
+  - Implemented the `dispatch` method in the login page to store the user's email in the global state.
+- **Accessing Global State**:
+  - Used `useSelector` to access the stored email on all relevant pages.
+- **Testing**:
+  - Verified that the email is correctly stored and accessed across different pages.
+
+---
+
+## Milestone 33: JWT Token Generation and Cookie Storage
+
+- **JWT Package Installation**: Installed `jsonwebtoken` using NPM.
+- **Token Creation**:
+  - Used the `sign` method to create a JWT token containing the user's email and ID.
+  - Set `maxAge` to define an expiration time for the token.
+- **Cookie Storage**:
+  - Added the JWT token inside the response as a cookie to store it in the browser.
+
+---
+
+## Milestone 34: JWT Validation and Authentication Middleware
+
+- **Token Retrieval**:
+  - Extracted the JWT token from the browser cookies and sent it to the backend.
+- **Middleware Implementation**:
+  - Created a middleware function in the backend to validate the received JWT token.
+- **Authentication Enforcement**:
+  - Ensured that users cannot access protected pages without a valid login.
+- **Testing**:
+  - Verified that unauthorized users are blocked from accessing restricted pages.
+
+---
+
+## Milestone 35: Deployment of Frontend and Backend
+
+- **Backend Deployment**:
+  - Deployed the backend using a deployment service.
+  - Replaced `localhost` with the backend deployment URL in the frontend.
+- **Frontend Deployment**:
+  - Deployed the frontend using a deployment service.
+- **Final Testing**:
+  - Ensured that both the frontend and backend were correctly deployed and working as expected.
+- **GitHub Updates**:
+  - Committed all final deployment-related changes to the repository.

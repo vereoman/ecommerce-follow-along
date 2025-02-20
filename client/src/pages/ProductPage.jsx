@@ -34,11 +34,16 @@ const ProductPage = () => {
 
         fetchProduct();
 
+        // Prevent the layout shift by preserving the scrollbar width
+        const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+        document.body.style.paddingRight = `${scrollbarWidth}px`;
         document.body.style.overflow = "hidden";
+        
         window.scrollTo(0, 0);
 
         return () => {
             document.body.style.overflow = "auto";
+            document.body.style.paddingRight = "0px";
         };
     }, [id]);
 

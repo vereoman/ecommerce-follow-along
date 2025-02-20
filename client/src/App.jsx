@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { clearEmail } from "./store/store";
 import Header from "./components/Header";
 import LandingPage from "./pages/LandingPage";
 import ProfilePage from "./pages/ProfilePage";
@@ -31,6 +33,7 @@ const App = () => {
     localStorage.getItem("isAuthenticated") === "true"
   );
   const location = useLocation();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -42,6 +45,8 @@ const App = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     localStorage.removeItem("isAuthenticated");
+    
+    dispatch(clearEmail());
   };
 
   const hideHeaderFooterRoutes = ["/login", "/signup"];

@@ -81,11 +81,13 @@ const ProfilePage = ({ onSignOut }) => {
       if (!file) return;
 
       setUploading(true);
+      setError(null);
+      
       const token = localStorage.getItem("token");
       if (!token) throw new Error("No authentication token found");
 
       const formData = new FormData();
-      formData.append("image", file);
+      formData.append("profilePhoto", file);
 
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/users/upload-photo`,
@@ -93,15 +95,17 @@ const ProfilePage = ({ onSignOut }) => {
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
           },
         }
       );
 
-      const updatedUser = { ...user, imageUrl: response.data.imageUrl };
+      const updatedUser = { ...user, imageUrl: response.data.user.imageUrl };
       setUser(updatedUser);
       localStorage.setItem("user", JSON.stringify(updatedUser));
     } catch (error) {
-      setError("Failed to upload profile photo");
+      console.error("Photo upload error:", error);
+      setError("Failed to upload profile photo. " + (error.response?.data?.message || error.message));
     } finally {
       setUploading(false);
     }
@@ -197,9 +201,17 @@ const ProfilePage = ({ onSignOut }) => {
               </label>
             </div>
 
+            {uploading && (
+              <div className="text-sm text-blue-600">Uploading image...</div>
+            )}
+            
+            {error && (
+              <div className="text-sm text-red-600">{error}</div>
+            )}
+
             <div className="text-center space-y-2">
               <h2 className="text-2xl font-bold text-gray-900">
-                {user?.name}
+                {user?.name || user?.email}
               </h2>
               <p className="text-gray-600">{user?.email}</p>
             </div>

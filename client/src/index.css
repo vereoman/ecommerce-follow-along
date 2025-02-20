@@ -1,3 +1,91 @@
-html {
-  overflow-y: hidden;
-} 
+.bg-gradient-animation {
+  background-size: 400% 400%;
+  animation: gradientMovement 15s ease infinite;
+}
+
+.water-animation {
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 800 800' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%23111' d='M0,0 v800 h800 v-800 h-800 M769,229 C581.9,229 475.8,310.1 384,329.8 C293.3,349.5 223,370.2 223,464 C223,557.8 400.4,699.2 539,737.9 C677.6,776.6 769,723.3 769,647 C769,570.7 722.5,474.5 586.7,453 C451,431.5 505.9,242 505.9,242 C505.9,242 590.7,157.5 549.9,135.2 C509.2,112.9 517.9,131.7 529.6,147 C541.3,162.3 484.6,187.9 468.3,176.2 C452,164.5 455.5,144.3 442.4,138.2 C429.3,132.1 433.9,97.3 422.9,79.9 C411.9,62.5 380.2,62.6 361.5,60.2 C342.8,57.8 327.9,42.1 310.1,35.6 C292.3,29.1 250,54.5 250,54.5 C250,54.5 234.8,19.7 221.3,6.5 C207.9,-6.7 112.7,-6.2 31.2,26.5 C-50.3,59.2 -16.9,179.9 40.7,226.5 C98.3,273.1 184.8,206.7 257,264 C329.2,321.3 304,432.1 304,432.1 C304,432.1 270.2,529.8 306.9,578.1 C343.6,626.4 500.4,685.7 500.4,685.7 C500.4,685.7 627.9,657.6 683.2,631.8 C738.5,606 764.3,571.5 769,522.7 C773.7,473.9 769,229 769,229 z' style='opacity:0.2;'%3E%3C/path%3E%3C/svg%3E");
+  animation: waterMovement 20s linear infinite;
+}
+
+.hero-interactive:hover {
+  filter: hue-rotate(-10deg) brightness(1.2);
+  transition: filter 0.3s ease;
+}
+
+.button-liquid-hover:hover::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  transform: scale(0);
+  animation: liquidPulse 0.6s ease-out;
+}
+
+@keyframes gradientMovement {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes waterMovement {
+  0% {
+    background-position: 0px 0px;
+  }
+  100% {
+    background-position: 1000px 1000px;
+  }
+}
+
+@keyframes liquidPulse {
+  0% {
+    transform: scale(0);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+.text-shimmer {
+  background: linear-gradient(90deg, #fff, #aaa, #fff);
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: textShimmer 3s linear infinite;
+}
+
+@keyframes textShimmer {
+  0% {
+    background-position: 0% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.enhanced-mouse-follow {
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.dark-glow-text {
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3), 
+               0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+.inverted-mouse-gradient {
+  background-blend-mode: multiply;
+  mix-blend-mode: hard-light;
+}

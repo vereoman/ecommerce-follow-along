@@ -3,14 +3,17 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Eye, EyeSlash } from "@phosphor-icons/react";
 import { motion } from "framer-motion";
+import { useDispatch } from "react-redux";
+import { setEmail } from "../store/store";
 
 const SignupPage = ({ setIsAuthenticated }) => {
-  const [email, setEmail] = useState("");
+  const [email, setEmailState] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [isSeller, setIsSeller] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const formVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -48,8 +51,10 @@ const SignupPage = ({ setIsAuthenticated }) => {
       if (response.status === 201) {
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("user", JSON.stringify(response.data.user));
-        localStorage.setItem("userEmail", response.data.user.email); // Store the user email
         localStorage.setItem("isAuthenticated", "true");
+        
+        dispatch(setEmail(response.data.user.email));
+        
         setIsAuthenticated(true);
         navigate("/");
       }
@@ -99,7 +104,7 @@ const SignupPage = ({ setIsAuthenticated }) => {
               <input
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => setEmailState(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                 required
               />

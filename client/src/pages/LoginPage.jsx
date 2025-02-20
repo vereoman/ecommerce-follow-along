@@ -3,14 +3,17 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Eye, EyeSlash } from "@phosphor-icons/react";
 import { motion } from "framer-motion";
+import { useDispatch } from "react-redux";
+import { setEmail } from "../store/store";
 
 const LoginPage = ({ setIsAuthenticated }) => {
-  const [email, setEmail] = useState("");
+  const [email, setEmailState] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,8 +31,10 @@ const LoginPage = ({ setIsAuthenticated }) => {
 
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("userEmail", user.email); // Store the user email
       localStorage.setItem("isAuthenticated", "true");
+      
+      dispatch(setEmail(user.email));
+      
       setIsAuthenticated(true);
       navigate("/");
     } catch (error) {
@@ -99,7 +104,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
               <input
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => setEmailState(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
                 required
               />

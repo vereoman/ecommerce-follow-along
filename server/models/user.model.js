@@ -8,6 +8,9 @@ const userSchema = new mongoose.Schema(
             unique: true,
             match: [/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/, 'Please fill a valid email address'],
         },
+        name: {
+            type: String
+        },
         password: {
             type: String,
             required: true,
@@ -22,6 +25,9 @@ const userSchema = new mongoose.Schema(
             default: false
         },
         imageUrl: {  
+            type: String
+        },
+        cloudinaryId: {
             type: String
         }
     }
